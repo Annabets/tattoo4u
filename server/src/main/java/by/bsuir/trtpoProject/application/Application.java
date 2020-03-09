@@ -1,4 +1,4 @@
-package by.bsuir.trtpoProject.controller;
+package by.bsuir.trtpoProject.application;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
