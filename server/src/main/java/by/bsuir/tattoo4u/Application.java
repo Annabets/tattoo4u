@@ -1,4 +1,4 @@
-package by.bsuir.trtpoProject.application;
+package by.bsuir.tattoo4u;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
