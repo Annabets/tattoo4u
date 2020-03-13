@@ -39,7 +39,7 @@ public class PostService {
                 String resultFilename = uuid + "." + originalFilename;
 
                 try {
-                    file.transferTo(new File(uploadPath + "/" + resultFilename));
+                    file.transferTo(new File(System.getProperty("user.dir") + "/tattoo4u_uploaded" + "/" + resultFilename));
                     post.setFilename(resultFilename);
                 } catch (IOException e) {
                     throw new ServiceException(e);
