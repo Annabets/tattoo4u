@@ -13,7 +13,7 @@ public class JwtUserFactory {
     public JwtUserFactory() {
     }
 
-    public static JwtUser create(User user){
+    public static JwtUser create(User user) {
         return new JwtUser(
                 user.getId(),
                 user.getUsername(),
@@ -24,10 +24,10 @@ public class JwtUserFactory {
         );
     }
 
-    private static List<GrantedAuthority> mapToGrantedAuthorities(List<Role> userRoles){
-        List<GrantedAuthority> authorityList=new ArrayList<>();
+    private static List<GrantedAuthority> mapToGrantedAuthorities(List<Role> userRoles) {
+        List<GrantedAuthority> authorityList = new ArrayList<>();
 
-        for(Role role:userRoles){
+        for (Role role : userRoles) {
             authorityList.add(new SimpleGrantedAuthority(role.getName()));
         }
 

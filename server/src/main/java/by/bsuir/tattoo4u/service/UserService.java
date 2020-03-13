@@ -6,9 +6,7 @@ import java.util.List;
 
 public interface UserService {
 
-    User registerUser(User user);
-    User registerMaster(User user);
-    User registerAdmin(User user);
+    User register(User user, String role) throws ServiceException;
 
     List<User> getAll();
     User getByUsername(String username);

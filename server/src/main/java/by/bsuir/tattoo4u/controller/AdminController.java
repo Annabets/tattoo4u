@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,8 +34,8 @@ public class AdminController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        List<UserDto> userDtoList=new ArrayList<>();
-        for (User user:userList){
+        List<UserDto> userDtoList = new ArrayList<>();
+        for (User user : userList) {
             userDtoList.add(UserDto.fromUser(user));
         }
 

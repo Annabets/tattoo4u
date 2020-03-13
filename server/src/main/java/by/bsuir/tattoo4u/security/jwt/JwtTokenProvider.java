@@ -29,22 +29,22 @@ public class JwtTokenProvider {
     private JwtUserDetailsService jwtUserDetailsService;
 
     @Bean
-    private BCryptPasswordEncoder getPasswordEncoder(){
-        BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
+    private BCryptPasswordEncoder getPasswordEncoder() {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return passwordEncoder;
     }
 
-    protected void init(){
-        secretWord= Base64.getEncoder().encodeToString(secretWord.getBytes());
+    protected void init() {
+        secretWord = Base64.getEncoder().encodeToString(secretWord.getBytes());
     }
 
-    public String createToken(String username, List<Role> roleList){
+    public String createToken(String username, List<Role> roleList) {
 
-        Claims claims= Jwts.claims().setSubject(username);
+        Claims claims = Jwts.claims().setSubject(username);
         claims.put("roles", roleList);
 
-        Date nowDate=new Date();
-        Date endOfValidityDate=new Date(nowDate.getTime()+validityInMillisecond);
+        Date nowDate = new Date();
+        Date endOfValidityDate = new Date(nowDate.getTime() + validityInMillisecond);
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -54,21 +54,21 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public String getUsername(String token){
+    public String getUsername(String token) {
         return Jwts.parser().setSigningKey(secretWord).parseClaimsJws(token).getBody().getSubject();
     }
 
-    public Authentication getAuthentication(String token){
-        UserDetails userDetails=jwtUserDetailsService.loadUserByUsername(getUsername(token));
+    public Authentication getAuthentication(String token) {
+        UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(getUsername(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    public String resolveToken(HttpServletRequest req){
-        String result=null;
+    public String resolveToken(HttpServletRequest req) {
+        String result = null;
 
-        String bearerToken=req.getHeader("Authorization");
-        if(bearerToken!=null && bearerToken.startsWith("Bearer_")){
-            result=bearerToken.substring(7);
+        String bearerToken = req.getHeader("Authorization");
+        if (bearerToken != null && (bearerToken.startsWith("Bearer_") || bearerToken.startsWith("Bearer "))) {
+            result = bearerToken.substring(7);
         }
 
         return result;
@@ -85,7 +85,7 @@ public class JwtTokenProvider {
             }
 
             return result;
-        }catch (JwtException | IllegalArgumentException e) {
+        } catch (JwtException | IllegalArgumentException e) {
             throw new JwtAuthenticationException("JWT token is expired or invalid");
         }
     }

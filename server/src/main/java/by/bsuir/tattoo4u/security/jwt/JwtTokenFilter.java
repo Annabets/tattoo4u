@@ -1,7 +1,5 @@
 package by.bsuir.tattoo4u.security.jwt;
 
-import by.bsuir.tattoo4u.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
@@ -22,16 +20,20 @@ public class JwtTokenFilter extends GenericFilterBean {
     }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws ServletException, IOException {
 
-        String token=jwtTokenProvider.resolveToken((HttpServletRequest) servletRequest);
+        String token = jwtTokenProvider.resolveToken((HttpServletRequest) servletRequest);
 
-        if(token!=null && jwtTokenProvider.isValidToken(token)){
-            Authentication authentication=jwtTokenProvider.getAuthentication(token);
+        try {
+            if (token != null && jwtTokenProvider.isValidToken(token)) {
+                Authentication authentication = jwtTokenProvider.getAuthentication(token);
 
-            if(authentication!=null){
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                if (authentication != null) {
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
             }
+        } catch (JwtAuthenticationException e) {
+            //write logger for uncorrect jwt
         }
 
         filterChain.doFilter(servletRequest, servletResponse);

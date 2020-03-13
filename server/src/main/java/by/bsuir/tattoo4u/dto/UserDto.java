@@ -12,8 +12,8 @@ public class UserDto {
     private String username;
     private String email;
 
-    public User toUser(){
-        User user=new User();
+    public User toUser() {
+        User user = new User();
         user.setId(id);
         user.setUsername(username);
         user.setEmail(email);
@@ -21,8 +21,8 @@ public class UserDto {
         return user;
     }
 
-    public static UserDto fromUser(User user){
-        UserDto userDto=new UserDto();
+    public static UserDto fromUser(User user) {
+        UserDto userDto = new UserDto();
         userDto.setId(user.getId());
         userDto.setUsername(user.getUsername());
         userDto.setEmail(user.getEmail());

@@ -34,8 +34,8 @@ public class MasterController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        List<UserDto> userDtoList=new ArrayList<>();
-        for (User user:userList){
+        List<UserDto> userDtoList = new ArrayList<>();
+        for (User user : userList) {
             userDtoList.add(UserDto.fromUser(user));
         }
 

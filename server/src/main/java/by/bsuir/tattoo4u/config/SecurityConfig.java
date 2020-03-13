@@ -17,19 +17,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    private static final String ADMIN_ENDPOINT="/tattoo4u/admin";
-    private static final String MASTER_ENDPOINT="/tattoo4u/master";
-    private static final String USER_ENDPOINT="/tattoo4u/user";
-    private static final String LOGIN_ENDPOINT="/tattoo4u/login";
+    private static final String LOGIN_ENDPOINT = "/tattoo4u/login";
+    private static final String REGISTRATION_ENDPOINT = "/tattoo4u/register";
 
     @Autowired
-    public SecurityConfig (JwtTokenProvider jwtTokenProvider){
-        this.jwtTokenProvider=jwtTokenProvider;
+    public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Bean
     @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception{
+    public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
 
@@ -41,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(LOGIN_ENDPOINT).permitAll()
+                .antMatchers(LOGIN_ENDPOINT, REGISTRATION_ENDPOINT).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider));
