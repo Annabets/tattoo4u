@@ -1,5 +1,5 @@
 //endpoints
-export const API_URL = 'https://tattoo4u.herokuapp.com';
+export const API_URL = 'https://tattoo4u.herokuapp.com/api';
 export const SIGN_IN = '/signIn';
 export const SIGN_UP = '/signUp';
 
