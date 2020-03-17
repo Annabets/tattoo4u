@@ -17,10 +17,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "api/signIn")
@@ -48,8 +48,8 @@ public class AuthenticationController {
     @PostMapping
     public ResponseEntity<?> loginUser(@RequestBody String request) {
         try {
-            Gson gson=new Gson();
-            AuthenticationRequestDto requestDto=gson.fromJson(request, AuthenticationRequestDto.class);
+            Gson gson = new Gson();
+            AuthenticationRequestDto requestDto = gson.fromJson(request, AuthenticationRequestDto.class);
 
             String username = requestDto.getUsername();
 
@@ -63,7 +63,7 @@ public class AuthenticationController {
 
             String token = jwtTokenProvider.createToken(username, user.getRoles());
 
-            AuthenticationResponseDto responseDto=new AuthenticationResponseDto();
+            AuthenticationResponseDto responseDto = new AuthenticationResponseDto();
             responseDto.setUsername(username);
             responseDto.setToken(token);
 
