@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@Table(name = "uzer")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
