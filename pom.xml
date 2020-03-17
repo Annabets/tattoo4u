@@ -51,6 +51,17 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+<<<<<<< HEAD
+        <!-- MySQL connector -->
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.18</version>
+        </dependency>
+
+=======
+>>>>>>> upstream/server
         <!-- JSON Web Token lib -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
@@ -74,10 +85,15 @@
                 </exclusion>
             </exclusions>
         </dependency>
+<<<<<<< HEAD
+
+=======
+>>>>>>> upstream/server
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
+<<<<<<< HEAD
         </dependency>
 
         <!---Logger-->
@@ -85,11 +101,32 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
             <version>2.6.1</version>
+=======
+>>>>>>> upstream/server
         </dependency>
+
+        <!---Logger-->
         <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+<<<<<<< HEAD
+            <artifactId>log4j-core</artifactId>
+=======
+            <artifactId>log4j-api</artifactId>
+>>>>>>> upstream/server
+            <version>2.6.1</version>
+        </dependency>
+
+        <!---Postgresql-->
+        <dependency>
+<<<<<<< HEAD
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+=======
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>2.6.1</version>
+>>>>>>> upstream/server
         </dependency>
 
         <!---Postgresql-->
@@ -98,6 +135,14 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.6</version>
+        </dependency>
+
     </dependencies>
 
 </project>

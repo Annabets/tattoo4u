@@ -1,9 +1,11 @@
 package by.bsuir.tattoo4u.controller;
 
 import by.bsuir.tattoo4u.dto.request.AuthenticationRequestDto;
+import by.bsuir.tattoo4u.dto.response.AuthenticationResponseDto;
 import by.bsuir.tattoo4u.entity.User;
 import by.bsuir.tattoo4u.security.jwt.JwtTokenProvider;
 import by.bsuir.tattoo4u.service.UserService;
+import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "api/signIn")
@@ -41,11 +40,17 @@ public class AuthenticationController {
         this.userService = userService;
         this.httpHeaders = new HttpHeaders();
         httpHeaders.add("Access-Control-Allow-Origin", "*");
+        httpHeaders.add("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");
+        httpHeaders.add("Access-Control-Allow-Headers", "Origin, Content-Type, Authorization, Access-Control-Allow-Headers, X-Requested-With");
+
     }
 
     @PostMapping
-    public ResponseEntity<Map<Object, Object>> login(@RequestBody AuthenticationRequestDto requestDto) {
+    public ResponseEntity<?> loginUser(@RequestBody String request) {
         try {
+            Gson gson = new Gson();
+            AuthenticationRequestDto requestDto = gson.fromJson(request, AuthenticationRequestDto.class);
+
             String username = requestDto.getUsername();
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
@@ -58,11 +63,11 @@ public class AuthenticationController {
 
             String token = jwtTokenProvider.createToken(username, user.getRoles());
 
-            Map<Object, Object> response = new HashMap<>();
-            response.put("username", username);
-            response.put("token", token);
+            AuthenticationResponseDto responseDto = new AuthenticationResponseDto();
+            responseDto.setUsername(username);
+            responseDto.setToken(token);
 
-            return new ResponseEntity<>(response, httpHeaders, HttpStatus.OK);
+            return new ResponseEntity<>(responseDto, httpHeaders, HttpStatus.OK);
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid username or password");
         }

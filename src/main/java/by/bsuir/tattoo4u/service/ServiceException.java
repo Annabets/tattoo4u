@@ -1,6 +1,8 @@
 package by.bsuir.tattoo4u.service;
 
 public class ServiceException extends Exception {
+
+
     public ServiceException() {
         super();
     }
@@ -9,11 +11,13 @@ public class ServiceException extends Exception {
         super(message);
     }
 
-    public ServiceException(Exception e) {
-        super(e);
+
+    public ServiceException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public ServiceException(String message, Exception e) {
-        super(message, e);
+    public ServiceException(Throwable cause) {
+        super(cause);
     }
+
 }
