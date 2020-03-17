@@ -11,9 +11,9 @@ const handleResponse = resp =>
     .catch(error => Promise.reject(error.message));
 
 
-const signInUser = data => fetch(`${API_URL + SIGN_IN}`, {method: POST, headers:{'Content-Type': 'application/json'}, body: JSON.stringify(data)}).then(handleResponse);
+const signInUser = data => fetch(`${API_URL + SIGN_IN}`, {method: POST, body: JSON.stringify(data)}).then(handleResponse);
 
-const signUpUser = data => fetch(`${API_URL + SIGN_UP}`, {method: POST, headers:{'Content-Type': 'application/json'}, body: JSON.stringify(data)}).then(handleResponse);
+const signUpUser = data => fetch(`${API_URL + SIGN_UP}`, {method: POST, body: JSON.stringify(data)}).then(handleResponse);
 
 
 export const api = {
