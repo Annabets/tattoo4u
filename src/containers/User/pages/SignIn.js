@@ -11,7 +11,7 @@ class SignIn extends React.Component {
     super(props);
 
     this.state = {
-      userName: '',
+      username: '',
       password: '',
     }
   }
@@ -22,7 +22,7 @@ class SignIn extends React.Component {
   };
 
   render() {
-    const {userName, password} = this.state;
+    const {username, password} = this.state;
     return (
       <div className="sign-in" style={{backgroundImage: `url(${bgImg})`}}>
         <div className="form-container">
@@ -33,8 +33,8 @@ class SignIn extends React.Component {
                 <Form.Control
                   type="text"
                   placeholder="Username"
-                  value={userName}
-                  onChange={e => this.setState({userName: e.target.value})}
+                  value={username}
+                  onChange={e => this.setState({username: e.target.value})}
                 />
               </Form.Group>
               <Form.Group>
