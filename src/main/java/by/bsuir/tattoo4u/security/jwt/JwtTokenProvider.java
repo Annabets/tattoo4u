@@ -29,12 +29,6 @@ public class JwtTokenProvider {
     @Autowired
     private JwtUserDetailsService jwtUserDetailsService;
 
-    @Bean
-    private BCryptPasswordEncoder getPasswordEncoder() {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        return passwordEncoder;
-    }
-
     protected void init() {
         secretWord = Base64.getEncoder().encodeToString(secretWord.getBytes());
     }
