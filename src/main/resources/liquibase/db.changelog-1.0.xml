@@ -1,0 +1,82 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+<!--    <changeSet id="1.0.0" author="hal">-->
+<!--        <createTable tableName="users">-->
+<!--            <column name="id" type="BIGINT" autoIncrement="true">-->
+<!--                <constraints primaryKey="true" nullable="false"/>-->
+<!--            </column>-->
+
+<!--            <column name="username" type="VARCHAR(100)">-->
+<!--                <constraints nullable="false" unique="true"/>-->
+<!--            </column>-->
+
+<!--            <column name="email" type="VARCHAR(255)">-->
+<!--                <constraints nullable="false" unique="true"/>-->
+<!--            </column>-->
+
+<!--            <column name="password" type="VARCHAR(255)">-->
+<!--                <constraints nullable="false"/>-->
+<!--            </column>-->
+<!--        </createTable>-->
+<!--    </changeSet>-->
+
+<!--    <changeSet id="1.0.1" author="hal">-->
+<!--        <createTable tableName="roles">-->
+<!--            <column name="id" type="BIGINT" autoIncrement="true">-->
+<!--                <constraints primaryKey="true" nullable="false"/>-->
+<!--            </column>-->
+
+<!--            <column name="name" type="VARCHAR(100)">-->
+<!--                <constraints nullable="false" unique="true"/>-->
+<!--            </column>-->
+<!--        </createTable>-->
+<!--    </changeSet>-->
+
+<!--    <changeSet id="1.0.2" author="hal">-->
+<!--        <createTable tableName="users_roles">-->
+<!--            <column name="user_id" type="BIGINT">-->
+<!--            </column>-->
+
+<!--            <column name="role_id" type="BIGINT">-->
+<!--            </column>-->
+<!--        </createTable>-->
+<!--    </changeSet>-->
+
+<!--    <changeSet id="1.0.3" author="hal">-->
+<!--        <addForeignKeyConstraint baseTableName="users_roles"-->
+<!--                                 baseColumnNames="user_id"-->
+<!--                                 constraintName="fk_users_roles_users"-->
+<!--                                 onDelete="CASCADE"-->
+<!--                                 onUpdate="RESTRICT"-->
+<!--                                 referencedTableName="users"-->
+<!--                                 referencedColumnNames="id"/>-->
+<!--    </changeSet>-->
+
+<!--    <changeSet id="1.0.4" author="hal">-->
+<!--        <addForeignKeyConstraint baseTableName="users_roles"-->
+<!--                                 baseColumnNames="role_id"-->
+<!--                                 constraintName="fk_users_roles_roles"-->
+<!--                                 onDelete="CASCADE"-->
+<!--                                 onUpdate="RESTRICT"-->
+<!--                                 referencedTableName="roles"-->
+<!--                                 referencedColumnNames="id"/>-->
+<!--    </changeSet>-->
+
+    <changeSet id="1.0.5" author="hal">
+        <insert tableName="roles">
+            <column name="name" value="USER"/>
+        </insert>
+
+        <insert tableName="roles">
+            <column name="name" value="ADMIN"/>
+        </insert>
+
+        <insert tableName="roles">
+            <column name="name" value="MASTER"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
