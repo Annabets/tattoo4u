@@ -1,25 +1,29 @@
 import React from 'react';
 import {Nav, Navbar, NavDropdown} from "react-bootstrap";
+import * as routes from '../routes';
+import {isAuth, withNavigation} from "../utils";
+import {connect} from "react-redux";
 
-export default ({user}) => {
-  return (
+
+export default connect(null)(() => {
+  return withNavigation(window.location.pathname) ? (
     <Navbar bg="primary" variant="dark">
       <Navbar.Brand href="/">TATTOO4U</Navbar.Brand>
       <Nav className="mr-auto">
-        <Nav.Link href="/gallery">Gallery</Nav.Link>
-        <Nav.Link href="/studios">Studios</Nav.Link>
-        <Nav.Link href="/masters">Masters</Nav.Link>
+        <Nav.Link href={routes.GALLERY}>Gallery</Nav.Link>
+        <Nav.Link href={routes.STUDIOS}>Studios</Nav.Link>
+        <Nav.Link href={routes.MASTERS}>Masters</Nav.Link>
       </Nav>
       <Nav>
-        {user ?
-          <NavDropdown title={user.userName} id="profile-nav-dropdown">
-            <NavDropdown.Item href="/profile">My profile</NavDropdown.Item>
+        {isAuth() ?
+          <NavDropdown title="User " id="profile-nav-dropdown">
+            <NavDropdown.Item href={routes.PROFILE}>Your Profile</NavDropdown.Item>
             <NavDropdown.Divider/>
             <NavDropdown.Item>Sign Out</NavDropdown.Item>
           </NavDropdown> :
-          <Nav.Link href="/signIn">SIGN IN</Nav.Link>
+          <Nav.Link href={routes.SIGN_IN}>SIGN IN</Nav.Link>
         }
       </Nav>
     </Navbar>
-  )
-};
+  ) : null
+});
