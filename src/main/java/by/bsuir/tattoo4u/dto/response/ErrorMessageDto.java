@@ -6,7 +6,7 @@ import lombok.Data;
 public class ErrorMessageDto {
     private String error;
 
-    public ErrorMessageDto(String message) {
-        this.error = message;
+    public ErrorMessageDto(Throwable exception) {
+        this.error = exception.getMessage();
     }
 }

@@ -1,5 +1,7 @@
 package by.bsuir.tattoo4u.controller;
 
+import by.bsuir.tattoo4u.controller.controllerExceptionExtn.EmptyDataException;
+import by.bsuir.tattoo4u.controller.controllerExceptionExtn.IncorrectDataInputException;
 import by.bsuir.tattoo4u.dto.response.ErrorMessageDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -22,13 +24,25 @@ public class ExceptionController {
 
     @ExceptionHandler(value = BadCredentialsException.class)
     public ResponseEntity<ErrorMessageDto> handle(final BadCredentialsException exception) {
-        ErrorMessageDto message = new ErrorMessageDto(exception.getMessage());
+        ErrorMessageDto message = new ErrorMessageDto(exception);
         return new ResponseEntity<>(message, httpHeaders, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(value = ControllerException.class)
     public ResponseEntity<ErrorMessageDto> handle(final ControllerException exception) {
-        ErrorMessageDto message = new ErrorMessageDto(exception.getMessage());
+        ErrorMessageDto message = new ErrorMessageDto(exception);
+        return new ResponseEntity<>(message, httpHeaders, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = EmptyDataException.class)
+    public ResponseEntity<ErrorMessageDto> handle(final EmptyDataException exception) {
+        ErrorMessageDto message = new ErrorMessageDto(exception);
+        return new ResponseEntity<>(message, httpHeaders, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = IncorrectDataInputException.class)
+    public ResponseEntity<ErrorMessageDto> handle(final IncorrectDataInputException exception) {
+        ErrorMessageDto message = new ErrorMessageDto(exception);
         return new ResponseEntity<>(message, httpHeaders, HttpStatus.BAD_REQUEST);
     }
 }

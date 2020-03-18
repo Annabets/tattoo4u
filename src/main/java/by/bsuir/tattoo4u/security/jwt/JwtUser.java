@@ -12,7 +12,7 @@ public class JwtUser implements UserDetails {
     private final String username;
     private final String email;
     private final String password;
-    private final boolean enabled;
+    private boolean enabled;
     private final Collection<? extends GrantedAuthority> authorities;
 
     public JwtUser(Long id, String username, String email, String password, boolean enabled, Collection<? extends GrantedAuthority> authorities) {
