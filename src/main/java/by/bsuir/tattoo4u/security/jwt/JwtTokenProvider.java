@@ -1,6 +1,8 @@
 package by.bsuir.tattoo4u.security.jwt;
 
 import by.bsuir.tattoo4u.entity.Role;
+import by.bsuir.tattoo4u.service.TokenService;
+import by.bsuir.tattoo4u.service.impl.TokenServiceImpl;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +28,9 @@ public class JwtTokenProvider {
 
     @Autowired
     private JwtUserDetailsService jwtUserDetailsService;
+
+    @Autowired
+    private TokenService tokenService;
 
     protected void init() {
         secretWord = Base64.getEncoder().encodeToString(secretWord.getBytes());
@@ -77,6 +82,7 @@ public class JwtTokenProvider {
 
             if (claims.getBody().getExpiration().before(new Date())) {
                 result = false;
+                tokenService.delete(token);
             }
 
             return result;

@@ -60,7 +60,9 @@ public class UserController {
     }
 
     @PostMapping(value = "{id}")
-    public ResponseEntity<UserResponseDto> updateUserById(@PathVariable(name = "id") Long id, @RequestBody RegistrationUserRequestDto requestDto) {
+    public ResponseEntity<UserResponseDto> updateUserById(@PathVariable(name = "id") Long id, @RequestBody String request) {
+
+        RegistrationUserRequestDto requestDto=RegistrationUserRequestDto.fromJson(request);
 
         if (requestDto == null) {
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
@@ -71,7 +73,7 @@ public class UserController {
         try {
             user = userService.updateById(id, requestDto.getUser(), requestDto.getRole());
         } catch (ServiceException e) {
-            throw new ControllerException(e.getMessage());
+            throw new ControllerException(e);
         }
 
         if (user == null) {

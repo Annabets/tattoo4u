@@ -15,6 +15,6 @@ public class ControllerException extends RuntimeException {
     }
 
     public ControllerException(Throwable cause) {
-        super(cause);
+        super(cause.getMessage());
     }
 }
