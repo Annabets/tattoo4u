@@ -3,9 +3,17 @@ import {Nav, Navbar, NavDropdown} from "react-bootstrap";
 import * as routes from '../routes';
 import {isAuth, withNavigation} from "../utils";
 import {connect} from "react-redux";
+import {signOut} from "../containers/User/actions";
 
 
-export default connect(null)(() => {
+export default connect(
+  state => {console.log(state);return {
+    username: state.user.username
+  }},
+    dispatch => ({
+      signOut: () => dispatch(signOut())
+    })
+)(({username, signOut}) => {
   return withNavigation(window.location.pathname) ? (
     <Navbar bg="primary" variant="dark">
       <Navbar.Brand href="/">TATTOO4U</Navbar.Brand>
@@ -16,10 +24,10 @@ export default connect(null)(() => {
       </Nav>
       <Nav>
         {isAuth() ?
-          <NavDropdown title="User " id="profile-nav-dropdown">
+          <NavDropdown title={username} id="profile-nav-dropdown">
             <NavDropdown.Item href={routes.PROFILE}>Your Profile</NavDropdown.Item>
             <NavDropdown.Divider/>
-            <NavDropdown.Item>Sign Out</NavDropdown.Item>
+            <NavDropdown.Item onClick={signOut}>Sign Out</NavDropdown.Item>
           </NavDropdown> :
           <Nav.Link href={routes.SIGN_IN}>SIGN IN</Nav.Link>
         }

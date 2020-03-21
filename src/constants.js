@@ -11,3 +11,4 @@ export const DELETE = 'DELETE';
 
 //Local Storage constants
 export const AUTH_KEY = 'authKey';
+export const USER_NAME = 'userName';

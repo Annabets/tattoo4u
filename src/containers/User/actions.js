@@ -13,6 +13,7 @@ export function signIn(data) {
           type: constants.SIGN_IN_USER_SUCCESS,
           userData,
         })
+        window.location.replace('/');
       },
       errorMessage => {
         dispatch({
@@ -35,6 +36,7 @@ export function signUp(data) {
           type: constants.SIGN_UP_USER_SUCCESS,
           userData,
         })
+        window.location.replace('/');
       },
       errorMessage => {
         dispatch({
@@ -47,6 +49,11 @@ export function signUp(data) {
 }
 
 export function signOut() {
-  localStorage.removeItem(AUTH_KEY);
-  window.location.replace('/');
+  return dispatch => {
+    dispatch({
+      type: constants.SIGN_OUT_USER
+    });
+    window.location.replace('/');
+  }
+
 }
