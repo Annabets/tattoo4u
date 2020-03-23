@@ -1,16 +1,11 @@
 package by.bsuir.tattoo4u.controller;
 
-import by.bsuir.tattoo4u.controller.controllerExceptionExtn.EmptyDataException;
 import by.bsuir.tattoo4u.dto.request.AuthenticationRequestDto;
 import by.bsuir.tattoo4u.dto.response.AuthenticationResponseDto;
 import by.bsuir.tattoo4u.entity.User;
-import by.bsuir.tattoo4u.security.jwt.JwtAuthenticationException;
 import by.bsuir.tattoo4u.security.jwt.JwtTokenProvider;
-import by.bsuir.tattoo4u.security.jwt.JwtUser;
 import by.bsuir.tattoo4u.service.TokenService;
 import by.bsuir.tattoo4u.service.UserService;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping(value = "api")
@@ -57,7 +47,7 @@ public class AuthenticationController {
     @PostMapping("signIn")
     public ResponseEntity<?> loginUser(@RequestBody String request) {
         try {
-            AuthenticationRequestDto requestDto =  AuthenticationRequestDto.fromJson(request);
+            AuthenticationRequestDto requestDto = AuthenticationRequestDto.fromJson(request);
 
             String username = requestDto.getUsername();
 
@@ -73,9 +63,7 @@ public class AuthenticationController {
 
             tokenService.add(token);
 
-            AuthenticationResponseDto responseDto = new AuthenticationResponseDto();
-            responseDto.setUsername(username);
-            responseDto.setToken(token);
+            AuthenticationResponseDto responseDto = AuthenticationResponseDto.fromUserAndToken(user, token);
 
             return new ResponseEntity<>(responseDto, httpHeaders, HttpStatus.OK);
         } catch (AuthenticationException e) {
@@ -84,7 +72,7 @@ public class AuthenticationController {
     }
 
     @GetMapping("signOut")
-    public ResponseEntity<?> logoutUser(@RequestHeader("Authorization") String bearerToken){
+    public ResponseEntity<?> logoutUser(@RequestHeader("Authorization") String bearerToken) {
 
         String token = null;
         if (bearerToken != null && (bearerToken.startsWith("Bearer_") || bearerToken.startsWith("Bearer "))) {

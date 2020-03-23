@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 public class RegistrationUserRequestDto {
 
-    private final static Gson gson=new Gson();
+    private final static Gson gson = new Gson();
 
     private String username;
     private String password;
@@ -30,13 +30,13 @@ public class RegistrationUserRequestDto {
         return role.toUpperCase();
     }
 
-    public static RegistrationUserRequestDto fromJson(String jsonString){
-        if(jsonString==null || jsonString.isEmpty()){
+    public static RegistrationUserRequestDto fromJson(String jsonString) {
+        if (jsonString == null || jsonString.isEmpty()) {
             throw new EmptyDataException();
         }
         try {
             return gson.fromJson(jsonString, RegistrationUserRequestDto.class);
-        }catch (JsonSyntaxException e){
+        } catch (JsonSyntaxException e) {
             throw new IncorrectDataInputException("Incorrect JSON object");
         }
 

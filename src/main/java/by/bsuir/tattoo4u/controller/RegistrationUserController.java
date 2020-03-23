@@ -34,7 +34,7 @@ public class RegistrationUserController {
     @PostMapping
     public ResponseEntity<?> register(@RequestBody String request) {
 
-        RegistrationUserRequestDto requestDto=RegistrationUserRequestDto.fromJson(request);
+        RegistrationUserRequestDto requestDto = RegistrationUserRequestDto.fromJson(request);
 
         if (requestDto == null) {
             return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
@@ -43,7 +43,7 @@ public class RegistrationUserController {
         User user = requestDto.getUser();
         String role = requestDto.getRole();
 
-        User registeredUser=null;
+        User registeredUser = null;
         try {
             registeredUser = userService.register(user, role);
         } catch (ServiceException e) {
@@ -52,9 +52,7 @@ public class RegistrationUserController {
 
         String token = jwtTokenProvider.createToken(registeredUser.getUsername(), registeredUser.getRoles());
 
-        AuthenticationResponseDto responseDto = new AuthenticationResponseDto();
-        responseDto.setUsername(registeredUser.getUsername());
-        responseDto.setToken(token);
+        AuthenticationResponseDto responseDto = AuthenticationResponseDto.fromUserAndToken(registeredUser, token);
 
         return new ResponseEntity<>(responseDto, httpHeaders, HttpStatus.OK);
     }

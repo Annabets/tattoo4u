@@ -8,7 +8,6 @@ import by.bsuir.tattoo4u.service.ServiceException;
 import by.bsuir.tattoo4u.service.UserService;
 import by.bsuir.tattoo4u.service.validator.UserDataValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

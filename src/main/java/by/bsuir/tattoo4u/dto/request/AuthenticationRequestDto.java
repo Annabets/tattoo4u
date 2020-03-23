@@ -9,18 +9,18 @@ import lombok.Data;
 @Data
 public class AuthenticationRequestDto {
 
-    private final static Gson gson=new Gson();
+    private final static Gson gson = new Gson();
 
     private String username;
     private String password;
 
-    public static AuthenticationRequestDto fromJson(String jsonString){
-        if(jsonString==null || jsonString.isEmpty()){
+    public static AuthenticationRequestDto fromJson(String jsonString) {
+        if (jsonString == null || jsonString.isEmpty()) {
             throw new EmptyDataException();
         }
         try {
             return gson.fromJson(jsonString, AuthenticationRequestDto.class);
-        }catch (JsonSyntaxException e){
+        } catch (JsonSyntaxException e) {
             throw new IncorrectDataInputException("Incorrect JSON object");
         }
 
