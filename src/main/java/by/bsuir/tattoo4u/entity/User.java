@@ -6,9 +6,7 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.List;
-
 import java.util.Set;
-
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -25,7 +23,6 @@ public class User extends BaseEntity {
     @Column(name = "password")
     private String password;
 
-
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Post> posts;
 
@@ -35,6 +32,5 @@ public class User extends BaseEntity {
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private List<Role> roles;
-
 }
 
