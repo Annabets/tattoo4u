@@ -25,9 +25,11 @@ public class User extends BaseEntity {
     @Column(name = "password")
     private String password;
 
-
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Post> posts;
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Studio> studios;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JsonIgnore
