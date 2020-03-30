@@ -1,6 +1,6 @@
 package by.bsuir.tattoo4u.controller;
 
-import by.bsuir.tattoo4u.controller.controllerExceptionExtn.EmptyDataException;
+import by.bsuir.tattoo4u.dto.request.PostRequestDto;
 import by.bsuir.tattoo4u.dto.response.PostResponseDto;
 import by.bsuir.tattoo4u.entity.PhotoUpload;
 import by.bsuir.tattoo4u.entity.Post;
@@ -11,14 +11,11 @@ import by.bsuir.tattoo4u.service.TokenService;
 import by.bsuir.tattoo4u.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,27 +34,23 @@ public class PostController {
         this.userService = userService;
     }
 
-    @PostMapping("add-post")
+    @PostMapping(value = "add-post", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> addPost(
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("description") String description,
-            @RequestParam("tags") List<String> tags,
-            @RequestParam("token") String bearerToken
+            @RequestHeader("Authorization") String token,
+            @ModelAttribute PostRequestDto postRequestDto
     ) {
         //token validation
-        if (file == null || file.getOriginalFilename().isEmpty()) {
-            throw new EmptyDataException("Uploaded file is empty");
-        }
-
-        String token = bearerToken.substring(7); //move to service
+        token = token.substring(7); //move to service
 
         String username = tokenService.getUsername(token);
 
+        System.out.println(username);
+
         User user = userService.getByUsername(username);
 
-        Post post = new Post(description, user);
+        Post post = new Post(postRequestDto.getDescription(), user);
 
-        PhotoUpload photoUpload = new PhotoUpload(file);
+        PhotoUpload photoUpload = new PhotoUpload(postRequestDto.getFile());
 
         try {
             postService.savePhoto(post, photoUpload);
@@ -66,6 +59,7 @@ public class PostController {
         } catch (ServiceException e) {
             throw new ControllerException(e);
         }
+
     }
 
     @GetMapping("posts")

@@ -29,7 +29,6 @@ public class AuthenticationController {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
     private final TokenService tokenService;
-    private final HttpHeaders httpHeaders;
 
     @Autowired
     public AuthenticationController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserService userService, TokenService tokenService) {
@@ -37,17 +36,12 @@ public class AuthenticationController {
         this.jwtTokenProvider = jwtTokenProvider;
         this.userService = userService;
         this.tokenService = tokenService;
-        this.httpHeaders = new HttpHeaders();
-        httpHeaders.add("Access-Control-Allow-Origin", "*");
-        httpHeaders.add("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");
-        httpHeaders.add("Access-Control-Allow-Headers", "Origin, Content-Type, Authorization, Access-Control-Allow-Headers, X-Requested-With");
-
     }
 
     @PostMapping("signIn")
-    public ResponseEntity<?> loginUser(@RequestBody String request) {
+    public ResponseEntity<?> loginUser(@RequestBody AuthenticationRequestDto requestDto) {
         try {
-            AuthenticationRequestDto requestDto = AuthenticationRequestDto.fromJson(request);
+            //AuthenticationRequestDto requestDto = AuthenticationRequestDto.fromJson(request);
 
             String username = requestDto.getUsername();
 
@@ -65,7 +59,7 @@ public class AuthenticationController {
 
             AuthenticationResponseDto responseDto = AuthenticationResponseDto.fromUserAndToken(user, token);
 
-            return new ResponseEntity<>(responseDto, httpHeaders, HttpStatus.OK);
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid username or password");
         }
@@ -81,6 +75,6 @@ public class AuthenticationController {
 
         tokenService.delete(token);
 
-        return new ResponseEntity<>(httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
