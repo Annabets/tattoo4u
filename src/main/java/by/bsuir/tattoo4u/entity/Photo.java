@@ -15,4 +15,7 @@ public class Photo {
     private Long id;
 
     private String url;
+
+    public Photo() {
+    }
 }

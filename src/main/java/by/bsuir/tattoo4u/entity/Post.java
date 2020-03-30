@@ -21,6 +21,9 @@ public class Post {
     @JoinColumn(name = "photo_id")
     private Photo photo;
 
+    public Post() {
+    }
+
     public Post(String description, User author) {
         this.description = description;
         this.author = author;
