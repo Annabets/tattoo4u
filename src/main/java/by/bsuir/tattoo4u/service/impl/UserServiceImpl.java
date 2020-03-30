@@ -51,14 +51,14 @@ public class UserServiceImpl implements UserService {
 
         User updateUser = userRepository.findById(id).orElse(null);
 
-        if (user == null) {
+        if (updateUser == null) {
             throw new ServiceException("No user with (" + id + ") id");
         }
 
         refactorUser(user, roleName);
 
         if (userRepository.existsByUsernameAndIdNot(user.getUsername(), id)) {
-            throw new ServiceException("Username has already taken");
+            throw new ServiceException("Username is already taken");
         }
         if (userRepository.existsByEmailAndIdNot(user.getEmail(), id)) {
             throw new ServiceException("Email has already in use");

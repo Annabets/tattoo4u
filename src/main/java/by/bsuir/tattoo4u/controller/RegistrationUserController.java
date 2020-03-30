@@ -21,23 +21,21 @@ public class RegistrationUserController {
 
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
-    private final HttpHeaders httpHeaders;
 
     @Autowired
     public RegistrationUserController(UserService userService, JwtTokenProvider jwtTokenProvider) {
         this.userService = userService;
         this.jwtTokenProvider = jwtTokenProvider;
-        this.httpHeaders = new HttpHeaders();
-        httpHeaders.add("Access-Control-Allow-Origin", "*");
+
     }
 
     @PostMapping
-    public ResponseEntity<?> register(@RequestBody String request) {
+    public ResponseEntity<?> register(@RequestBody RegistrationUserRequestDto requestDto) {
 
-        RegistrationUserRequestDto requestDto = RegistrationUserRequestDto.fromJson(request);
+        //RegistrationUserRequestDto requestDto = RegistrationUserRequestDto.fromJson(request);
 
         if (requestDto == null) {
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         User user = requestDto.getUser();
@@ -54,6 +52,6 @@ public class RegistrationUserController {
 
         AuthenticationResponseDto responseDto = AuthenticationResponseDto.fromUserAndToken(registeredUser, token);
 
-        return new ResponseEntity<>(responseDto, httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 }
