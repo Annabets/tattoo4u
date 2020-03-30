@@ -1,9 +1,11 @@
 package by.bsuir.tattoo4u.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
+@Data
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -15,72 +17,15 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User author;
 
-    private String filename;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "photo_id")
+    private Photo photo;
 
     public Post() {
     }
 
-    public Post(String description, User author, String filename) {
+    public Post(String description, User author) {
         this.description = description;
         this.author = author;
-        this.filename = filename;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public User getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Post post = (Post) o;
-        return id.equals(post.id) &&
-                description.equals(post.description) &&
-                author.equals(post.author) &&
-                filename.equals(post.filename);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, description, author, filename);
-    }
-
-    @Override
-    public String toString() {
-        return "Post{" +
-                "id=" + id +
-                ", description='" + description + '\'' +
-                ", author=" + author +
-                ", filename='" + filename + '\'' +
-                '}';
     }
 }
