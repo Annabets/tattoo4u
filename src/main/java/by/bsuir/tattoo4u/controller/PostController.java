@@ -1,5 +1,6 @@
 package by.bsuir.tattoo4u.controller;
 
+import by.bsuir.tattoo4u.controller.controllerExceptionExtn.EmptyDataException;
 import by.bsuir.tattoo4u.dto.response.PostResponseDto;
 import by.bsuir.tattoo4u.entity.PhotoUpload;
 import by.bsuir.tattoo4u.entity.Post;
@@ -44,6 +45,10 @@ public class PostController {
             @RequestParam("token") String bearerToken
     ) {
         //token validation
+        if (file == null || file.getOriginalFilename().isEmpty()) {
+            throw new EmptyDataException("Uploaded file is empty");
+        }
+
         String token = bearerToken.substring(7); //move to service
 
         String username = tokenService.getUsername(token);
