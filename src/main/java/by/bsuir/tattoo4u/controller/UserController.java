@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -104,7 +105,7 @@ public class UserController {
     }
 
     @GetMapping(value = "currentUser")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MASTER', 'USER')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> getCurrentUser(@RequestHeader("Authorization") String bearerToken) {
 
         String token = null;

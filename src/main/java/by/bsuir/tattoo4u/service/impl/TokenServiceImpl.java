@@ -20,13 +20,13 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public String getUsername(String token) {
-        return jwtTokenProvider.getUsername(token);
+    public Token add(String token) {
+        return tokenRepository.save(new Token(token));
     }
 
     @Override
-    public Token add(String token) {
-        return tokenRepository.save(new Token(token));
+    public String getUsername(String token) {
+        return jwtTokenProvider.getUsername(token);
     }
 
     @Override

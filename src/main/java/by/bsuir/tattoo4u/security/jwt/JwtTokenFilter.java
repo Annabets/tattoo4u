@@ -19,8 +19,8 @@ public class JwtTokenFilter extends GenericFilterBean {
 
     private final static Logger log = LogManager.getLogger(JwtTokenFilter.class);
 
-    private JwtTokenProvider jwtTokenProvider;
-    private TokenService tokenService;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final TokenService tokenService;
 
     @Autowired
     public JwtTokenFilter(JwtTokenProvider jwtTokenProvider, TokenService tokenService) {
