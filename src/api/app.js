@@ -35,10 +35,12 @@ const uploadPhoto = (file, tags, description) => {
 
 const getPhotos = () => fetch(`${API_URL + '/posts'}`, {method: GET, headers: {'Authorization':`Bearer_${getToken()}`}}).then(handleResponse)
 
+const getStudios = () => fetch(`${API_URL + '/getStudios'}`, {method: GET}).then(handleResponse);
 
 export const api = {
   signInUser,
   signUpUser,
   uploadPhoto,
   getPhotos,
+  getStudios,
 };
