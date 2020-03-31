@@ -11,6 +11,10 @@ export function authHeader() {
   }
 }
 
+export function getToken() {
+  return localStorage.getItem(AUTH_KEY);
+}
+
 export function isAuth() {
   return !!localStorage.getItem(AUTH_KEY);
 }

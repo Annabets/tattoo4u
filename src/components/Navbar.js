@@ -7,9 +7,9 @@ import {signOut} from "../containers/User/actions";
 
 
 export default connect(
-  state => {console.log(state);return {
+  state => ({
     username: state.user.username
-  }},
+  }),
     dispatch => ({
       signOut: () => dispatch(signOut())
     })
@@ -24,7 +24,7 @@ export default connect(
       </Nav>
       <Nav>
         {isAuth() ?
-          <NavDropdown title={username} id="profile-nav-dropdown">
+          <NavDropdown bsPrefix="nav-link user-dropdown" title={username} id="profile-nav-dropdown">
             <NavDropdown.Item href={routes.PROFILE}>Your Profile</NavDropdown.Item>
             <NavDropdown.Divider/>
             <NavDropdown.Item onClick={signOut}>Sign Out</NavDropdown.Item>

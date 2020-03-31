@@ -5,7 +5,8 @@ import {Provider} from "react-redux";
 import HomePage from '../containers/HomePage';
 import SignIn from '../containers/User/pages/SignIn';
 import SignUp from "../containers/User/pages/SignUp";
-import {SIGN_IN, SIGN_UP} from "../routes";
+import Profile from '../containers/Profile';
+import {SIGN_IN, SIGN_UP, PROFILE} from "../routes";
 import Navbar from "./Navbar";
 
 export default () => (
@@ -20,6 +21,9 @@ export default () => (
       </Route>
       <Route exact path={SIGN_UP}>
         <SignUp/>
+      </Route>
+      <Route exact path={PROFILE}>
+        <Profile />
       </Route>
     </Router>
   </Provider>
