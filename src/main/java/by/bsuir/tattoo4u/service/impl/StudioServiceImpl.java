@@ -36,7 +36,7 @@ public class StudioServiceImpl implements StudioService {
 
     @Override
     public List<StudioResponseDto> takeByName(String name, Pageable pageable) throws ServiceException {
-        Page<Studio> studios = studioRepository.findAllByName(name, pageable);
+        Page<Studio> studios = studioRepository.findAllByNameContainingIgnoreCase(name, pageable);//studioRepository.findAllByName(name, pageable);
 
         return compileList(studios);
     }
