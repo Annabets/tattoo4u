@@ -84,8 +84,8 @@ public class PostServiceImpl implements PostService {
         return postRepository.findAll();
     }
 
-    @Override
-    public Iterable<Post> takePosts(List<String> tags) throws ServiceException {
-        return postRepository.findByTagsContainingIgnoreCase();
-    }
+//    @Override
+//    public Iterable<Post> takePosts(List<String> tags) throws ServiceException {
+//        return postRepository.findByTagsContainingIgnoreCase();
+//    }
 }

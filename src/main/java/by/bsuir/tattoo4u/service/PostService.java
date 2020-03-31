@@ -13,5 +13,5 @@ public interface PostService {
 
     Iterable<Post> takePosts() throws ServiceException;
 
-    Iterable<Post> takePosts(List<String> tags) throws ServiceException;
+    //Iterable<Post> takePosts(List<String> tags) throws ServiceException;
 }
