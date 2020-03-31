@@ -71,9 +71,10 @@ public class PostController {
 
     }
 
-    @GetMapping("posts")
+    @GetMapping(value = "posts")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<?> posts() {
+
         try {
             Iterable<Post> posts = postService.takePosts();
 
