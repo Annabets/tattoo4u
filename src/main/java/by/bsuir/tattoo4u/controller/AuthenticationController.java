@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -38,7 +39,7 @@ public class AuthenticationController {
         this.tokenService = tokenService;
     }
 
-    @PostMapping("signIn")
+    @PostMapping(value = "signIn")
     public ResponseEntity<?> loginUser(@RequestBody AuthenticationRequestDto requestDto) {
         try {
             //AuthenticationRequestDto requestDto = AuthenticationRequestDto.fromJson(request);
