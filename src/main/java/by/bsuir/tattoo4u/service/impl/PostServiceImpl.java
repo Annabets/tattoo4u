@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -81,5 +82,10 @@ public class PostServiceImpl implements PostService {
 
     public Iterable<Post> takePosts() {
         return postRepository.findAll();
+    }
+
+    @Override
+    public Iterable<Post> takePosts(List<String> tags) throws ServiceException {
+        return postRepository.findByTagsContainingIgnoreCase();
     }
 }

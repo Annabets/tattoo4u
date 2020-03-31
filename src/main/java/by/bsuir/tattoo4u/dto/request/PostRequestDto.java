@@ -7,7 +7,6 @@ import java.util.List;
 
 @Data
 public class PostRequestDto {
-
     private MultipartFile file;
     private String description;
     private List<String> tags;

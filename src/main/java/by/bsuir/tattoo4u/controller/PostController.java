@@ -35,6 +35,7 @@ public class PostController {
     }
 
     @PostMapping(value = "add-post", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<?> addPost(
             @RequestHeader("Authorization") String token,
             @ModelAttribute PostRequestDto postRequestDto
@@ -44,11 +45,9 @@ public class PostController {
 
         String username = tokenService.getUsername(token);
 
-        System.out.println(username);
-
         User user = userService.getByUsername(username);
 
-        Post post = new Post(postRequestDto.getDescription(), user);
+        Post post = new Post(postRequestDto.getDescription(), user, postRequestDto.getTags());
 
         PhotoUpload photoUpload = new PhotoUpload(postRequestDto.getFile());
 
@@ -63,7 +62,6 @@ public class PostController {
     }
 
     @GetMapping(value = "posts")
-    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<?> posts() {
 
         try {
@@ -82,4 +80,15 @@ public class PostController {
             throw new ControllerException(e);
         }
     }
+
+//    @GetMapping(value = "take-posts")
+//    public ResponseEntity<?> takePosts(@ModelAttribute List<String> tags){
+//        try{
+//            postService.takePosts(tags);
+//        } catch (ServiceException e) {
+//
+//        }
+//
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 }
