@@ -1,16 +1,17 @@
 package by.bsuir.tattoo4u.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-public class Post {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
+@NoArgsConstructor
+public class Post extends BaseEntity{
     private String description;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -21,11 +22,12 @@ public class Post {
     @JoinColumn(name = "photo_id")
     private Photo photo;
 
-    public Post() {
-    }
+    @ElementCollection
+    private List<String> tags;
 
-    public Post(String description, User author) {
+    public Post(String description, User author, List<String> tags) {
         this.description = description;
         this.author = author;
+        this.tags = tags;
     }
 }

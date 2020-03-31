@@ -4,7 +4,6 @@ import by.bsuir.tattoo4u.security.jwt.JwtConfigurer;
 import by.bsuir.tattoo4u.security.jwt.JwtTokenProvider;
 import by.bsuir.tattoo4u.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,7 +14,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 @Configuration
@@ -27,6 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String LOGIN_ENDPOINT = "/api/signIn";
     private static final String REGISTRATION_ENDPOINT = "/api/signUp";
+    private static final String POSTS_ENDPOINT = "/api/posts";
 
     @Autowired
     public SecurityConfig(JwtTokenProvider jwtTokenProvider, TokenService tokenService) {
@@ -49,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(LOGIN_ENDPOINT, REGISTRATION_ENDPOINT).permitAll()
+                .antMatchers(LOGIN_ENDPOINT, REGISTRATION_ENDPOINT, POSTS_ENDPOINT).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider, tokenService));
@@ -74,7 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean(name = "multipartResolver")
     public CommonsMultipartResolver multipartResolver() {
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        multipartResolver.setMaxUploadSize(100000);
+        multipartResolver.setMaxUploadSize(100000000);
         return multipartResolver;
     }
 }

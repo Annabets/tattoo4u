@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,28 +35,19 @@ public class PostController {
     }
 
     @PostMapping(value = "add-post", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<?> addPost(
             @RequestHeader("Authorization") String token,
-//            @RequestParam("file") MultipartFile file,
-//            @RequestParam("description") String description,
-//            @RequestParam("tags") List<String> tags,
-//            @RequestParam("token") String bearerToken
             @ModelAttribute PostRequestDto postRequestDto
-            ) {
-
-        System.out.println(postRequestDto);
-        System.out.println(token);
-
+    ) {
         //token validation
-        String token1 = token.substring(7); //move to service
+        token = token.substring(7); //move to service
 
-        String username = tokenService.getUsername(token1);
-
-        System.out.println(username);
+        String username = tokenService.getUsername(token);
 
         User user = userService.getByUsername(username);
 
-        Post post = new Post(postRequestDto.getDescription(), user);
+        Post post = new Post(postRequestDto.getDescription(), user, postRequestDto.getTags());
 
         PhotoUpload photoUpload = new PhotoUpload(postRequestDto.getFile());
 
@@ -72,7 +62,6 @@ public class PostController {
     }
 
     @GetMapping(value = "posts")
-    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<?> posts() {
 
         try {
@@ -91,4 +80,15 @@ public class PostController {
             throw new ControllerException(e);
         }
     }
+
+//    @GetMapping(value = "take-posts")
+//    public ResponseEntity<?> takePosts(@ModelAttribute List<String> tags){
+//        try{
+//            postService.takePosts(tags);
+//        } catch (ServiceException e) {
+//
+//        }
+//
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 }
