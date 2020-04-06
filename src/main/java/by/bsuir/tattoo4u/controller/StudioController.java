@@ -38,7 +38,7 @@ public class StudioController {
         this.tokenService = tokenService;
     }
 
-    @PostMapping("/studioReg")
+    @PostMapping("/studio")
     @PreAuthorize("hasAuthority('MASTER')")
     public ResponseEntity<?> registerStudio(@RequestBody StudioRegistrationRequestDto requestDto,
                                             @RequestHeader("Authorization") String token) {
@@ -60,29 +60,17 @@ public class StudioController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/getStudios")
-    public ResponseEntity<?> takeStudios(
+    @GetMapping("/studio")
+    public ResponseEntity<?> takeStudios(@RequestParam(defaultValue = "") String name,
             @PageableDefault(sort = {"rating"}, direction = Sort.Direction.DESC) Pageable pageable) {
         List<StudioResponseDto> studios;
         try {
-            studios = studioService.takeStudios(pageable);
+            if(name == null || name.equals("")) {
+                studios = studioService.takeStudios(pageable);
+            } else {
+                studios = studioService.takeByName(name, pageable);
+            }
         } catch (ServiceException ex) {
-            throw new ControllerException(ex);
-        }
-        return new ResponseEntity<>(studios, HttpStatus.OK);
-    }
-
-    @GetMapping("/getStudiosByName")
-    public ResponseEntity<?> takeStudiosByName(@RequestBody String request, @PageableDefault Pageable pageable) {
-        List<StudioResponseDto> studios;
-        try {
-            JSONObject json = new JSONObject(request);
-            String name = json.getString("name");
-
-            studios = studioService.takeByName(name, pageable);
-        } catch (ServiceException ex) {
-            throw new ControllerException(ex);
-        } catch (JSONException ex) {
             throw new ControllerException(ex);
         }
         return new ResponseEntity<>(studios, HttpStatus.OK);
