@@ -22,15 +22,12 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-    private final HttpHeaders httpHeaders;
     private final TokenService tokenService;
 
     @Autowired
     public UserController(UserService userService, TokenService tokenService) {
         this.userService = userService;
         this.tokenService = tokenService;
-        this.httpHeaders = new HttpHeaders();
-        httpHeaders.add("Access-Control-Allow-Origin", "*");
     }
 
     @GetMapping
@@ -39,7 +36,7 @@ public class UserController {
         List<User> userList = userService.getAll();
 
         if (userList == null || userList.isEmpty()) {
-            return new ResponseEntity<>(httpHeaders, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
         List<UserResponseDto> userDtoList = new ArrayList<>();
@@ -47,7 +44,7 @@ public class UserController {
             userDtoList.add(UserResponseDto.fromUser(user));
         }
 
-        return new ResponseEntity<>(userDtoList, httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(userDtoList, HttpStatus.OK);
     }
 
     @GetMapping(value = "{id}")
@@ -56,12 +53,12 @@ public class UserController {
         User user = userService.getById(id);
 
         if (user == null) {
-            return new ResponseEntity<>(httpHeaders, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
         UserResponseDto userDto = UserResponseDto.fromUser(user);
 
-        return new ResponseEntity<>(userDto, httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
     @PostMapping(value = "{id}")
@@ -71,7 +68,7 @@ public class UserController {
         RegistrationUserRequestDto requestDto = RegistrationUserRequestDto.fromJson(request);
 
         if (requestDto == null) {
-            return new ResponseEntity<>(httpHeaders, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         User user = null;
@@ -83,12 +80,12 @@ public class UserController {
         }
 
         if (user == null) {
-            return new ResponseEntity<>(httpHeaders, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
         UserResponseDto userDto = UserResponseDto.fromUser(user);
 
-        return new ResponseEntity<>(userDto, httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "{id}")
@@ -101,7 +98,7 @@ public class UserController {
             throw new ControllerException(e.getMessage());
         }
 
-        return new ResponseEntity(httpHeaders, HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping(value = "currentUser")
@@ -118,11 +115,11 @@ public class UserController {
         User user = userService.getByUsername(username);
 
         if (user == null) {
-            return new ResponseEntity<>(httpHeaders, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
         UserResponseDto userDto = UserResponseDto.fromUser(user);
 
-        return new ResponseEntity<>(userDto, httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 }
