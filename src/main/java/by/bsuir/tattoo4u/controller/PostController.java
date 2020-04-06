@@ -74,8 +74,8 @@ public class PostController {
         }
     }
 
-    @GetMapping(value = "take-posts/{user}")
-    public ResponseEntity<?> takeUserPosts(@PathVariable User user){
+    @GetMapping(value = "take-posts/{id}")
+    public ResponseEntity<?> takeUserPosts(@PathVariable("id") User user){
         try {
             Iterable<Post> posts = postService.takePosts(user);
 
@@ -87,16 +87,17 @@ public class PostController {
         }
     }
 
-//    @GetMapping(value = "take-posts")
-//    public ResponseEntity<?> takePosts(@ModelAttribute List<String> tags){
+    @PostMapping(value = "take-posts")
+    public ResponseEntity<?> takePosts(@RequestBody String tags){
 //        try{
 //            postService.takePosts(tags);
+//            return new ResponseEntity<>(HttpStatus.OK);
 //        } catch (ServiceException e) {
-//
+//            throw new ControllerException(e);
 //        }
-//
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     @DeleteMapping(value = "delete-post/{post}")
     public ResponseEntity<?> deletePost(@PathVariable Post post){

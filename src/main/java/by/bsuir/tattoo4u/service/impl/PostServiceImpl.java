@@ -91,6 +91,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public Iterable<Post> takePosts(List<String> tags) throws ServiceException {
+        return postRepository.findByTags(tags);
+    }
+
+    @Override
     public void delete(Post post) throws ServiceException {
         postRepository.delete(post);
     }
