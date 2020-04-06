@@ -35,7 +35,7 @@ public class PostController {
     }
 
     @PostMapping(value = "add-post", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> addPost(
             @RequestHeader("Authorization") String token,
             @ModelAttribute PostRequestDto postRequestDto
@@ -75,7 +75,7 @@ public class PostController {
     }
 
     @GetMapping(value = "take-posts/{id}")
-    public ResponseEntity<?> takeUserPosts(@PathVariable("id") User user){
+    public ResponseEntity<?> takeUserPosts(@PathVariable("id") User user) {
         try {
             Iterable<Post> posts = postService.takePosts(user);
 
@@ -87,20 +87,21 @@ public class PostController {
         }
     }
 
-    @PostMapping(value = "take-posts")
-    public ResponseEntity<?> takePosts(@RequestBody String tags){
-//        try{
-//            postService.takePosts(tags);
-//            return new ResponseEntity<>(HttpStatus.OK);
-//        } catch (ServiceException e) {
-//            throw new ControllerException(e);
-//        }
+    @GetMapping(value = "take-posts")
+    public ResponseEntity<?> takePosts(@RequestParam String tags) {
+        try {
+            Iterable<Post> posts = postService.takePosts(tags);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+            Iterable<PostResponseDto> postDtoList = toDto(posts);
+
+            return new ResponseEntity<>(postDtoList, HttpStatus.OK);
+        } catch (ServiceException e) {
+            throw new ControllerException(e);
+        }
     }
 
     @DeleteMapping(value = "delete-post/{post}")
-    public ResponseEntity<?> deletePost(@PathVariable Post post){
+    public ResponseEntity<?> deletePost(@PathVariable Post post) {
         try {
             postService.delete(post);
             return new ResponseEntity<>(HttpStatus.OK);

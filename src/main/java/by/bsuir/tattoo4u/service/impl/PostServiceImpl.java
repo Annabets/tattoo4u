@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -91,12 +92,17 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Iterable<Post> takePosts(List<String> tags) throws ServiceException {
-        return postRepository.findByTags(tags);
+    public Iterable<Post> takePosts(String tags) throws ServiceException {
+        List<String> tagsList = parseTags(tags);
+        return postRepository.findByTags(tagsList);
     }
 
     @Override
     public void delete(Post post) throws ServiceException {
         postRepository.delete(post);
+    }
+
+    private List<String> parseTags(String tags){
+        return Arrays.asList(tags.split("#"));
     }
 }

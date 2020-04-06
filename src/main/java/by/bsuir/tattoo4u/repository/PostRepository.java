@@ -13,7 +13,7 @@ public interface PostRepository extends CrudRepository<Post, Long> {
 
     Iterable<Post> findByAuthor(User user);
 
-    @Query(nativeQuery = true, value = "SELECT * FROM post WHERE p.id IN (SELECT post_id FROM post_tags WHERE tags IN (:tags))")
+    @Query(nativeQuery = true, value = "SELECT * FROM post WHERE id IN (SELECT post_id FROM post_tags WHERE tags IN (:tags))")
     Iterable<Post> findByTags(@Param("tags") List<String> tags);
 
     //Iterable<Post> findByTagsInContainingIgnoreCase(List<String> tags);
