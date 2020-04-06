@@ -15,4 +15,6 @@ public interface PostService {
     Iterable<Post> takePosts() throws ServiceException;
 
     Iterable<Post> takePosts(User user) throws ServiceException;
+
+    void delete(Post post) throws ServiceException;
 }

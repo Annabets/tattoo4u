@@ -89,4 +89,9 @@ public class PostServiceImpl implements PostService {
     public Iterable<Post> takePosts(User user) throws ServiceException {
         return postRepository.findByAuthor(user);
     }
+
+    @Override
+    public void delete(Post post) throws ServiceException {
+        postRepository.delete(post);
+    }
 }

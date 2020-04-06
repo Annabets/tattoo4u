@@ -98,8 +98,15 @@ public class PostController {
 //        return new ResponseEntity<>(HttpStatus.OK);
 //    }
 
-//    @DeleteMapping(value = "remove-post")
-//    public ResponseEntity<?> deletePost()
+    @DeleteMapping(value = "delete-post/{post}")
+    public ResponseEntity<?> deletePost(@PathVariable Post post){
+        try {
+            postService.delete(post);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (ServiceException e) {
+            throw new ControllerException(e);
+        }
+    }
 
 
     private Iterable<PostResponseDto> toDto(Iterable<Post> posts) {
