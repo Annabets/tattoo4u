@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
-public class Post extends BaseEntity{
+public class Post extends BaseEntity {
     private String description;
 
     @ManyToOne(fetch = FetchType.EAGER)

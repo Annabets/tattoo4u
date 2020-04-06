@@ -2,21 +2,23 @@ package by.bsuir.tattoo4u.service.impl;
 
 import by.bsuir.tattoo4u.entity.Token;
 import by.bsuir.tattoo4u.repository.TokenRepository;
-import by.bsuir.tattoo4u.security.jwt.JwtTokenProvider;
 import by.bsuir.tattoo4u.service.TokenService;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TokenServiceImpl implements TokenService {
 
+    @Value("${jwt.token.secret}")
+    private String secretWord;
+
     private final TokenRepository tokenRepository;
-    private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    public TokenServiceImpl(TokenRepository tokenRepository, JwtTokenProvider jwtTokenProvider) {
+    public TokenServiceImpl(TokenRepository tokenRepository) {
         this.tokenRepository = tokenRepository;
-        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
@@ -26,7 +28,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public String getUsername(String token) {
-        return jwtTokenProvider.getUsername(token);
+        return Jwts.parser().setSigningKey(secretWord).parseClaimsJws(token).getBody().getSubject();
     }
 
     @Override
