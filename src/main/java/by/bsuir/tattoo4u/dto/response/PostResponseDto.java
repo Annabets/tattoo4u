@@ -3,6 +3,7 @@ package by.bsuir.tattoo4u.dto.response;
 import by.bsuir.tattoo4u.entity.Post;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data

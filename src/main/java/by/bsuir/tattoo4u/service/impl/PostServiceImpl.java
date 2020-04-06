@@ -3,6 +3,7 @@ package by.bsuir.tattoo4u.service.impl;
 import by.bsuir.tattoo4u.entity.Photo;
 import by.bsuir.tattoo4u.entity.PhotoUpload;
 import by.bsuir.tattoo4u.entity.Post;
+import by.bsuir.tattoo4u.entity.User;
 import by.bsuir.tattoo4u.repository.PhotoRepository;
 import by.bsuir.tattoo4u.repository.PostRepository;
 import by.bsuir.tattoo4u.service.PostService;
@@ -84,8 +85,8 @@ public class PostServiceImpl implements PostService {
         return postRepository.findAll();
     }
 
-//    @Override
-//    public Iterable<Post> takePosts(List<String> tags) throws ServiceException {
-//        return postRepository.findByTagsContainingIgnoreCase();
-//    }
+    @Override
+    public Iterable<Post> takePosts(User user) throws ServiceException {
+        return postRepository.findByAuthor(user);
+    }
 }

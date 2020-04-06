@@ -58,7 +58,6 @@ public class PostController {
         } catch (ServiceException e) {
             throw new ControllerException(e);
         }
-
     }
 
     @GetMapping(value = "posts")
@@ -67,13 +66,20 @@ public class PostController {
         try {
             Iterable<Post> posts = postService.takePosts();
 
-            List<PostResponseDto> postDtoList = new ArrayList<>();
+            Iterable<PostResponseDto> postDtoList = toDto(posts);
 
-            for (Post post : posts) {
-                PostResponseDto postDto = new PostResponseDto();
-                postDto.fromPost(post);
-                postDtoList.add(postDto);
-            }
+            return new ResponseEntity<>(postDtoList, HttpStatus.OK);
+        } catch (ServiceException e) {
+            throw new ControllerException(e);
+        }
+    }
+
+    @GetMapping(value = "take-posts/{user}")
+    public ResponseEntity<?> takeUserPosts(@PathVariable User user){
+        try {
+            Iterable<Post> posts = postService.takePosts(user);
+
+            Iterable<PostResponseDto> postDtoList = toDto(posts);
 
             return new ResponseEntity<>(postDtoList, HttpStatus.OK);
         } catch (ServiceException e) {
@@ -91,4 +97,20 @@ public class PostController {
 //
 //        return new ResponseEntity<>(HttpStatus.OK);
 //    }
+
+//    @DeleteMapping(value = "remove-post")
+//    public ResponseEntity<?> deletePost()
+
+
+    private Iterable<PostResponseDto> toDto(Iterable<Post> posts) {
+        List<PostResponseDto> postDtoList = new ArrayList<>();
+
+        for (Post post : posts) {
+            PostResponseDto postDto = new PostResponseDto();
+            postDto.fromPost(post);
+            postDtoList.add(postDto);
+        }
+
+        return postDtoList;
+    }
 }
