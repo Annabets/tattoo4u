@@ -2,7 +2,6 @@ package by.bsuir.tattoo4u.security.jwt;
 
 import by.bsuir.tattoo4u.entity.Role;
 import by.bsuir.tattoo4u.service.TokenService;
-import by.bsuir.tattoo4u.service.impl.TokenServiceImpl;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -32,9 +30,9 @@ public class JwtTokenProvider {
     @Autowired
     private TokenService tokenService;
 
-    protected void init() {
-        secretWord = Base64.getEncoder().encodeToString(secretWord.getBytes());
-    }
+//    protected void init() {
+//        secretWord = Base64.getEncoder().encodeToString(secretWord.getBytes());
+//    }
 
     public String createToken(String username, List<Role> roleList) {
 
@@ -53,7 +51,7 @@ public class JwtTokenProvider {
     }
 
     public String getUsername(String token) {
-        return Jwts.parser().setSigningKey(secretWord).parseClaimsJws(token).getBody().getSubject();
+        return tokenService.getUsername(token);
     }
 
 
