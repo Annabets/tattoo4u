@@ -25,6 +25,16 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
+    public String clearBearerToken(String bearerToken) {
+        String token = null;
+        if (bearerToken != null && (bearerToken.startsWith("Bearer_") || bearerToken.startsWith("Bearer "))) {
+            token = bearerToken.substring(7);
+        }
+
+        return token;
+    }
+
+    @Override
     public String getUsername(String token) {
         return jwtTokenProvider.getUsername(token);
     }
@@ -32,8 +42,7 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public void delete(String string) {
         if (tokenRepository.existsByToken(string)) {
-            Token token = tokenRepository.getByToken(string);
-            tokenRepository.deleteById(token.getId());
+            tokenRepository.deleteByToken(string);
         }
     }
 

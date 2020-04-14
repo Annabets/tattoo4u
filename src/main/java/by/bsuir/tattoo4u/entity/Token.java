@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @EqualsAndHashCode(callSuper = true)
 public class Token extends BaseEntity {
 
-    @Column(name = "token")
+    @Column(name = "token", unique = true)
     private String token;
 
     public Token() {

@@ -4,6 +4,8 @@ import by.bsuir.tattoo4u.entity.Token;
 
 public interface TokenService {
 
+    String clearBearerToken(String bearerToken);
+
     String getUsername(String token);
 
     Token add(String token);
