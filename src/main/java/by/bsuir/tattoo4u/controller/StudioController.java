@@ -1,21 +1,19 @@
 package by.bsuir.tattoo4u.controller;
 
-import by.bsuir.tattoo4u.controller.controllerExceptionExtn.IncorrectDataInputException;
+import by.bsuir.tattoo4u.dto.request.AddingMasterRequestDto;
 import by.bsuir.tattoo4u.dto.request.StudioRegistrationRequestDto;
 import by.bsuir.tattoo4u.dto.response.StudioResponseDto;
+import by.bsuir.tattoo4u.dto.response.UserResponseDto;
 import by.bsuir.tattoo4u.entity.Studio;
 import by.bsuir.tattoo4u.entity.User;
 import by.bsuir.tattoo4u.service.ServiceException;
 import by.bsuir.tattoo4u.service.StudioService;
 import by.bsuir.tattoo4u.service.TokenService;
 import by.bsuir.tattoo4u.service.UserService;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -53,6 +51,7 @@ public class StudioController {
             User owner = userService.getByUsername(ownerName);
 
             studio.setOwner(owner);
+            owner.setStudio(studio);
             studioService.add(studio);
         } catch (ServiceException ex) {
             throw new ControllerException(ex);
@@ -61,6 +60,17 @@ public class StudioController {
     }
 
     @GetMapping("/studio")
+    public ResponseEntity<?> takeStudioById(@RequestParam Long studioId) {
+        StudioResponseDto studio;
+        try {
+            studio = studioService.takeStudioById(studioId);
+        } catch (ServiceException ex) {
+            throw new ControllerException(ex);
+        }
+        return new ResponseEntity<>(studio, HttpStatus.OK);
+    }
+
+    @GetMapping("/studios")
     public ResponseEntity<?> takeStudios(@RequestParam(defaultValue = "") String name,
             @PageableDefault(sort = {"rating"}, direction = Sort.Direction.DESC) Pageable pageable) {
         List<StudioResponseDto> studios;
@@ -74,5 +84,39 @@ public class StudioController {
             throw new ControllerException(ex);
         }
         return new ResponseEntity<>(studios, HttpStatus.OK);
+    }
+
+    @PostMapping("/master")
+    @PreAuthorize("hasAuthority('MASTER')")
+    public ResponseEntity<?> addMaster(@RequestBody AddingMasterRequestDto requestDto) {
+        User master = userService.getById(requestDto.getMasterId());
+        try {
+            studioService.addMaster(master, requestDto.getStudioId());
+        } catch (ServiceException ex) {
+            throw new ControllerException(ex);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/masters")
+    public ResponseEntity<?> takeMastersInStudio(@RequestParam String name) {
+        List<UserResponseDto> masters;
+        try {
+            masters = studioService.takeMasters(name);
+        } catch (ServiceException ex) {
+            throw new ControllerException(ex);
+        }
+        return new ResponseEntity<>(masters, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/master")
+    public ResponseEntity<?> dismissMasterFromStudio(@RequestBody AddingMasterRequestDto requestDto) {
+        User master = userService.getById(requestDto.getMasterId());
+        try {
+            studioService.removeMaster(master, requestDto.getStudioId());
+        } catch (ServiceException ex) {
+            throw new ControllerException(ex);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
