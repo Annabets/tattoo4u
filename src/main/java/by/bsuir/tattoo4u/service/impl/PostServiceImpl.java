@@ -42,8 +42,6 @@ public class PostServiceImpl implements PostService {
     }
 
     public void savePhoto(Post post, PhotoUpload photoUpload) throws ServiceException {
-        //PhotoUploadValidator validator = new PhotoUploadValidator();
-        //validator.validate(photoUpload, result);
         cloudinary.config.cloudName = cloudName;
         cloudinary.config.apiSecret = apiSecret;
         cloudinary.config.apiKey = apiKey;
@@ -51,7 +49,7 @@ public class PostServiceImpl implements PostService {
         try {
             Map uploadResult = cloudinary.uploader().upload(
                     photoUpload.getFile().getBytes(),
-                    ObjectUtils.asMap("resource_type", "auto")
+                    ObjectUtils.asMap("resource_type", "image")
             );
 
             photoUpload.setPublicId((String) uploadResult.get("public_id"));
@@ -73,7 +71,7 @@ public class PostServiceImpl implements PostService {
             photoRepository.save(photo);
 
             post.setPhoto(photo);
-        } catch (IOException e) {
+        } catch (IOException | RuntimeException e) {
             throw new ServiceException(e);
         }
     }
@@ -102,7 +100,7 @@ public class PostServiceImpl implements PostService {
         postRepository.delete(post);
     }
 
-    private List<String> parseTags(String tags){
+    private List<String> parseTags(String tags) {
         return Arrays.asList(tags.split("#"));
     }
 }
