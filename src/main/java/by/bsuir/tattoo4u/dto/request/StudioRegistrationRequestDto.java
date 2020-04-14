@@ -2,10 +2,8 @@ package by.bsuir.tattoo4u.dto.request;
 
 import by.bsuir.tattoo4u.entity.Studio;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode()
 public class StudioRegistrationRequestDto {
     private String name;
     private String description;
