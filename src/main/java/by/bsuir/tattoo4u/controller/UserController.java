@@ -1,17 +1,24 @@
 package by.bsuir.tattoo4u.controller;
 
 import by.bsuir.tattoo4u.dto.request.RegistrationUserRequestDto;
+import by.bsuir.tattoo4u.dto.request.UpdateUserRequestDto;
+import by.bsuir.tattoo4u.dto.response.AuthenticationResponseDto;
 import by.bsuir.tattoo4u.dto.response.UserResponseDto;
 import by.bsuir.tattoo4u.entity.User;
+import by.bsuir.tattoo4u.security.jwt.JwtTokenProvider;
 import by.bsuir.tattoo4u.service.ServiceException;
 import by.bsuir.tattoo4u.service.TokenService;
 import by.bsuir.tattoo4u.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -63,18 +70,22 @@ public class UserController {
 
     @PostMapping(value = "{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<UserResponseDto> updateUserById(@PathVariable(name = "id") Long id, @RequestBody String request) {
-
-        RegistrationUserRequestDto requestDto = RegistrationUserRequestDto.fromJson(request);
+    public ResponseEntity<?> updateUserById(@RequestHeader("Authorization") String bearerToken, @PathVariable(name = "id") Long id, @RequestBody UpdateUserRequestDto requestDto) {
 
         if (requestDto == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        String token=tokenService.clearBearerToken(bearerToken);
+
+        if(tokenService.getUsername(token).equals(userService.getById(id).getUsername())){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         User user = null;
 
         try {
-            user = userService.updateById(id, requestDto.getUser(), requestDto.getRole());
+            user = userService.updateById(id, requestDto.getUser());
         } catch (ServiceException e) {
             throw new ControllerException(e);
         }
@@ -83,22 +94,22 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        UserResponseDto userDto = UserResponseDto.fromUser(user);
+        UserResponseDto responseDto=new UserResponseDto(user);
 
-        return new ResponseEntity<>(userDto, HttpStatus.OK);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity deleteUserById(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<?> deleteUserById(@PathVariable(name = "id") Long id) {
 
         try {
             userService.delete(id);
         } catch (ServiceException e) {
-            throw new ControllerException(e.getMessage());
+            throw new ControllerException(e);
         }
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping(value = "currentUser")
@@ -121,5 +132,19 @@ public class UserController {
         UserResponseDto userDto = UserResponseDto.fromUser(user);
 
         return new ResponseEntity<>(userDto, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "masters")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> getAllMasters(@PageableDefault(sort = "username", direction = Sort.Direction.ASC) Pageable pageable){
+
+        List<User> userList=userService.getAllMasters(pageable);
+
+        List<UserResponseDto> userResponseDto=new ArrayList<>();
+        for (User user: userList){
+            userResponseDto.add(new UserResponseDto(user));
+        }
+
+        return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
     }
 }
