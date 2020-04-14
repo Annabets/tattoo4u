@@ -10,6 +10,15 @@ public class UserResponseDto {
     private String username;
     private String email;
 
+    public UserResponseDto() {
+    }
+
+    public UserResponseDto(User user) {
+        this.id = user.getId();
+        this.username = user.getUsername();
+        this.email = user.getEmail();
+    }
+
     public User toUser() {
         User user = new User();
         user.setId(id);
