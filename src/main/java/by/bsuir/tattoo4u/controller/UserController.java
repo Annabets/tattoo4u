@@ -30,13 +30,11 @@ public class UserController {
 
     private final UserService userService;
     private final TokenService tokenService;
-    private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    public UserController(UserService userService, TokenService tokenService, JwtTokenProvider jwtTokenProvider) {
+    public UserController(UserService userService, TokenService tokenService) {
         this.userService = userService;
         this.tokenService = tokenService;
-        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @GetMapping
