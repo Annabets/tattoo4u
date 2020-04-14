@@ -14,7 +14,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -26,7 +25,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String LOGIN_ENDPOINT = "/api/signIn";
     private static final String REGISTRATION_ENDPOINT = "/api/signUp";
     private static final String POSTS_ENDPOINT = "/api/posts";
+    private static final String STUDIOS = "/api/studios";
     private static final String STUDIO = "/api/studio";
+    private static final String GET_MASTERS = "/api/masters/**";
 
     @Autowired
     public SecurityConfig(JwtTokenProvider jwtTokenProvider, TokenService tokenService) {
@@ -49,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(LOGIN_ENDPOINT, REGISTRATION_ENDPOINT, POSTS_ENDPOINT, STUDIO).permitAll()
+                .antMatchers(LOGIN_ENDPOINT, REGISTRATION_ENDPOINT, POSTS_ENDPOINT, STUDIO, GET_MASTERS, STUDIOS).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider, tokenService));
@@ -69,12 +70,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }
-
-    @Bean(name = "multipartResolver")
-    public CommonsMultipartResolver multipartResolver() {
-        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        multipartResolver.setMaxUploadSize(100000000);
-        return multipartResolver;
     }
 }

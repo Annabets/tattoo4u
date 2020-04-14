@@ -1,9 +1,10 @@
 package by.bsuir.tattoo4u.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -12,8 +13,10 @@ public class Studio extends BaseEntity {
 
     private String name;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "owner_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private User owner;
 
     private Double rating;
@@ -22,11 +25,14 @@ public class Studio extends BaseEntity {
 
     private String address;
 
-    //    @OneToMany(fetch = FetchType.EAGER)
-//    private List<Contact> contacts;
     private String contact;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "job_id")
+    private List<Master> masters;
+
     public Studio() {
+        masters = new ArrayList<>();
     }
 
     public Studio(String name, String description, String address, String contact) {

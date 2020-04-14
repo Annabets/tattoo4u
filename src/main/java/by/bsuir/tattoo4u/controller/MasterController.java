@@ -1,23 +1,16 @@
 package by.bsuir.tattoo4u.controller;
 
-import by.bsuir.tattoo4u.dto.request.RegistrationMasterRequestDto;
-import by.bsuir.tattoo4u.dto.request.UsernameRequestDto;
 import by.bsuir.tattoo4u.dto.response.MasterResponseDto;
-import by.bsuir.tattoo4u.dto.response.UserResponseDto;
 import by.bsuir.tattoo4u.entity.Master;
 import by.bsuir.tattoo4u.entity.RoleType;
 import by.bsuir.tattoo4u.entity.User;
-import by.bsuir.tattoo4u.repository.MasterRepository;
 import by.bsuir.tattoo4u.service.MasterService;
-import by.bsuir.tattoo4u.service.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -35,7 +28,6 @@ public class MasterController {
     }
 
     @GetMapping
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> getMasterByUsername(@PageableDefault(sort = "rating", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam(required = false) String name) {
 
         List<Master> masterList = new ArrayList<>();
@@ -54,7 +46,6 @@ public class MasterController {
     }
 
     @GetMapping("{id}")
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> getMasterById(@PathVariable("id") User user) {
 
         if (user == null) {

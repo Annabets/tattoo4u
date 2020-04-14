@@ -9,4 +9,8 @@ public interface StudioRepository extends JpaRepository<Studio, Long> {
     Page<Studio> findAll(Pageable pageable);
 
     Page<Studio> findAllByNameContainingIgnoreCase(String name, Pageable pageable);
+
+    Studio getById(Long id);
+
+    void deleteById(Long id);
 }
