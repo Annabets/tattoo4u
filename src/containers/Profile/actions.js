@@ -12,6 +12,7 @@ export function uploadPhoto(file, tags, description) {
           type: constants.UPLOAD_PHOTO_SUCCESS,
           userData,
         })
+        window.location.reload();
       },
       errorMessage => {
         dispatch({

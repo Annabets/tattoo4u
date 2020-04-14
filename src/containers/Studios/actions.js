@@ -23,17 +23,18 @@ export function getStudios(searchString) {
   }
 }
 
-export function registerStudio() {
+export function registerStudio(data) {
   return dispatch => {
     dispatch({
       type: constants.REGISTER_STUDIO_REQUEST,
     });
-    api.registerStudio().then(
+    api.registerStudio(data).then(
       userData => {
         dispatch({
           type: constants.REGISTER_STUDIO_SUCCESS,
           userData,
         })
+        window.location.reload();
       },
       errorMessage => {
         dispatch({

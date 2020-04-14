@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from "react-redux";
 import { Card, Form, FormControl, Button } from 'react-bootstrap';
-import {getStudios, registerStudio} from "../Studios/actions";
+import {getStudios} from "../Studios/actions";
 import {STUDIOS} from "../../routes";
 import StudioLogo from '../../assets/images/tattoo-machine-logo-vector.jpg';
 
@@ -66,5 +66,4 @@ export default connect(
   }),
   dispatch => ({
     getStudios: (searchString) => dispatch(getStudios(searchString)),
-    registerStudio: () => dispatch(registerStudio())
   }))(Studios);
