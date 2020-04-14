@@ -4,11 +4,13 @@ import {profileReducer} from "./containers/Profile/reducer";
 import {homePageReducer} from "./containers/HomePage/reducer";
 import {studiosReducer} from "./containers/Studios/reducer";
 import {photoGridReducer} from "./containers/PhotoGrid/reducer";
+import {studioReducer} from "./containers/Studio/reducer";
 
 export const rootReducer = combineReducers({
   user: userReducer,
   profile: profileReducer,
   homePage: homePageReducer,
   studios: studiosReducer,
+  studio: studioReducer,
   photoGrid: photoGridReducer,
 });

@@ -1,5 +1,5 @@
 import * as constants from './constants';
-import {AUTH_KEY, EMAIL, USER_NAME} from "../../constants";
+import {AUTH_KEY, EMAIL, ROLE, USER_ID, USER_NAME} from "../../constants";
 
 const initialState = {
   id: '',
@@ -20,12 +20,15 @@ export function userReducer(state = initialState, action) {
       localStorage.setItem(AUTH_KEY, action.userData.token);
       localStorage.setItem(USER_NAME, action.userData.username);
       localStorage.setItem(EMAIL, action.userData.email);
+      localStorage.setItem(USER_ID, action.userData.id);
+      localStorage.setItem(ROLE, action.userData.role);
       return {
         ...state,
         isLoadingUserData: false,
         id: action.userData.id,
         email: action.userData.email,
-        username: action.userData.username
+        username: action.userData.username,
+        role: action.userData.role,
       };
     case constants.SIGN_UP_USER_FAILURE:
     case constants.SIGN_IN_USER_FAILURE:
@@ -34,6 +37,8 @@ export function userReducer(state = initialState, action) {
       localStorage.removeItem(AUTH_KEY);
       localStorage.removeItem(USER_NAME);
       localStorage.removeItem(EMAIL);
+      localStorage.removeItem(USER_ID);
+      localStorage.removeItem(ROLE);
       return initialState;
     default:
       return state;

@@ -10,8 +10,8 @@ class PhotoGrid extends React.Component {
     }
 
     handleGetMorePhotos = () => {
-        const {isSearchPage, searchQuery, getMorePhotos} = this.props;
-        isSearchPage? getMorePhotos(searchQuery):getMorePhotos();
+        const {getMorePhotos} = this.props;
+        getMorePhotos();
     }
 
     renderColumn=(colNum,colLen)=>{

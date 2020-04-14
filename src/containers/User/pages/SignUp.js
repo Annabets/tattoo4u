@@ -32,7 +32,7 @@ class SignUp extends React.Component {
         <Nav.Link eventKey="USER">User</Nav.Link>
       </Nav.Item>
       <Nav.Item>
-        <Nav.Link eventKey="MATER">Tattoo master</Nav.Link>
+        <Nav.Link eventKey="MASTER">Tattoo master</Nav.Link>
       </Nav.Item>
     </Nav>
   )

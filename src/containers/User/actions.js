@@ -1,6 +1,5 @@
 import * as constants from './constants';
 import  {api} from "../../api/app";
-import {AUTH_KEY} from "../../constants";
 
 export function signIn(data) {
   return dispatch => {
@@ -50,10 +49,11 @@ export function signUp(data) {
 
 export function signOut() {
   return dispatch => {
-    dispatch({
-      type: constants.SIGN_OUT_USER
-    });
-    window.location.replace('/');
+    api.signOutUser().then(() => {
+      dispatch({
+        type: constants.SIGN_OUT_USER
+      });
+      window.location.replace('/')
+    })
   }
-
 }

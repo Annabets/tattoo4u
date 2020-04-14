@@ -7,6 +7,7 @@ import SignIn from '../containers/User/pages/SignIn';
 import SignUp from "../containers/User/pages/SignUp";
 import Profile from '../containers/Profile';
 import Studios from '../containers/Studios';
+import Studio from '../containers/Studio';
 import {SIGN_IN, SIGN_UP, PROFILE, STUDIOS} from "../routes";
 import Navbar from "./Navbar";
 
@@ -26,9 +27,10 @@ export default () => (
       <Route exact path={PROFILE}>
         <Profile />
       </Route>
-      <Route path={STUDIOS}>
+      <Route exact path={STUDIOS}>
         <Studios />
       </Route>
+      <Route path={`${STUDIOS}/:studioId`} component={Studio}/>
     </Router>
   </Provider>
 );

@@ -4,12 +4,7 @@ import {getToken} from "../utils";
 
 const handleResponse = resp =>
   resp.text()
-    .then(text => {
-      if (!resp.ok)
-        return Promise.reject(resp.statusText);
-      else
-        return Promise.resolve(JSON.parse(text));
-    })
+    .then(text => Promise.resolve(JSON.parse(text)))
     .catch(error => Promise.reject(error.message));
 
 
@@ -35,7 +30,41 @@ const uploadPhoto = (file, tags, description) => {
 
 const getPhotos = () => fetch(`${API_URL + '/posts'}`, {method: GET, headers: {'Authorization':`Bearer_${getToken()}`}}).then(handleResponse)
 
-const getStudios = () => fetch(`${API_URL + '/getStudios'}`, {method: GET}).then(handleResponse);
+const getStudios = searchString => fetch(`${API_URL + '/studios' + (searchString ? `?name=${searchString}` : '')}`, {method: GET}).then(handleResponse);
+
+const getStudioData = studioId => fetch(API_URL + `/studio?studioId=${studioId}`, {method: GET}).then(handleResponse);
+
+const registerStudio = data => fetch(`${API_URL + '/studio'}`, {
+  method: POST,
+  headers: {
+    'Authorization':`Bearer_${getToken()}`,
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(data)
+}).then(handleResponse);
+
+const getMasters = () => fetch(`${API_URL + '/users/masters'}`, {method: GET, headers:{'Authorization':`Bearer_${getToken()}`}}).then(handleResponse);
+
+const registerMaster = data => fetch(API_URL + '/master', {
+  method: POST,
+  headers: {
+    'Authorization':`Bearer_${getToken()}`,
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(data),
+})
+
+const signOutUser = () => fetch(`${API_URL + '/signOut'}`, {method: GET, headers:{'Authorization':`Bearer_${getToken()}`}}).then(handleResponse);
+
+const getCurrentUser = () => fetch(
+  API_URL + '/users/currentUser',
+  {
+    method: GET,
+    headers: {
+      'Authorization':`Bearer_${getToken()}`
+    }
+  }
+).then(handleResponse);
 
 export const api = {
   signInUser,
@@ -43,4 +72,10 @@ export const api = {
   uploadPhoto,
   getPhotos,
   getStudios,
+  getStudioData,
+  signOutUser,
+  registerStudio,
+  getCurrentUser,
+  getMasters,
+  registerMaster
 };
