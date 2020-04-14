@@ -11,7 +11,7 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class Master extends BaseEntity{
+public class Master extends BaseEntity {
 
     @JsonIgnore
     @OneToOne(fetch = FetchType.EAGER)
@@ -22,4 +22,10 @@ public class Master extends BaseEntity{
 
     @Column(name = "rating")
     private Double rating;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "job_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Studio job;
 }
