@@ -2,8 +2,9 @@ package by.bsuir.tattoo4u.controller;
 
 import by.bsuir.tattoo4u.dto.request.AddingMasterRequestDto;
 import by.bsuir.tattoo4u.dto.request.StudioRegistrationRequestDto;
+import by.bsuir.tattoo4u.dto.response.MasterResponseDto;
 import by.bsuir.tattoo4u.dto.response.StudioResponseDto;
-import by.bsuir.tattoo4u.dto.response.UserResponseDto;
+import by.bsuir.tattoo4u.dto.response.StudioWithMastersResponseDto;
 import by.bsuir.tattoo4u.entity.Studio;
 import by.bsuir.tattoo4u.entity.User;
 import by.bsuir.tattoo4u.service.ServiceException;
@@ -59,11 +60,25 @@ public class StudioController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @DeleteMapping("/studio")
+    @PreAuthorize("hasAnyAuthority('MASTER')")
+    public ResponseEntity<?> removeStudio(@RequestParam Long studioId) {
+        try {
+            studioService.removeStudio(studioId);
+        } catch (ServiceException ex) {
+            throw new ControllerException(ex);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @GetMapping("/studio")
     public ResponseEntity<?> takeStudioById(@RequestParam Long studioId) {
-        StudioResponseDto studio;
+        StudioWithMastersResponseDto studio;
         try {
-            studio = studioService.takeStudioById(studioId);
+            Studio tempStudio = studioService.takeStudioById(studioId);
+            List<MasterResponseDto> masters = studioService.takeMasters(studioId);
+
+            studio = new StudioWithMastersResponseDto(tempStudio, masters);
         } catch (ServiceException ex) {
             throw new ControllerException(ex);
         }
@@ -72,10 +87,10 @@ public class StudioController {
 
     @GetMapping("/studios")
     public ResponseEntity<?> takeStudios(@RequestParam(defaultValue = "") String name,
-            @PageableDefault(sort = {"rating"}, direction = Sort.Direction.DESC) Pageable pageable) {
+                                         @PageableDefault(sort = {"rating"}, direction = Sort.Direction.DESC) Pageable pageable) {
         List<StudioResponseDto> studios;
         try {
-            if(name == null || name.equals("")) {
+            if (name == null || name.equals("")) {
                 studios = studioService.takeStudios(pageable);
             } else {
                 studios = studioService.takeByName(name, pageable);
@@ -98,11 +113,11 @@ public class StudioController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/masters")
-    public ResponseEntity<?> takeMastersInStudio(@RequestParam String name) {
-        List<UserResponseDto> masters;
+    @GetMapping("/mastersInStudio")
+    public ResponseEntity<?> takeMastersInStudio(@RequestParam Long studioId) {
+        List<MasterResponseDto> masters;
         try {
-            masters = studioService.takeMasters(name);
+            masters = studioService.takeMasters(studioId);
         } catch (ServiceException ex) {
             throw new ControllerException(ex);
         }

@@ -1,7 +1,8 @@
 package by.bsuir.tattoo4u.service.impl;
 
+import by.bsuir.tattoo4u.dto.response.MasterResponseDto;
 import by.bsuir.tattoo4u.dto.response.StudioResponseDto;
-import by.bsuir.tattoo4u.dto.response.UserResponseDto;
+import by.bsuir.tattoo4u.entity.Master;
 import by.bsuir.tattoo4u.entity.Studio;
 import by.bsuir.tattoo4u.entity.User;
 import by.bsuir.tattoo4u.repository.StudioRepository;
@@ -33,9 +34,8 @@ public class StudioServiceImpl implements StudioService {
     }
 
     @Override
-    public StudioResponseDto takeStudioById(Long id) throws ServiceException {
-        Studio studio = studioRepository.getById(id);
-        return StudioResponseDto.fromStudio(studio);
+    public Studio takeStudioById(Long id) throws ServiceException {
+        return studioRepository.getById(id);
     }
 
     @Override
@@ -54,42 +54,51 @@ public class StudioServiceImpl implements StudioService {
 
     private List<StudioResponseDto> compileStudioResponseList(Page<Studio> studios) {
         List<StudioResponseDto> page = new LinkedList<>();
-        for (Studio studio: studios) {
-            page.add(StudioResponseDto.fromStudio(studio));
+        for (Studio studio : studios) {
+            page.add(new StudioResponseDto(studio));
         }
         return page;
     }
 
     @Override
     public void addMaster(User master, Long studioId) throws ServiceException {
-        //User master = userService.getById(masterId);
         Studio studio = studioRepository.getById(studioId);
 
-        studio.getMasters().add(master);
+        studio.getMasters().add(master.getMasterInfo());
         studioRepository.save(studio);
     }
 
     @Override
-    public void removeMaster(User master, Long studioId) throws ServiceException {
-        //User master = userService.getById(masterId);
+    public void removeMaster(User user, Long studioId) throws ServiceException {
+        Master master = user.getMasterInfo();
         Studio studio = studioRepository.getById(studioId);
 
-        studio.getMasters().remove(master);
+        List<Master> masters = studio.getMasters();//.remove(master);
+        masters.remove(master);
+        studio.setMasters(masters);
         studioRepository.save(studio);
     }
 
     @Override
-    public List<UserResponseDto> takeMasters(String studioName) throws ServiceException {
-        Studio studio = studioRepository.getByName(studioName);
-        List<User> masters = studio.getMasters();
+    public List<MasterResponseDto> takeMasters(Long studioId) throws ServiceException {
+        Studio studio = studioRepository.getById(studioId);
+        List<Master> masters = studio.getMasters();
         return compileMastersList(masters);
     }
 
-    private List<UserResponseDto> compileMastersList(List<User> mastersList) {
-        List<UserResponseDto> masters = new LinkedList<>();
-        for (User master: mastersList) {
-            masters.add(UserResponseDto.fromUser(master));
+    private List<MasterResponseDto> compileMastersList(List<Master> mastersList) {
+        List<MasterResponseDto> masters = new LinkedList<>();
+        for (Master master : mastersList) {
+            masters.add(new MasterResponseDto(master));
         }
         return masters;
+    }
+
+    @Override
+    public void removeStudio(Long id) throws ServiceException {
+        User owner = studioRepository.getById(id).getOwner();
+        owner.setStudio(null);
+
+        studioRepository.deleteById(id);
     }
 }

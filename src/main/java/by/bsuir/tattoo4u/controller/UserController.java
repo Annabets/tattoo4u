@@ -1,11 +1,9 @@
 package by.bsuir.tattoo4u.controller;
 
-import by.bsuir.tattoo4u.dto.request.RegistrationUserRequestDto;
 import by.bsuir.tattoo4u.dto.request.UpdateUserRequestDto;
-import by.bsuir.tattoo4u.dto.response.AuthenticationResponseDto;
 import by.bsuir.tattoo4u.dto.response.UserResponseDto;
+import by.bsuir.tattoo4u.dto.response.UserWithRoleResponseDto;
 import by.bsuir.tattoo4u.entity.User;
-import by.bsuir.tattoo4u.security.jwt.JwtTokenProvider;
 import by.bsuir.tattoo4u.service.ServiceException;
 import by.bsuir.tattoo4u.service.TokenService;
 import by.bsuir.tattoo4u.service.UserService;
@@ -13,12 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -76,9 +71,9 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        String token=tokenService.clearBearerToken(bearerToken);
+        String token = tokenService.clearBearerToken(bearerToken);
 
-        if(tokenService.getUsername(token).equals(userService.getById(id).getUsername())){
+        if (tokenService.getUsername(token).equals(userService.getById(id).getUsername())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -94,7 +89,7 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        UserResponseDto responseDto=new UserResponseDto(user);
+        UserResponseDto responseDto = new UserResponseDto(user);
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
@@ -129,19 +124,19 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        UserResponseDto userDto = UserResponseDto.fromUser(user);
+        UserWithRoleResponseDto userDto = new UserWithRoleResponseDto(user);
 
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
     @GetMapping(value = "masters")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> getAllMasters(@PageableDefault(sort = "username", direction = Sort.Direction.ASC) Pageable pageable){
+    public ResponseEntity<?> getAllMasters(@PageableDefault(sort = "username", direction = Sort.Direction.ASC) Pageable pageable) {
 
-        List<User> userList=userService.getAllMasters(pageable);
+        List<User> userList = userService.getAllMasters(pageable);
 
-        List<UserResponseDto> userResponseDto=new ArrayList<>();
-        for (User user: userList){
+        List<UserResponseDto> userResponseDto = new ArrayList<>();
+        for (User user : userList) {
             userResponseDto.add(new UserResponseDto(user));
         }
 
