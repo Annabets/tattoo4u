@@ -14,7 +14,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -71,12 +70,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }
-
-    @Bean(name = "multipartResolver")
-    public CommonsMultipartResolver multipartResolver() {
-        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        multipartResolver.setMaxUploadSize(100000000);
-        return multipartResolver;
     }
 }
