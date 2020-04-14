@@ -43,7 +43,7 @@ const registerStudio = data => fetch(`${API_URL + '/studio'}`, {
   body: JSON.stringify(data)
 }).then(handleResponse);
 
-const getMasters = () => fetch(`${API_URL + '/users/masters'}`, {method: GET, headers:{'Authorization':`Bearer_${getToken()}`}}).then(handleResponse);
+const getMasters = searchString => fetch(`${API_URL + '/users/masters' + (searchString ? `?name=${searchString}` : '')}`, {method: GET, headers:{'Authorization':`Bearer_${getToken()}`}}).then(handleResponse);
 
 const registerMaster = data => fetch(API_URL + '/master', {
   method: POST,
