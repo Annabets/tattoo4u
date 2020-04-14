@@ -4,7 +4,7 @@ import {getToken} from "../utils";
 
 const handleResponse = resp =>
   resp.text()
-    .then(text => Promise.resolve(JSON.parse(text)))
+    .then(text => resp.ok ? Promise.resolve(JSON.parse(text)) : Promise.reject(text))
     .catch(error => Promise.reject(error.message));
 
 
