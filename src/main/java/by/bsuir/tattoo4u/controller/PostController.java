@@ -35,7 +35,7 @@ public class PostController {
     }
 
     @PostMapping(value = "add-post", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('MASTER')")
     public ResponseEntity<?> addPost(
             @RequestHeader("Authorization") String token,
             @ModelAttribute PostRequestDto postRequestDto
@@ -62,7 +62,6 @@ public class PostController {
 
     @GetMapping(value = "posts")
     public ResponseEntity<?> posts() {
-
         try {
             Iterable<Post> posts = postService.takePosts();
 
@@ -77,11 +76,15 @@ public class PostController {
     @GetMapping(value = "take-posts/{id}")
     public ResponseEntity<?> takeUserPosts(@PathVariable("id") User user) {
         try {
-            Iterable<Post> posts = postService.takePosts(user);
+            if (user != null) {
+                Iterable<Post> posts = postService.takePosts(user);
 
-            Iterable<PostResponseDto> postDtoList = toDto(posts);
+                Iterable<PostResponseDto> postDtoList = toDto(posts);
 
-            return new ResponseEntity<>(postDtoList, HttpStatus.OK);
+                return new ResponseEntity<>(postDtoList, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         } catch (ServiceException e) {
             throw new ControllerException(e);
         }
@@ -103,13 +106,16 @@ public class PostController {
     @DeleteMapping(value = "delete-post/{post}")
     public ResponseEntity<?> deletePost(@PathVariable Post post) {
         try {
-            postService.delete(post);
-            return new ResponseEntity<>(HttpStatus.OK);
+            if (post != null) {
+                postService.delete(post);
+                return new ResponseEntity<>(HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         } catch (ServiceException e) {
             throw new ControllerException(e);
         }
     }
-
 
     private Iterable<PostResponseDto> toDto(Iterable<Post> posts) {
         List<PostResponseDto> postDtoList = new ArrayList<>();
