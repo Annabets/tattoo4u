@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ExceptionController {
 
-
     @ExceptionHandler(value = BadCredentialsException.class)
     public ResponseEntity<ErrorMessageDto> handle(final BadCredentialsException exception) {
         ErrorMessageDto message = new ErrorMessageDto(exception);

@@ -36,26 +36,17 @@ public class MasterController {
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> getAllMasters(@PageableDefault(sort = "rating", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<?> getMasterByUsername(@PageableDefault(sort = "rating", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam(required = false) String name) {
 
-        List<Master> masterList=masterService.getAll(pageable);
-
-        List<MasterResponseDto> masterResponseDto=new ArrayList<>();
-        for (Master master: masterList){
-            masterResponseDto.add(new MasterResponseDto(master));
+        List<Master> masterList = new ArrayList<>();
+        if (name == null) {
+            masterList = masterService.getAll(pageable);
+        } else {
+            masterList = masterService.getAllUsernameContain(name, pageable);
         }
 
-        return new ResponseEntity<>(masterResponseDto, HttpStatus.OK);
-    }
-
-    @PostMapping("/getByUsername")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> getMasterByUsername(@PageableDefault(sort = "rating", direction = Sort.Direction.DESC) Pageable pageable, @RequestBody @Validated UsernameRequestDto requestDto){
-
-        List<Master> masterList=masterService.getAllUsernameContain(requestDto.getUsername(), pageable);
-
-        List<MasterResponseDto> masterResponseDto=new ArrayList<>();
-        for (Master master: masterList){
+        List<MasterResponseDto> masterResponseDto = new ArrayList<>();
+        for (Master master : masterList) {
             masterResponseDto.add(new MasterResponseDto(master));
         }
 
@@ -64,16 +55,16 @@ public class MasterController {
 
     @GetMapping("{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> getMasterById(@PathVariable("id") User user){
+    public ResponseEntity<?> getMasterById(@PathVariable("id") User user) {
 
-        if(user==null){
+        if (user == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        MasterResponseDto masterResponseDto=null;
-        if(user.getRoles().get(0).getName().equals(RoleType.MASTER.name())) {
+        MasterResponseDto masterResponseDto = null;
+        if (user.getRoles().get(0).getName().equals(RoleType.MASTER.name())) {
             masterResponseDto = new MasterResponseDto(user.getMasterInfo());
-        }else{
+        } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
