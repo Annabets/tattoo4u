@@ -7,6 +7,7 @@ import by.bsuir.tattoo4u.repository.UserRepository;
 import by.bsuir.tattoo4u.service.ServiceException;
 import by.bsuir.tattoo4u.service.UserService;
 import by.bsuir.tattoo4u.service.validator.UserDataValidator;
+import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -47,7 +48,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateById(Long id, User user, String roleName) throws ServiceException {
+    public List<User> getAllMasters(Pageable pageable) {
+        return userRepository.getAllByRolesContaining(roleRepository.findByName("MASTER"), pageable);
+    }
+
+    @Override
+    public User updateById(Long id, User user) throws ServiceException {
 
         User updateUser = userRepository.findById(id).orElse(null);
 
@@ -55,7 +61,13 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("No user with (" + id + ") id");
         }
 
-        refactorUser(user, roleName);
+        if (!UserDataValidator.isValidUsername(user)) {
+            throw new ServiceException("Incorrect username");
+        }
+
+        if (!UserDataValidator.isValidEmail(user)) {
+            throw new ServiceException("Incorrect email");
+        }
 
         if (userRepository.existsByUsernameAndIdNot(user.getUsername(), id)) {
             throw new ServiceException("Username is already taken");
@@ -64,9 +76,10 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Email has already in use");
         }
 
-        user.setId(id);
+        updateUser.setUsername(user.getUsername());
+        updateUser.setEmail(user.getEmail());
 
-        User result = userRepository.save(user);
+        User result = userRepository.save(updateUser);
 
         return result;
     }
@@ -109,6 +122,12 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Incorrect password");
         }
 
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        extractRole(user, roleName);
+    }
+
+    private void extractRole(User user, String roleName) throws ServiceException {
         Role role = roleRepository.findByName(roleName);
 
         if (role == null) {
@@ -118,7 +137,6 @@ public class UserServiceImpl implements UserService {
         List<Role> userRoles = new ArrayList<>();
         userRoles.add(role);
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(userRoles);
     }
 }
