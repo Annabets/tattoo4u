@@ -3,6 +3,7 @@ package by.bsuir.tattoo4u.config;
 import by.bsuir.tattoo4u.security.jwt.JwtConfigurer;
 import by.bsuir.tattoo4u.security.jwt.JwtTokenProvider;
 import by.bsuir.tattoo4u.service.TokenService;
+import by.bsuir.tattoo4u.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final TokenService tokenService;
+    private final UserService userService;
 
     private static final String LOGIN_ENDPOINT = "/api/signIn";
     private static final String REGISTRATION_ENDPOINT = "/api/signUp";
@@ -30,9 +32,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String GET_MASTERS = "/api/masters/**";
 
     @Autowired
-    public SecurityConfig(JwtTokenProvider jwtTokenProvider, TokenService tokenService) {
+    public SecurityConfig(JwtTokenProvider jwtTokenProvider, TokenService tokenService, UserService userService) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.tokenService = tokenService;
+        this.userService=userService;
     }
 
     @Bean
@@ -53,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(LOGIN_ENDPOINT, REGISTRATION_ENDPOINT, POSTS_ENDPOINT, STUDIO, GET_MASTERS, STUDIOS).permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .apply(new JwtConfigurer(jwtTokenProvider, tokenService));
+                .apply(new JwtConfigurer(jwtTokenProvider, tokenService, userService));
     }
 
     @Bean

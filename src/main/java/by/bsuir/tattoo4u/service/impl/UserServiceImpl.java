@@ -1,5 +1,6 @@
 package by.bsuir.tattoo4u.service.impl;
 
+import by.bsuir.tattoo4u.entity.Master;
 import by.bsuir.tattoo4u.entity.Role;
 import by.bsuir.tattoo4u.entity.User;
 import by.bsuir.tattoo4u.repository.RoleRepository;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,6 +95,49 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User removeFavourite(String username, Long masterUserId) throws ServiceException {
+        User user=userRepository.findByUsername(username);
+        User masterUser=userRepository.findById(masterUserId).orElse(null);
+
+        if(username==null || masterUser==null){
+            throw new ServiceException("No such master or user");
+        }
+
+        Master master=masterUser.getMasterInfo();
+
+        if(master==null){
+            throw new ServiceException("User is not a master");
+        }
+
+        user.getFavourites().remove(master);
+
+        return userRepository.save(user);
+    }
+
+    @Override
+    public void banUser(Long id) throws ServiceException {
+        User user=userRepository.findById(id).orElseThrow(()-> new ServiceException("No such user"));
+
+        user.setBanned(true);
+
+        userRepository.save(user);
+    }
+
+    @Override
+    public boolean isBanned(String username) {
+        return userRepository.findByUsername(username).isBanned();
+    }
+
+    @Override
+    public void unbanUser(Long id) throws ServiceException {
+        User user=userRepository.findById(id).orElseThrow(()-> new ServiceException("No such user"));
+
+        user.setBanned(false);
+
+        userRepository.save(user);
+    }
+
+    @Override
     public User register(User user, String roleName) throws ServiceException {
 
         refactorUser(user, roleName);
@@ -104,10 +149,37 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Email has already in use");
         }
 
+        user.setBanned(false);
+
         User registeredUser = userRepository.save(user);
 
         return registeredUser;
     }
+
+    @Override
+    public User addFavourite(String username, Long masterUserId) throws ServiceException {
+
+        User user=userRepository.findByUsername(username);
+        User masterUser=userRepository.findById(masterUserId).orElse(null);
+
+        if(username==null || masterUser==null){
+            throw new ServiceException("No such master or user");
+        }
+
+        Master master=masterUser.getMasterInfo();
+
+        if(master==null){
+            throw new ServiceException("User is not a master");
+        }
+        if(user.getId().equals(masterUserId)){
+            throw new ServiceException("Cannot to subscribe on yourself");
+        }
+
+        user.getFavourites().add(master);
+
+        return userRepository.save(user);
+    }
+
 
     private void refactorUser(User user, String roleName) throws ServiceException {
         if (!UserDataValidator.isValidUsername(user)) {
