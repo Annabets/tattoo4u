@@ -28,6 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String STUDIOS = "/api/studios";
     private static final String STUDIO = "/api/studio";
     private static final String GET_MASTERS = "/api/masters/**";
+    private static final String TAKE_POSTS_ENDPOINT = "/api/take-posts/**";
 
     @Autowired
     public SecurityConfig(JwtTokenProvider jwtTokenProvider, TokenService tokenService) {
@@ -50,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(LOGIN_ENDPOINT, REGISTRATION_ENDPOINT, POSTS_ENDPOINT, STUDIO, GET_MASTERS, STUDIOS).permitAll()
+                .antMatchers(LOGIN_ENDPOINT, REGISTRATION_ENDPOINT, POSTS_ENDPOINT, STUDIO, GET_MASTERS, STUDIOS, TAKE_POSTS_ENDPOINT).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider, tokenService));

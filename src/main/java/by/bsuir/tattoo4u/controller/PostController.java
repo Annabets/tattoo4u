@@ -2,10 +2,7 @@ package by.bsuir.tattoo4u.controller;
 
 import by.bsuir.tattoo4u.dto.request.PostRequestDto;
 import by.bsuir.tattoo4u.dto.response.PostResponseDto;
-import by.bsuir.tattoo4u.entity.Photo;
-import by.bsuir.tattoo4u.entity.PhotoUpload;
-import by.bsuir.tattoo4u.entity.Post;
-import by.bsuir.tattoo4u.entity.User;
+import by.bsuir.tattoo4u.entity.*;
 import by.bsuir.tattoo4u.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(value = "api")
@@ -89,7 +88,7 @@ public class PostController {
 
                 return new ResponseEntity<>(postDtoList, HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("User with the specified id does not exist", HttpStatus.BAD_REQUEST);
             }
         } catch (ServiceException e) {
             throw new ControllerException(e);
@@ -110,13 +109,28 @@ public class PostController {
     }
 
     @DeleteMapping(value = "delete-post/{post}")
-    public ResponseEntity<?> deletePost(@PathVariable Post post) {
+    public ResponseEntity<?> deletePost(@PathVariable Post post, @RequestHeader("Authorization") String token) {
         try {
+            //token validation
+            token = token.substring(7); //move to service
+
+            String username = tokenService.getUsername(token);
+
+            User user = userService.getByUsername(username);
+
+            List<String> roles = user.getRoles().stream()
+                    .map(Role::getName)
+                    .collect(Collectors.toList());
+
             if (post != null) {
-                postService.delete(post);
-                return new ResponseEntity<>(HttpStatus.OK);
+                if (post.getAuthor().getId().equals(user.getId()) || roles.contains(RoleType.ADMIN.toString())) {
+                    postService.delete(post);
+                    return new ResponseEntity<>(HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>("Access is denied", HttpStatus.FORBIDDEN);
+                }
             } else {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Post with the specified id does not exist", HttpStatus.BAD_REQUEST);
             }
         } catch (ServiceException e) {
             throw new ControllerException(e);
