@@ -1,5 +1,6 @@
 package by.bsuir.tattoo4u.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Post extends BaseEntity {
     @Size(max = 2048, message = "Description size should be no more than 2048 characters")
     private String description;
@@ -30,10 +32,4 @@ public class Post extends BaseEntity {
     @ElementCollection
     @NotNull(message = "Tags must not be null")
     private List<String> tags;
-
-    public Post(String description, User author, List<String> tags) {
-        this.description = description;
-        this.author = author;
-        this.tags = tags;
-    }
 }

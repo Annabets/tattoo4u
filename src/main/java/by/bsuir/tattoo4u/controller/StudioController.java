@@ -5,12 +5,11 @@ import by.bsuir.tattoo4u.dto.request.StudioRegistrationRequestDto;
 import by.bsuir.tattoo4u.dto.response.MasterResponseDto;
 import by.bsuir.tattoo4u.dto.response.StudioResponseDto;
 import by.bsuir.tattoo4u.dto.response.StudioWithMastersResponseDto;
+import by.bsuir.tattoo4u.entity.Photo;
+import by.bsuir.tattoo4u.entity.PhotoUpload;
 import by.bsuir.tattoo4u.entity.Studio;
 import by.bsuir.tattoo4u.entity.User;
-import by.bsuir.tattoo4u.service.ServiceException;
-import by.bsuir.tattoo4u.service.StudioService;
-import by.bsuir.tattoo4u.service.TokenService;
-import by.bsuir.tattoo4u.service.UserService;
+import by.bsuir.tattoo4u.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -29,18 +28,28 @@ public class StudioController {
     private final StudioService studioService;
     private final UserService userService;
     private final TokenService tokenService;
+    private final PhotoService photoService;
 
     @Autowired
-    public StudioController(StudioService studioService, UserService userService, TokenService tokenService) {
+    public StudioController(
+            StudioService studioService,
+            UserService userService,
+            TokenService tokenService,
+            PhotoService photoService
+    ) {
         this.studioService = studioService;
         this.userService = userService;
         this.tokenService = tokenService;
+        this.photoService = photoService;
     }
 
     @PostMapping("/studio")
     @PreAuthorize("hasAuthority('MASTER')")
-    public ResponseEntity<?> registerStudio(@RequestBody StudioRegistrationRequestDto requestDto,
-                                            @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> registerStudio(
+            @ModelAttribute StudioRegistrationRequestDto requestDto,
+            @RequestHeader("Authorization") String token
+    ) {
+
         if (requestDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -53,6 +62,11 @@ public class StudioController {
 
             studio.setOwner(owner);
             owner.setStudio(studio);
+
+            PhotoUpload photoUpload = new PhotoUpload(requestDto.getFile());
+            Photo photo = photoService.save(photoUpload);
+            studio.setPhoto(photo);
+
             studioService.add(studio);
         } catch (ServiceException ex) {
             throw new ControllerException(ex);
