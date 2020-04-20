@@ -3,7 +3,6 @@ package by.bsuir.tattoo4u.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,11 +30,6 @@ public class Studio extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_id")
     private List<Master> masters;
-
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "photo_id")
-    @NotNull(message = "Photo must not be null")
-    private Photo photo;
 
     public Studio() {
         masters = new ArrayList<>();

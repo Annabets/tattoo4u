@@ -13,7 +13,6 @@ public class StudioResponseDto {
     private String owner;
     private String ownerId;
     private String contact;
-    private String photo;
 
     public StudioResponseDto(Studio studio) {
         this.id = studio.getId().toString();
@@ -24,6 +23,5 @@ public class StudioResponseDto {
         this.owner = studio.getOwner().getUsername();
         this.ownerId = studio.getOwner().getId().toString();
         this.contact = studio.getContact();
-        this.photo = studio.getPhoto().getUrl();
     }
 }
