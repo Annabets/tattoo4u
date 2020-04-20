@@ -96,8 +96,8 @@ public class StudioServiceImpl implements StudioService {
 
     @Override
     public void removeStudio(Long id) throws ServiceException {
-        User owner = studioRepository.getById(id).getOwner();
-        owner.setStudio(null);
+//        User owner = studioRepository.getById(id).getOwner();
+//        owner.setStudio(null);
 
         studioRepository.deleteById(id);
     }
