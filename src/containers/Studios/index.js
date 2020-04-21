@@ -26,7 +26,7 @@ class Studios extends React.Component {
 
   renderStudio = studio => (
     <Card className="m-2" style={{ width: '18rem' }}>
-      <Card.Img variant="top" src={StudioLogo}  />
+      <Card.Img variant="top" src={studio.photo || StudioLogo}  />
       <Card.Body>
         <Card.Title>{studio.name}</Card.Title>
         <Card.Subtitle className="mb-2 text-muted">{studio.address}</Card.Subtitle>
