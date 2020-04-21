@@ -8,8 +8,6 @@ import java.util.List;
 
 public interface PostService {
 
-    void savePhoto(Post post, PhotoUpload photoUpload) throws ServiceException;
-
     void save(Post post) throws ServiceException;
 
     Iterable<Post> takePosts() throws ServiceException;
