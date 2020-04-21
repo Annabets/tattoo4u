@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface StudioService {
-    void add(Studio studio) throws ServiceException;
+    void save(Studio studio) throws ServiceException;
 
     Studio takeStudioById(Long id) throws ServiceException;
 

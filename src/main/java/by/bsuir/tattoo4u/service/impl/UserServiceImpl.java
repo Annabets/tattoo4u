@@ -2,8 +2,10 @@ package by.bsuir.tattoo4u.service.impl;
 
 import by.bsuir.tattoo4u.entity.Master;
 import by.bsuir.tattoo4u.entity.Role;
+import by.bsuir.tattoo4u.entity.Studio;
 import by.bsuir.tattoo4u.entity.User;
 import by.bsuir.tattoo4u.repository.RoleRepository;
+import by.bsuir.tattoo4u.repository.StudioRepository;
 import by.bsuir.tattoo4u.repository.UserRepository;
 import by.bsuir.tattoo4u.service.ServiceException;
 import by.bsuir.tattoo4u.service.UserService;
@@ -22,13 +24,16 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final StudioRepository studioRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
+                           PasswordEncoder passwordEncoder, StudioRepository studioRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.studioRepository = studioRepository;
     }
 
     @Override
@@ -210,5 +215,30 @@ public class UserServiceImpl implements UserService {
         userRoles.add(role);
 
         user.setRoles(userRoles);
+    }
+
+    @Override
+    public User addFavouriteStudio(String username, Long studioId) throws ServiceException {
+        User user = userRepository.findByUsername(username);
+        Studio studio = studioRepository.getById(studioId);
+
+        user.getFavouritesStudios().add(studio);
+
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User removeFavouriteStudio(String username, Long studioId) throws ServiceException {
+        User user=userRepository.findByUsername(username);
+        Studio studio = studioRepository.getById(studioId);
+
+        user.getFavouritesStudios().remove(studio);
+
+        return userRepository.save(user);
+    }
+
+    @Override
+    public void save(User user) throws ServiceException {
+        userRepository.save(user);
     }
 }
