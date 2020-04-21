@@ -33,7 +33,7 @@ public class StudioServiceImpl implements StudioService {
     }
 
     @Override
-    public void add(Studio studio) throws ServiceException {
+    public void save(Studio studio) throws ServiceException {
         studioRepository.save(studio);
     }
 

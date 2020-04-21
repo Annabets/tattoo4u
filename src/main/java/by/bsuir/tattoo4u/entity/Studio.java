@@ -46,6 +46,11 @@ public class Studio extends BaseEntity {
     @EqualsAndHashCode.Exclude
     private Set<User> subscribers;
 
+    @OneToMany(mappedBy = "studio", fetch = FetchType.EAGER)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<Order> orders;
+
     public Studio() {
         masters = new ArrayList<>();
     }

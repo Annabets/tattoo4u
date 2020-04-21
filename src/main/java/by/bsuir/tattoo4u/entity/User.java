@@ -58,5 +58,10 @@ public class User extends BaseEntity {
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "studio_id", referencedColumnName = "id")})
     private Set<Studio> favouritesStudios;
+
+    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<Order> orders;
 }
 

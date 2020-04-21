@@ -27,4 +27,6 @@ public interface UserService {
     void banUser(Long id) throws ServiceException;
     boolean isBanned(String username);
     void unbanUser(Long id) throws ServiceException;
+
+    void save(User user) throws ServiceException;
 }

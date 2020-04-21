@@ -236,4 +236,9 @@ public class UserServiceImpl implements UserService {
 
         return userRepository.save(user);
     }
+
+    @Override
+    public void save(User user) throws ServiceException {
+        userRepository.save(user);
+    }
 }
