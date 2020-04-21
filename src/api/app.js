@@ -40,14 +40,22 @@ const getStudios = searchString => fetch(`${API_URL + '/studios' + (searchString
 
 const getStudioData = studioId => fetch(API_URL + `/studio?studioId=${studioId}`, {method: GET}).then(handleResponse);
 
-const registerStudio = data => fetch(`${API_URL + '/studio'}`, {
-  method: POST,
-  headers: {
-    'Authorization':`Bearer_${getToken()}`,
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify(data)
-}).then(handleResponse);
+const registerStudio = studioData => {
+  const data = new FormData();
+  data.append('file', studioData.selectedFile);
+  data.append('name', studioData.name);
+  data.append('description', studioData.description);
+  data.append('address', studioData.address);
+  data.append('contact', studioData.contact);
+
+  return axios.post(`${API_URL + '/studio'}`, data, {
+    headers: {
+      'content-type': 'multipart/form-data',
+      Authorization: `Bearer_${getToken()}`
+    }
+  }).then(resp => Promise.resolve(resp))
+    .catch(error => Promise.reject(error))
+};
 
 const getMasters = searchString => fetch(`${API_URL + '/masters' + (searchString ? `?name=${searchString}` : '')}`, {method: GET}).then(handleResponse);
 

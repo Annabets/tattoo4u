@@ -23,12 +23,14 @@ class Profile extends React.Component {
   handleRegisterStudio = e => {
     e.preventDefault();
 
+    const selectedFile = document.getElementById('studioPhoto').files[0];
     const name = document.getElementById('studioName').value;
     const description = document.getElementById('studioDescription').value;
     const address = document.getElementById('studioAddress').value;
     const contact = document.getElementById('studioContact').value;
 
     this.props.registerStudio({
+      selectedFile,
       name,
       description,
       address,
@@ -75,6 +77,13 @@ class Profile extends React.Component {
             <br/>
             <Form onSubmit={this.handleRegisterStudio}>
               <Form.Group>
+                <Form.Group>
+                  <FormLabel>Studio Photo</FormLabel>
+                  <Form.Control
+                    type="file"
+                    id="studioPhoto"
+                  />
+                </Form.Group>
                 <FormLabel>Name</FormLabel>
                 <Form.Control
                   type="text"
