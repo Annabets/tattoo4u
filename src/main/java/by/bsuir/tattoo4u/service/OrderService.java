@@ -12,4 +12,6 @@ public interface OrderService {
     List<OrderResponseDto> takeUsersOrders(User user) throws ServiceException;
 
     List<OrderResponseDto> takeStudiosOrders(Long studioId) throws ServiceException;
+
+    void confirmOrder(Long id) throws ServiceException;
 }

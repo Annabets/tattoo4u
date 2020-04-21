@@ -54,4 +54,12 @@ public class OrderServiceImpl implements OrderService {
         }
         return list;
     }
+
+    @Override
+    public void confirmOrder(Long id) throws ServiceException {
+        Order order = orderRepository.getById(id);
+
+        order.setFinish(true);
+        orderRepository.save(order);
+    }
 }
