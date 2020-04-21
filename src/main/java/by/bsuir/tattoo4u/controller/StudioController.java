@@ -54,17 +54,17 @@ public class StudioController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Studio studio = requestDto.getStudio();
         try {
             token = token.substring(7);
             String ownerName = tokenService.getUsername(token);
             User owner = userService.getByUsername(ownerName);
 
-            studio.setOwner(owner);
-            owner.setStudio(studio);
-
             PhotoUpload photoUpload = new PhotoUpload(requestDto.getFile());
             Photo photo = photoService.save(photoUpload);
+
+            Studio studio = requestDto.getStudio();
+            studio.setOwner(owner);
+            owner.setStudio(studio);
             studio.setPhoto(photo);
 
             studioService.add(studio);
