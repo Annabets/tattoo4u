@@ -1,11 +1,14 @@
 package by.bsuir.tattoo4u.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -36,6 +39,12 @@ public class Studio extends BaseEntity {
     @JoinColumn(name = "photo_id")
     @NotNull(message = "Photo must not be null")
     private Photo photo;
+
+    @ManyToMany(mappedBy = "favourites", fetch = FetchType.EAGER)
+    @JsonIgnore
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<User> subscribers;
 
     public Studio() {
         masters = new ArrayList<>();

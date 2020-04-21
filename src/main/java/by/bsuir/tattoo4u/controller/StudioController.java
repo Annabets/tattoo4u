@@ -60,11 +60,11 @@ public class StudioController {
             String ownerName = tokenService.getUsername(token);
             User owner = userService.getByUsername(ownerName);
 
-            studio.setOwner(owner);
-            owner.setStudio(studio);
-
             PhotoUpload photoUpload = new PhotoUpload(requestDto.getFile());
             Photo photo = photoService.save(photoUpload);
+
+            studio.setOwner(owner);
+            owner.setStudio(studio);
             studio.setPhoto(photo);
 
             studioService.add(studio);

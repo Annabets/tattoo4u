@@ -5,8 +5,8 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class FavouriteMasterRequest {
+public class AddingFavouriteRequest {
 
     @NotNull
-    private Long masterId;
+    private Long id;
 }
