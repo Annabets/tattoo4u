@@ -23,17 +23,17 @@
 <!--        </createTable>-->
 <!--    </changeSet>-->
 
-<!--    <changeSet id="1.0.1" author="hal">-->
-<!--        <createTable tableName="roles">-->
-<!--            <column name="id" type="BIGINT" autoIncrement="true">-->
-<!--                <constraints primaryKey="true" nullable="false"/>-->
-<!--            </column>-->
+    <changeSet id="1.0.1" author="hal">
+        <createTable tableName="roles">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
 
-<!--            <column name="name" type="VARCHAR(100)">-->
-<!--                <constraints nullable="false" unique="true"/>-->
-<!--            </column>-->
-<!--        </createTable>-->
-<!--    </changeSet>-->
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
 
 <!--    <changeSet id="1.0.2" author="hal">-->
 <!--        <createTable tableName="users_roles">-->
