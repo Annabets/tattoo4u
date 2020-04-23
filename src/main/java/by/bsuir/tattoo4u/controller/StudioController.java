@@ -67,7 +67,7 @@ public class StudioController {
             owner.setStudio(studio);
             studio.setPhoto(photo);
 
-            studioService.add(studio);
+            studioService.save(studio);
         } catch (ServiceException ex) {
             throw new ControllerException(ex);
         }

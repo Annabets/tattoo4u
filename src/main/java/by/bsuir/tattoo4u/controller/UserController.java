@@ -1,8 +1,13 @@
 package by.bsuir.tattoo4u.controller;
 
+import by.bsuir.tattoo4u.dto.request.AddingFavouriteRequest;
 import by.bsuir.tattoo4u.dto.request.UpdateUserRequestDto;
+import by.bsuir.tattoo4u.dto.response.MasterResponseDto;
+import by.bsuir.tattoo4u.dto.response.StudioResponseDto;
 import by.bsuir.tattoo4u.dto.response.UserResponseDto;
 import by.bsuir.tattoo4u.dto.response.UserWithRoleResponseDto;
+import by.bsuir.tattoo4u.entity.Master;
+import by.bsuir.tattoo4u.entity.Studio;
 import by.bsuir.tattoo4u.entity.User;
 import by.bsuir.tattoo4u.service.ServiceException;
 import by.bsuir.tattoo4u.service.TokenService;
@@ -14,10 +19,12 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "api/users")
@@ -142,4 +149,161 @@ public class UserController {
 
         return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
     }
+
+    @DeleteMapping("currentUser")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> deleteCurrentUser(@RequestHeader("Authorization") String bearerToken) {
+
+        String token = tokenService.clearBearerToken(bearerToken);
+
+        String username = tokenService.getUsername(token);
+
+        User user = userService.getByUsername(username);
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            userService.delete(user.getId());
+        } catch (ServiceException e) {
+            throw new ControllerException(e);
+        }
+
+        tokenService.delete(token);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("favourites")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> addFavourite(@RequestHeader("Authorization") String bearerToken, @RequestBody @Validated AddingFavouriteRequest requestDto) {
+
+        if (requestDto == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Long masterId = requestDto.getId();
+        String username = tokenService.getUsername(tokenService.clearBearerToken(bearerToken));
+
+        User userWithFavourite = null;
+        try {
+            userWithFavourite = userService.addFavourite(username, masterId);
+        } catch (ServiceException e) {
+            throw new ControllerException(e);
+        }
+
+        List<MasterResponseDto> responseDto = new ArrayList<>();
+        for (Master master : userWithFavourite.getFavourites()) {
+            responseDto.add(new MasterResponseDto(master));
+        }
+
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @GetMapping("favourites")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> getFavourite(@RequestHeader("Authorization") String bearerToken) {
+
+        String username = tokenService.getUsername(tokenService.clearBearerToken(bearerToken));
+
+        Set<Master> masterSet = userService.getByUsername(username).getFavourites();
+
+        List<MasterResponseDto> responseDto = new ArrayList<>();
+        for (Master master : masterSet) {
+            responseDto.add(new MasterResponseDto(master));
+        }
+
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @DeleteMapping("favourites")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> deleteFavourite(@RequestHeader("Authorization") String bearerToken, @RequestBody @Validated AddingFavouriteRequest requestDto) {
+
+        if (requestDto == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Long masterId = requestDto.getId();
+        String username = tokenService.getUsername(tokenService.clearBearerToken(bearerToken));
+
+        User userWithFavourite = null;
+        try {
+            userWithFavourite = userService.removeFavourite(username, masterId);
+        } catch (ServiceException e) {
+            throw new ControllerException(e);
+        }
+
+        List<MasterResponseDto> responseDto = new ArrayList<>();
+        for (Master master : userWithFavourite.getFavourites()) {
+            responseDto.add(new MasterResponseDto(master));
+        }
+
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @PostMapping("favouritesStudio")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> addFavoriteStudio(@RequestHeader("Authorization") String bearerToken, @RequestBody @Validated AddingFavouriteRequest requestDto) {
+        if (requestDto == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        String username = tokenService.getUsername(tokenService.clearBearerToken(bearerToken));
+        User user;
+
+        try {
+            user = userService.addFavouriteStudio(username, requestDto.getId());
+        } catch (ServiceException ex) {
+            throw new ControllerException(ex);
+        }
+
+        List<StudioResponseDto> responseDto = new ArrayList<>();
+        for (Studio studio : user.getFavouritesStudios()) {
+            responseDto.add(new StudioResponseDto(studio));
+        }
+
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @GetMapping("favouritesStudios")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> getFavoritesStudios(@RequestHeader("Authorization") String bearerToken) {
+        String username = tokenService.getUsername(tokenService.clearBearerToken(bearerToken));
+
+        Set<Studio> studiSet = userService.getByUsername(username).getFavouritesStudios();
+
+        List<StudioResponseDto> responseDto = new ArrayList<>();
+        for (Studio studio : studiSet) {
+            responseDto.add(new StudioResponseDto(studio));
+        }
+
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @DeleteMapping("favouritesStudio")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> deleteFavouriteStudio(@RequestHeader("Authorization") String bearerToken, @RequestBody @Validated AddingFavouriteRequest requestDto) {
+
+        if (requestDto == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        String username = tokenService.getUsername(tokenService.clearBearerToken(bearerToken));
+        User userWithFavourite;
+
+        try {
+            userWithFavourite = userService.removeFavouriteStudio(username, requestDto.getId());
+        } catch (ServiceException e) {
+            throw new ControllerException(e);
+        }
+
+        List<StudioResponseDto> responseDto = new ArrayList<>();
+        for (Studio studio : userWithFavourite.getFavouritesStudios()) {
+            responseDto.add(new StudioResponseDto(studio));
+        }
+
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
 }

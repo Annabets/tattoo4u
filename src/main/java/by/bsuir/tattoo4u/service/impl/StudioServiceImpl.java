@@ -6,6 +6,7 @@ import by.bsuir.tattoo4u.entity.Master;
 import by.bsuir.tattoo4u.entity.Studio;
 import by.bsuir.tattoo4u.entity.User;
 import by.bsuir.tattoo4u.repository.StudioRepository;
+import by.bsuir.tattoo4u.repository.UserRepository;
 import by.bsuir.tattoo4u.service.ServiceException;
 import by.bsuir.tattoo4u.service.StudioService;
 import by.bsuir.tattoo4u.service.UserService;
@@ -21,15 +22,18 @@ import java.util.List;
 public class StudioServiceImpl implements StudioService {
     private final UserService userService;
     private final StudioRepository studioRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public StudioServiceImpl(UserService userService, StudioRepository studioRepository) {
+    public StudioServiceImpl(UserService userService, StudioRepository studioRepository,
+                             UserRepository userRepository) {
         this.userService = userService;
         this.studioRepository = studioRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public void add(Studio studio) throws ServiceException {
+    public void save(Studio studio) throws ServiceException {
         studioRepository.save(studio);
     }
 
@@ -96,9 +100,10 @@ public class StudioServiceImpl implements StudioService {
 
     @Override
     public void removeStudio(Long id) throws ServiceException {
-//        User owner = studioRepository.getById(id).getOwner();
-//        owner.setStudio(null);
+        User owner = studioRepository.getById(id).getOwner();
+        owner.setStudio(null);
 
+        userRepository.save(owner);
         studioRepository.deleteById(id);
     }
 }

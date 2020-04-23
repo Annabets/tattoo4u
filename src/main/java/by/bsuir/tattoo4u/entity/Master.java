@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "masters")
@@ -28,4 +30,10 @@ public class Master extends BaseEntity {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Studio job;
+
+    @ManyToMany(mappedBy = "favourites", fetch = FetchType.EAGER)
+    @JsonIgnore
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<User> subscribers;
 }

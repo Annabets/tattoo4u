@@ -6,6 +6,7 @@ import by.bsuir.tattoo4u.entity.RoleType;
 import by.bsuir.tattoo4u.entity.User;
 import by.bsuir.tattoo4u.service.MasterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -21,6 +22,7 @@ import java.util.List;
 public class MasterController {
 
     private MasterService masterService;
+    private int pageSize=10;
 
     @Autowired
     public MasterController(MasterService masterService) {
@@ -28,7 +30,15 @@ public class MasterController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getMasterByUsername(@PageableDefault(sort = "rating", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam(required = false) String name) {
+    public ResponseEntity<?> getMasterByUsername(@PageableDefault(sort = "rating", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam(required = false) String name, @RequestParam(required = false) String page) {
+
+        if(page !=null && !page.isEmpty()){
+            int pageNumber=Integer.parseInt(page);
+            if(pageNumber<0){
+                throw new ControllerException("Page index must not be less than zero");
+            }
+            pageable=PageRequest.of(pageNumber, pageSize, Sort.Direction.DESC, "rating");
+        }
 
         List<Master> masterList = new ArrayList<>();
         if (name == null) {

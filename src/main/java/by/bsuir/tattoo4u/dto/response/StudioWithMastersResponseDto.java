@@ -16,6 +16,7 @@ public class StudioWithMastersResponseDto {
     private String ownerId;
     private String contact;
     private List<MasterResponseDto> masters;
+    private String photo;
 
     public StudioWithMastersResponseDto(Studio studio, List<MasterResponseDto> masters) {
         this.id = studio.getId().toString();
@@ -27,5 +28,6 @@ public class StudioWithMastersResponseDto {
         this.ownerId = studio.getOwner().getId().toString();
         this.contact = studio.getContact();
         this.masters = masters;
+        this.photo = studio.getPhoto().getUrl();
     }
 }

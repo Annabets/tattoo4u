@@ -1,6 +1,7 @@
 package by.bsuir.tattoo4u.security.jwt;
 
 import by.bsuir.tattoo4u.service.TokenService;
+import by.bsuir.tattoo4u.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,13 @@ public class JwtTokenFilter extends GenericFilterBean {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final TokenService tokenService;
+    private final UserService userService;
 
     @Autowired
-    public JwtTokenFilter(JwtTokenProvider jwtTokenProvider, TokenService tokenService) {
+    public JwtTokenFilter(JwtTokenProvider jwtTokenProvider, TokenService tokenService, UserService userService) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.tokenService = tokenService;
+        this.userService = userService;
     }
 
     @Override
@@ -34,7 +37,7 @@ public class JwtTokenFilter extends GenericFilterBean {
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) servletRequest);
 
         try {
-            if (token != null && jwtTokenProvider.isValidToken(token) && tokenService.exists(token)) {
+            if (token != null && jwtTokenProvider.isValidToken(token) && tokenService.exists(token) && !userService.isBanned(tokenService.getUsername(token))) {
 
                 Authentication authentication = null;
 

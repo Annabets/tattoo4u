@@ -22,10 +22,13 @@ public class User extends BaseEntity {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "banned")
+    private boolean banned;
+
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Post> posts;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "my_studio_id")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
@@ -40,5 +43,25 @@ public class User extends BaseEntity {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Master masterInfo;
+
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIgnore
+    @JoinTable(name = "users_masters",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "master_id", referencedColumnName = "id")})
+    private Set<Master> favourites;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIgnore
+    @JoinTable(name = "users_studios",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "studio_id", referencedColumnName = "id")})
+    private Set<Studio> favouritesStudios;
+
+    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<Order> orders;
 }
 
