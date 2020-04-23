@@ -9,11 +9,13 @@ public class UserWithRoleResponseDto {
     private String username;
     private String email;
     private String role;
+    private String photo;
 
     public UserWithRoleResponseDto(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
         this.email = user.getEmail();
         this.role = user.getRoles().get(0).getName();
+        this.photo = user.getPhoto().getUrl();
     }
 }
