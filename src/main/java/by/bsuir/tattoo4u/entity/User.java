@@ -64,4 +64,3 @@ public class User extends BaseEntity {
     @EqualsAndHashCode.Exclude
     private Set<Order> orders;
 }
-

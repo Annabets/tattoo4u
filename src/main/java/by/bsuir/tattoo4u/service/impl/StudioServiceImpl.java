@@ -1,10 +1,13 @@
 package by.bsuir.tattoo4u.service.impl;
 
 import by.bsuir.tattoo4u.dto.response.MasterResponseDto;
+import by.bsuir.tattoo4u.dto.response.StudioFeedbackResponseDto;
 import by.bsuir.tattoo4u.dto.response.StudioResponseDto;
 import by.bsuir.tattoo4u.entity.Master;
 import by.bsuir.tattoo4u.entity.Studio;
+import by.bsuir.tattoo4u.entity.StudioFeedback;
 import by.bsuir.tattoo4u.entity.User;
+import by.bsuir.tattoo4u.repository.StudioFeedbackRepository;
 import by.bsuir.tattoo4u.repository.StudioRepository;
 import by.bsuir.tattoo4u.repository.UserRepository;
 import by.bsuir.tattoo4u.service.ServiceException;
@@ -23,13 +26,15 @@ public class StudioServiceImpl implements StudioService {
     private final UserService userService;
     private final StudioRepository studioRepository;
     private final UserRepository userRepository;
+    private final StudioFeedbackRepository studioFeedbackRepository;
 
     @Autowired
     public StudioServiceImpl(UserService userService, StudioRepository studioRepository,
-                             UserRepository userRepository) {
+                             UserRepository userRepository, StudioFeedbackRepository studioFeedbackRepository) {
         this.userService = userService;
         this.studioRepository = studioRepository;
         this.userRepository = userRepository;
+        this.studioFeedbackRepository = studioFeedbackRepository;
     }
 
     @Override
@@ -105,5 +110,29 @@ public class StudioServiceImpl implements StudioService {
 
         userRepository.save(owner);
         studioRepository.deleteById(id);
+    }
+
+    @Override
+    public void addFeedback(StudioFeedback feedback) throws ServiceException {
+        studioFeedbackRepository.save(feedback);
+
+        Studio studio = feedback.getStudio();
+        Double rating = studioFeedbackRepository.avg(studio.getId());
+        studio.setRating(rating);
+        studioRepository.save(studio);
+    }
+
+    @Override
+    public List<StudioFeedbackResponseDto> takeStudiosFeedbacks(Long studioId) {
+        Studio studio = studioRepository.getById(studioId);
+        return compileFeedbackList(studioFeedbackRepository.findAllByStudio(studio));
+    }
+
+    private List<StudioFeedbackResponseDto> compileFeedbackList(List<StudioFeedback> feedbackList) {
+        List<StudioFeedbackResponseDto> feedbacks = new LinkedList<>();
+        for (StudioFeedback feedback : feedbackList) {
+            feedbacks.add(new StudioFeedbackResponseDto(feedback));
+        }
+        return feedbacks;
     }
 }
