@@ -11,6 +11,7 @@ public class AuthenticationResponseDto {
     private String token;
     private String email;
     private String role;
+    private String photo;
 
     public static AuthenticationResponseDto fromUserAndToken(User user, String token) {
         AuthenticationResponseDto authenticationResponseDto = new AuthenticationResponseDto();
@@ -19,6 +20,7 @@ public class AuthenticationResponseDto {
         authenticationResponseDto.setId(user.getId());
         authenticationResponseDto.setEmail(user.getEmail());
         authenticationResponseDto.setRole(user.getRoles().get(0).getName());
+        authenticationResponseDto.setPhoto(user.getPhoto().getUrl());
 
         return authenticationResponseDto;
     }

@@ -7,8 +7,8 @@ import by.bsuir.tattoo4u.repository.UserRepository;
 import by.bsuir.tattoo4u.service.ServiceException;
 import by.bsuir.tattoo4u.service.UserService;
 import by.bsuir.tattoo4u.service.validator.UserDataValidator;
-import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -90,6 +90,11 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("No such user");
         }
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public void save(User user) throws ServiceException {
+        userRepository.save(user);
     }
 
     @Override

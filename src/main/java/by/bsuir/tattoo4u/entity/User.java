@@ -1,7 +1,9 @@
 package by.bsuir.tattoo4u.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
@@ -40,5 +42,9 @@ public class User extends BaseEntity {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Master masterInfo;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "photo_id")
+    private Photo photo;
 }
 
