@@ -1,9 +1,8 @@
 package by.bsuir.tattoo4u.service.impl;
 
 import by.bsuir.tattoo4u.dto.response.OrderResponseDto;
-import by.bsuir.tattoo4u.entity.Order;
-import by.bsuir.tattoo4u.entity.Studio;
-import by.bsuir.tattoo4u.entity.User;
+import by.bsuir.tattoo4u.entity.*;
+import by.bsuir.tattoo4u.repository.MasterRepository;
 import by.bsuir.tattoo4u.repository.OrderRepository;
 import by.bsuir.tattoo4u.repository.StudioRepository;
 import by.bsuir.tattoo4u.repository.UserRepository;
@@ -20,13 +19,15 @@ public class OrderServiceImpl implements OrderService {
     private final StudioRepository studioRepository;
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
+    private final MasterRepository masterRepository;
 
     @Autowired
     public OrderServiceImpl(OrderRepository orderRepository, StudioRepository studioRepository,
-                             UserRepository userRepository) {
+                            UserRepository userRepository, MasterRepository masterRepository) {
         this.orderRepository = orderRepository;
         this.studioRepository = studioRepository;
         this.userRepository = userRepository;
+        this.masterRepository = masterRepository;
     }
 
     @Override
@@ -49,7 +50,7 @@ public class OrderServiceImpl implements OrderService {
 
     private List<OrderResponseDto> compileList(List<Order> orders) {
         List<OrderResponseDto> list = new LinkedList<>();
-        for(Order order : orders) {
+        for (Order order : orders) {
             list.add(new OrderResponseDto(order));
         }
         return list;
@@ -59,7 +60,18 @@ public class OrderServiceImpl implements OrderService {
     public void confirmOrder(Long id) throws ServiceException {
         Order order = orderRepository.getById(id);
 
-        order.setFinish(true);
+        order.setStatus(OrderStatus.CONFIRMED.toString());
         orderRepository.save(order);
+    }
+
+    @Override
+    public void acceptOrder(Long id, Master master) throws ServiceException {
+        Order order = orderRepository.getById(id);
+
+        order.setStatus(OrderStatus.IN_PROGRESS.toString());
+        order.setMaster(master);
+
+        master.getOrders().add(order);
+        masterRepository.save(master);
     }
 }

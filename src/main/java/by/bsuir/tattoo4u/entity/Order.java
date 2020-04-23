@@ -11,8 +11,6 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "orders")
 public class Order extends BaseEntity {
-    private boolean finish;
-
     private String description;
 
     @OneToOne(fetch = FetchType.EAGER)
@@ -28,12 +26,18 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "author_id")
     private User author;
 
+    private String status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "master_id")
+    private Master master;
+
     public Order() {
-        this.finish = false;
+        this.status = OrderStatus.NEW.toString();
     }
 
     public Order(String description) {
         this.description = description;
-        this.finish = false;
+        this.status = OrderStatus.NEW.toString();
     }
 }
