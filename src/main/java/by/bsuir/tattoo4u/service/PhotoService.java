@@ -5,4 +5,8 @@ import by.bsuir.tattoo4u.entity.PhotoUpload;
 
 public interface PhotoService {
     Photo save(PhotoUpload photoUpload) throws ServiceException;
+
+    Photo save(Photo photo) throws ServiceException;
+
+    Photo takePhotoIncognito() throws ServiceException;
 }

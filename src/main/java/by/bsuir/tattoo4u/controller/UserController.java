@@ -73,7 +73,11 @@ public class UserController {
 
     @PostMapping(value = "{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<?> updateUserById(@RequestHeader("Authorization") String bearerToken, @PathVariable(name = "id") Long id, @RequestBody UpdateUserRequestDto requestDto) {
+    public ResponseEntity<?> updateUserById(
+            @RequestHeader("Authorization") String bearerToken,
+            @PathVariable(name = "id") Long id,
+            @RequestBody UpdateUserRequestDto requestDto
+    ) {
 
         if (requestDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

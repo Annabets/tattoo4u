@@ -7,6 +7,7 @@ import by.bsuir.tattoo4u.entity.User;
 import by.bsuir.tattoo4u.repository.RoleRepository;
 import by.bsuir.tattoo4u.repository.StudioRepository;
 import by.bsuir.tattoo4u.repository.UserRepository;
+import by.bsuir.tattoo4u.service.PhotoService;
 import by.bsuir.tattoo4u.service.ServiceException;
 import by.bsuir.tattoo4u.service.UserService;
 import by.bsuir.tattoo4u.service.validator.UserDataValidator;
@@ -25,14 +26,21 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final StudioRepository studioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PhotoService photoService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
-                           PasswordEncoder passwordEncoder, StudioRepository studioRepository) {
+    public UserServiceImpl(
+            UserRepository userRepository,
+            RoleRepository roleRepository,
+            PasswordEncoder passwordEncoder,
+            StudioRepository studioRepository,
+            PhotoService photoService
+    ) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.studioRepository = studioRepository;
+        this.photoService = photoService;
     }
 
     @Override
@@ -154,6 +162,7 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setBanned(false);
+        user.setPhoto(photoService.takePhotoIncognito());
 
         User registeredUser = userRepository.save(user);
 
