@@ -6,9 +6,8 @@ import by.bsuir.tattoo4u.dto.response.MasterResponseDto;
 import by.bsuir.tattoo4u.dto.response.StudioResponseDto;
 import by.bsuir.tattoo4u.dto.response.UserResponseDto;
 import by.bsuir.tattoo4u.dto.response.UserWithRoleResponseDto;
-import by.bsuir.tattoo4u.entity.Master;
-import by.bsuir.tattoo4u.entity.Studio;
-import by.bsuir.tattoo4u.entity.User;
+import by.bsuir.tattoo4u.entity.*;
+import by.bsuir.tattoo4u.service.PhotoService;
 import by.bsuir.tattoo4u.service.ServiceException;
 import by.bsuir.tattoo4u.service.TokenService;
 import by.bsuir.tattoo4u.service.UserService;
@@ -21,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,14 +29,15 @@ import java.util.Set;
 @RestController
 @RequestMapping(value = "api/users")
 public class UserController {
-
     private final UserService userService;
     private final TokenService tokenService;
+    private final PhotoService photoService;
 
     @Autowired
-    public UserController(UserService userService, TokenService tokenService) {
+    public UserController(UserService userService, TokenService tokenService, PhotoService photoService) {
         this.userService = userService;
         this.tokenService = tokenService;
+        this.photoService = photoService;
     }
 
     @GetMapping
@@ -306,4 +307,31 @@ public class UserController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    @PostMapping(value = "upload-photo")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> addPhoto(
+            @ModelAttribute MultipartFile file,
+            @RequestHeader("Authorization") String token
+    ) {
+        try {
+            //token validation
+            token = token.substring(7); //move to service
+
+            String username = tokenService.getUsername(token);
+
+            User user = userService.getByUsername(username);
+
+            PhotoUpload photoUpload = new PhotoUpload(file);
+
+            Photo photo = photoService.save(photoUpload);
+
+            user.setPhoto(photo);
+
+            userService.save(user);
+
+            return new ResponseEntity<>("Photo added", HttpStatus.OK);
+        } catch (ServiceException e) {
+            throw new ControllerException(e);
+        }
+    }
 }
