@@ -11,7 +11,7 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class MasterComment extends BaseEntity{
+public class MasterComment extends BaseEntity implements Comparable<MasterComment>{
 
     @Column(name = "rating")
     private Double rating;
@@ -32,4 +32,9 @@ public class MasterComment extends BaseEntity{
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Master master;
+
+    @Override
+    public int compareTo(MasterComment o) {
+        return getId().compareTo(o.getId());
+    }
 }
