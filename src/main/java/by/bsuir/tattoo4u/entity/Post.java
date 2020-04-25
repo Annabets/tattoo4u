@@ -15,7 +15,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Post extends BaseEntity {
+public class Post extends BaseEntity implements Comparable<Post> {
     @Size(max = 2048, message = "Description size should be no more than 2048 characters")
     private String description;
 
@@ -32,4 +32,9 @@ public class Post extends BaseEntity {
     @ElementCollection
     @NotNull(message = "Tags must not be null")
     private List<String> tags;
+
+    @Override
+    public int compareTo(Post o) {
+        return getId().compareTo(o.getId());
+    }
 }
