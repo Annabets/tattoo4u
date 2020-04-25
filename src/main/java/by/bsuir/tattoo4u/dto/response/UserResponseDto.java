@@ -9,6 +9,7 @@ public class UserResponseDto {
     private Long id;
     private String username;
     private String email;
+    private String photo;
 
     public UserResponseDto() {
     }
@@ -17,6 +18,7 @@ public class UserResponseDto {
         this.id = user.getId();
         this.username = user.getUsername();
         this.email = user.getEmail();
+        this.photo = user.getPhoto().getUrl();
     }
 
     public User toUser() {
@@ -33,6 +35,7 @@ public class UserResponseDto {
         userDto.setId(user.getId());
         userDto.setUsername(user.getUsername());
         userDto.setEmail(user.getEmail());
+        userDto.setPhoto(user.getPhoto().getUrl());
 
         return userDto;
     }

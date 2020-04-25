@@ -22,7 +22,7 @@ public class StudioFeedback extends BaseEntity {
 
     private String username;
 
-    //private String userPhoto;
+    private String userPhoto;
 
     public StudioFeedback() {
     }

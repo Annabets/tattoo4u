@@ -7,15 +7,15 @@ import by.bsuir.tattoo4u.entity.User;
 import by.bsuir.tattoo4u.repository.RoleRepository;
 import by.bsuir.tattoo4u.repository.StudioRepository;
 import by.bsuir.tattoo4u.repository.UserRepository;
+import by.bsuir.tattoo4u.service.PhotoService;
 import by.bsuir.tattoo4u.service.ServiceException;
 import by.bsuir.tattoo4u.service.UserService;
 import by.bsuir.tattoo4u.service.validator.UserDataValidator;
-import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,14 +26,21 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final StudioRepository studioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PhotoService photoService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
-                           PasswordEncoder passwordEncoder, StudioRepository studioRepository) {
+    public UserServiceImpl(
+            UserRepository userRepository,
+            RoleRepository roleRepository,
+            PasswordEncoder passwordEncoder,
+            StudioRepository studioRepository,
+            PhotoService photoService
+    ) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.studioRepository = studioRepository;
+        this.photoService = photoService;
     }
 
     @Override
@@ -101,16 +108,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User removeFavourite(String username, Long masterUserId) throws ServiceException {
-        User user=userRepository.findByUsername(username);
-        User masterUser=userRepository.findById(masterUserId).orElse(null);
+        User user = userRepository.findByUsername(username);
+        User masterUser = userRepository.findById(masterUserId).orElse(null);
 
-        if(username==null || masterUser==null){
+        if (username == null || masterUser == null) {
             throw new ServiceException("No such master or user");
         }
 
-        Master master=masterUser.getMasterInfo();
+        Master master = masterUser.getMasterInfo();
 
-        if(master==null){
+        if (master == null) {
             throw new ServiceException("User is not a master");
         }
 
@@ -121,7 +128,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void banUser(Long id) throws ServiceException {
-        User user=userRepository.findById(id).orElseThrow(()-> new ServiceException("No such user"));
+        User user = userRepository.findById(id).orElseThrow(() -> new ServiceException("No such user"));
 
         user.setBanned(true);
 
@@ -135,7 +142,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void unbanUser(Long id) throws ServiceException {
-        User user=userRepository.findById(id).orElseThrow(()-> new ServiceException("No such user"));
+        User user = userRepository.findById(id).orElseThrow(() -> new ServiceException("No such user"));
 
         user.setBanned(false);
 
@@ -155,6 +162,7 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setBanned(false);
+        user.setPhoto(photoService.takePhotoIncognito());
 
         User registeredUser = userRepository.save(user);
 
@@ -164,19 +172,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public User addFavourite(String username, Long masterUserId) throws ServiceException {
 
-        User user=userRepository.findByUsername(username);
-        User masterUser=userRepository.findById(masterUserId).orElse(null);
+        User user = userRepository.findByUsername(username);
+        User masterUser = userRepository.findById(masterUserId).orElse(null);
 
-        if(username==null || masterUser==null){
+        if (username == null || masterUser == null) {
             throw new ServiceException("No such master or user");
         }
 
-        Master master=masterUser.getMasterInfo();
+        Master master = masterUser.getMasterInfo();
 
-        if(master==null){
+        if (master == null) {
             throw new ServiceException("User is not a master");
         }
-        if(user.getId().equals(masterUserId)){
+        if (user.getId().equals(masterUserId)) {
             throw new ServiceException("Cannot to subscribe on yourself");
         }
 
@@ -229,7 +237,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User removeFavouriteStudio(String username, Long studioId) throws ServiceException {
-        User user=userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username);
         Studio studio = studioRepository.getById(studioId);
 
         user.getFavouritesStudios().remove(studio);

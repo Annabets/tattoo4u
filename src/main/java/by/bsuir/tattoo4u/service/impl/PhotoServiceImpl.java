@@ -26,6 +26,9 @@ public class PhotoServiceImpl implements PhotoService {
     @Value("${cloudinary.apiKey}")
     private String apiKey;
 
+    @Value("${photo.incognito}")
+    private String photoIncognitoUrl;
+
     private PhotoRepository photoRepository;
     private Cloudinary cloudinary = new Cloudinary();
 
@@ -68,5 +71,15 @@ public class PhotoServiceImpl implements PhotoService {
         } catch (IOException | RuntimeException e) {
             throw new ServiceException(e);
         }
+    }
+
+    @Override
+    public Photo save(Photo photo) throws ServiceException {
+        return photoRepository.save(photo);
+    }
+
+    @Override
+    public Photo takePhotoIncognito() throws ServiceException {
+        return save(new Photo(photoIncognitoUrl));
     }
 }

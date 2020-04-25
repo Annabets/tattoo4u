@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class StudioFeedbackResponseDto {
     private String username;
-    //private String userPhoto;
+    private String userPhoto;
     private String feedback;
     private String rating;
 
@@ -14,6 +14,6 @@ public class StudioFeedbackResponseDto {
         this.feedback = studioFeedback.getFeedback();
         this.rating = studioFeedback.getRating().toString();
         this.username = studioFeedback.getUsername();
-        //this.userPhoto = studioFeedback.getUserPhoto();
+        this.userPhoto = studioFeedback.getUserPhoto();
     }
 }

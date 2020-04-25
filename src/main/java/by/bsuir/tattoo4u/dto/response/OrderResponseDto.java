@@ -20,6 +20,6 @@ public class OrderResponseDto {
         this.photoUrl = order.getPhoto().getUrl();
         this.userId = order.getAuthor().getId().toString();
         this.userName = order.getAuthor().getUsername();
-        this.status = order.getStatus().toString();
+        this.status = order.getStatus();
     }
 }
