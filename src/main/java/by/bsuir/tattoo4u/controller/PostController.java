@@ -143,6 +143,7 @@ public class PostController {
     }
 
     @GetMapping("like-post/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> like(@PathVariable("id") Post post, @RequestHeader("Authorization") String token) {
         User user = tokenService.getUser(token);
 
@@ -176,6 +177,7 @@ public class PostController {
     }
 
     @PostMapping("comment/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> addComment(
             @RequestHeader("Authorization") String token,
             @RequestBody CommentRequestDto commentDto,
@@ -201,6 +203,7 @@ public class PostController {
     }
 
     @GetMapping("comment/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> takeComment(@PathVariable("id") Post post){
         if(post != null){
             Set<Comment> comments = post.getComments();
