@@ -13,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,12 +43,7 @@ public class PostController {
             @RequestHeader("Authorization") String token,
             @ModelAttribute PostRequestDto postRequestDto
     ) {
-        //token validation
-        token = token.substring(7); //move to service
-
-        String username = tokenService.getUsername(token);
-
-        User user = userService.getByUsername(username);
+        User user = tokenService.getUser(token);
 
         PhotoUpload photoUpload = new PhotoUpload(postRequestDto.getFile());
 
@@ -66,11 +60,13 @@ public class PostController {
     }
 
     @GetMapping(value = "posts")
-    public ResponseEntity<?> posts() {
+    public ResponseEntity<?> posts(@RequestHeader("Authorization") String token) {
         try {
+            User user = tokenService.getUser(token);
+
             Iterable<Post> posts = postService.takePosts();
 
-            Iterable<PostResponseDto> postDtoList = toDto(posts);
+            Iterable<PostResponseDto> postDtoList = toDto(posts, user);
 
             return new ResponseEntity<>(postDtoList, HttpStatus.OK);
         } catch (ServiceException e) {
@@ -79,12 +75,17 @@ public class PostController {
     }
 
     @GetMapping(value = "take-posts/{id}")
-    public ResponseEntity<?> takeUserPosts(@PathVariable("id") User user) {
+    public ResponseEntity<?> takeUserPosts(
+            @PathVariable("id") User user,
+            @RequestHeader("Authorization") String token
+    ) {
         try {
             if (user != null) {
+                User currentUser = tokenService.getUser(token);
+
                 Iterable<Post> posts = postService.takePosts(user);
 
-                Iterable<PostResponseDto> postDtoList = toDto(posts);
+                Iterable<PostResponseDto> postDtoList = toDto(posts, currentUser);
 
                 return new ResponseEntity<>(postDtoList, HttpStatus.OK);
             } else {
@@ -96,11 +97,13 @@ public class PostController {
     }
 
     @GetMapping(value = "take-posts")
-    public ResponseEntity<?> takePosts(@RequestParam String tags) {
+    public ResponseEntity<?> takePosts(@RequestParam String tags, @RequestHeader("Authorization") String token) {
         try {
+            User currentUser = tokenService.getUser(token);
+
             Iterable<Post> posts = postService.takePosts(tags);
 
-            Iterable<PostResponseDto> postDtoList = toDto(posts);
+            Iterable<PostResponseDto> postDtoList = toDto(posts, currentUser);
 
             return new ResponseEntity<>(postDtoList, HttpStatus.OK);
         } catch (ServiceException e) {
@@ -111,12 +114,7 @@ public class PostController {
     @DeleteMapping(value = "delete-post/{post}")
     public ResponseEntity<?> deletePost(@PathVariable Post post, @RequestHeader("Authorization") String token) {
         try {
-            //token validation
-            token = token.substring(7); //move to service
-
-            String username = tokenService.getUsername(token);
-
-            User user = userService.getByUsername(username);
+            User user = tokenService.getUser(token);
 
             List<String> roles = user.getRoles().stream()
                     .map(Role::getName)
@@ -137,12 +135,45 @@ public class PostController {
         }
     }
 
-    private Iterable<PostResponseDto> toDto(Iterable<Post> posts) {
+    @GetMapping(value = "like-post/{id}")
+    public ResponseEntity<?> like(@PathVariable("id") Post post, @RequestHeader("Authorization") String token) {
+        User user = tokenService.getUser(token);
+
+        if (post != null) {
+
+            try {
+                postService.like(post, user);
+            } catch (ServiceException e) {
+                throw new ControllerException(e);
+            }
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(value = "/tr")
+    public ResponseEntity<?> tr(@RequestHeader("Authorization") String token) {
+        try {
+            User user = tokenService.getUser(token);
+
+            Iterable<Post> posts = postService.takeTr();
+
+            Iterable<PostResponseDto> postDtoList = toDto(posts, user);
+
+            return new ResponseEntity<>(postDtoList, HttpStatus.OK);
+        } catch (ServiceException e) {
+            throw new ControllerException(e);
+        }
+    }
+
+    private Iterable<PostResponseDto> toDto(Iterable<Post> posts, User user) {
         List<PostResponseDto> postDtoList = new ArrayList<>();
 
         for (Post post : posts) {
             PostResponseDto postDto = new PostResponseDto();
-            postDto.fromPost(post);
+            postDto.fromPost(post, user);
             postDtoList.add(postDto);
         }
 

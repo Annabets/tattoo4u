@@ -28,6 +28,8 @@ public class User extends BaseEntity {
     private boolean banned;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Set<Post> posts;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -67,6 +69,8 @@ public class User extends BaseEntity {
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "photo_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Photo photo;
 }
 
