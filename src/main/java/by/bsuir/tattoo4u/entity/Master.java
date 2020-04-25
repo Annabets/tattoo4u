@@ -36,4 +36,9 @@ public class Master extends BaseEntity {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<User> subscribers;
+
+    @OneToMany(mappedBy = "master", fetch = FetchType.EAGER)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<MasterComment> commentsToMaster;
 }

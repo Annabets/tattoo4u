@@ -18,7 +18,7 @@ public class UserResponseDto {
         this.id = user.getId();
         this.username = user.getUsername();
         this.email = user.getEmail();
-        this.photo = user.getPhoto().getUrl();
+        this.photo = user.getPhoto()!=null?user.getPhoto().getUrl():null;
     }
 
     public User toUser() {
