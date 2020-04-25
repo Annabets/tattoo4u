@@ -94,4 +94,30 @@ public class OrderController {
         }
         return new ResponseEntity<>(orders, HttpStatus.CREATED);
     }
+
+    @PostMapping("/confirmationOrder")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<?> confirmOrder(@RequestParam Long id) {
+        try {
+            orderService.confirmOrder(id);
+        } catch (ServiceException ex) {
+            throw new ControllerException(ex);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/acceptance")
+    @PreAuthorize("hasAuthority('MASTER')")
+    public ResponseEntity<?> acceptOrder(@RequestHeader("Authorization") String bearerToken,
+                                        @RequestParam Long id ) {
+        try {
+            String username = tokenService.getUsername(tokenService.clearBearerToken(bearerToken));
+            Master master = userService.getByUsername(username).getMasterInfo();
+
+            orderService.acceptOrder(id, master);
+        } catch (ServiceException ex) {
+            throw new ControllerException(ex);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

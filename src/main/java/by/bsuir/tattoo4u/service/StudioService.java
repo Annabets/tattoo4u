@@ -1,8 +1,10 @@
 package by.bsuir.tattoo4u.service;
 
 import by.bsuir.tattoo4u.dto.response.MasterResponseDto;
+import by.bsuir.tattoo4u.dto.response.StudioFeedbackResponseDto;
 import by.bsuir.tattoo4u.dto.response.StudioResponseDto;
 import by.bsuir.tattoo4u.entity.Studio;
+import by.bsuir.tattoo4u.entity.StudioFeedback;
 import by.bsuir.tattoo4u.entity.User;
 import org.springframework.data.domain.Pageable;
 
@@ -24,4 +26,8 @@ public interface StudioService {
     void removeMaster(User master, Long studioId) throws ServiceException;
 
     void removeStudio(Long id) throws ServiceException;
+
+    void addFeedback(StudioFeedback feedback) throws ServiceException;
+
+    List<StudioFeedbackResponseDto> takeStudiosFeedbacks(Long studioId) throws ServiceException;
 }
