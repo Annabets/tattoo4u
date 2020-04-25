@@ -1,6 +1,6 @@
 import React from 'react';
 import {store} from "../configureStore";
-import {BrowserRouter as Router, Route} from "react-router-dom";
+import {Router, Route} from "react-router";
 import {Provider} from "react-redux";
 import HomePage from '../containers/HomePage';
 import SignIn from '../containers/User/pages/SignIn';
@@ -11,10 +11,11 @@ import Studio from '../containers/Studio';
 import Masters from '../containers/Masters';
 import {SIGN_IN, SIGN_UP, PROFILE, STUDIOS, MASTERS} from "../routes";
 import Navbar from "./Navbar";
+import {history} from "../utils";
 
 export default () => (
   <Provider store={store}>
-    <Router>
+    <Router history={history}>
       <Navbar />
       <Route exact path="/">
         <HomePage/>
