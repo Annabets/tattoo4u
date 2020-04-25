@@ -41,7 +41,7 @@ class Profile extends React.Component {
   render() {
     return (
       <>
-        {localStorage.getItem(ROLE) === 'MASTER' &&
+        {this.props.role === 'MASTER' &&
         <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example">
           <Tab eventKey="addPost" title="Upload Photo">
             <h3>Upload photo</h3>
@@ -122,7 +122,11 @@ class Profile extends React.Component {
   }
 }
 
-export default connect(null, dispatch => ({
-  uploadPhoto: (data, cb) => dispatch(uploadPhoto(data, cb)),
-  registerStudio: (data, cb) => dispatch(registerStudio(data, cb))
-}))(Profile);
+export default connect(
+  state => ({
+    role: state.user.role
+  }),
+  dispatch => ({
+    uploadPhoto: (data, cb) => dispatch(uploadPhoto(data, cb)),
+    registerStudio: (data, cb) => dispatch(registerStudio(data, cb))
+  }))(Profile);

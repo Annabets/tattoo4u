@@ -29,7 +29,7 @@ class Studios extends React.Component {
   }
 
   render() {
-    const { studioData : {name, rating, description, address, owner, contact, ownerId, masters}, mastersToSelect } = this.props;
+    const { studioData : {name, rating, description, address, owner, contact, ownerId, masters}, mastersToSelect, userId } = this.props;
     return (
       <div className="container-fluid">
         <h1>{name}</h1>
@@ -39,7 +39,7 @@ class Studios extends React.Component {
         {masters && <p>Masters: {masters.map(master => master.username).toString()}</p>}
         <p>{address}</p>
         <p>{description}</p>
-        {(ownerId === localStorage.getItem('userId')) &&
+        {ownerId === userId &&
         <Form onSubmit={this.handleSubmit}>
           <Form.Group controlId="mastersSelect">
             <Form.Control as="select" custom onChange={this.selectMaster}>
@@ -58,6 +58,7 @@ class Studios extends React.Component {
 
 export default connect(
   state => ({
+    userId: state.user.id,
     studioData: state.studio.studioData,
     mastersToSelect: state.studio.mastersToSelect,
   }),

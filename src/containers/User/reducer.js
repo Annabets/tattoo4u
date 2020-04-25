@@ -3,10 +3,11 @@ import {AUTH_KEY, EMAIL, ROLE, USER_ID, USER_NAME} from "../../constants";
 import {clearLocalStorage} from "../../utils";
 
 const initialState = {
-  id: '',
+  id: localStorage.getItem(USER_ID) || '',
   username: localStorage.getItem(USER_NAME) || '',
-  email: '',
+  email: localStorage.getItem(EMAIL) || '',
   authKey: localStorage.getItem(AUTH_KEY) || '',
+  role: localStorage.getItem(ROLE) || '',
   isLoadingUserData: false,
   error: '',
 };
