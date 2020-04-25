@@ -41,6 +41,10 @@ public class Post extends BaseEntity {
     @EqualsAndHashCode.Exclude
     private Set<User> likes;
 
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "post_id")
+    private Set<Comment> comments;
+
     public Post(
             @Size(max = 2048, message = "Description size should be no more than 2048 characters") String description,
             @NotNull(message = "Author must not be null") User author,
