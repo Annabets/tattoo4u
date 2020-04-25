@@ -1,5 +1,6 @@
 import * as constants from "./constants";
 import {api} from "../../api/app";
+import {apiErrorHandler} from "../../utils";
 
 export function getMasters(searchString) {
   return dispatch => {
@@ -7,17 +8,18 @@ export function getMasters(searchString) {
       type: constants.GET_MASTERS_REQUEST,
     });
     api.getMasters(searchString).then(
-      data => {
+      response => {
         dispatch({
           type: constants.GET_MASTERS_SUCCESS,
-          data,
+          data: response.data,
         })
       },
-      errorMessage => {
+      error => {
         dispatch({
           type: constants.GET_MASTERS_FAILURE,
-          payload: errorMessage
-        })
+          payload: error.message
+        });
+        apiErrorHandler(error)
       }
     )
   }

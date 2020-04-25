@@ -1,24 +1,26 @@
 import * as constants from "./constants";
 import {api} from "../../api/app";
+import {apiErrorHandler} from "../../utils";
 
-export function uploadPhoto(file, tags, description) {
+export function uploadPhoto(data, cb) {
   return dispatch => {
     dispatch({
       type: constants.UPLOAD_PHOTO_REQUEST,
     });
-    api.uploadPhoto(file,tags,description).then(
-      userData => {
+    api.uploadPhoto(data).then(
+      response => {
         dispatch({
           type: constants.UPLOAD_PHOTO_SUCCESS,
-          userData,
-        })
-        window.location.reload();
+          userData: response.data,
+        });
+        cb && cb();
       },
-      errorMessage => {
+      error => {
         dispatch({
           type: constants.UPLOAD_PHOTO_FAILURE,
-          payload: errorMessage
-        })
+          payload: error.message
+        });
+        apiErrorHandler(error)
       }
     )
   }

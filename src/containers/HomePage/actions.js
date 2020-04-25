@@ -1,5 +1,6 @@
 import * as constants from "./constants";
 import {api} from "../../api/app";
+import {apiErrorHandler} from "../../utils";
 
 export function getPhotos() {
   return dispatch => {
@@ -7,17 +8,18 @@ export function getPhotos() {
       type: constants.GET_PHOTOS_REQUEST,
     });
     api.getPhotos().then(
-      userData => {
+      response => {
         dispatch({
           type: constants.GET_PHOTOS_SUCCESS,
-          payload: userData,
+          payload: response.data,
         })
       },
-      errorMessage => {
+      error => {
         dispatch({
           type: constants.GET_PHOTOS_FAILURE,
-          payload: errorMessage
-        })
+          payload: error.message
+        });
+        apiErrorHandler(error)
       }
     )
   }

@@ -1,5 +1,6 @@
 import * as constants from './constants';
 import {AUTH_KEY, EMAIL, ROLE, USER_ID, USER_NAME} from "../../constants";
+import {clearLocalStorage} from "../../utils";
 
 const initialState = {
   id: '',
@@ -34,11 +35,7 @@ export function userReducer(state = initialState, action) {
     case constants.SIGN_IN_USER_FAILURE:
       return {...state, isLoadingUserData: false, error: action.payload};
     case constants.SIGN_OUT_USER:
-      localStorage.removeItem(AUTH_KEY);
-      localStorage.removeItem(USER_NAME);
-      localStorage.removeItem(EMAIL);
-      localStorage.removeItem(USER_ID);
-      localStorage.removeItem(ROLE);
+      clearLocalStorage();
       return initialState;
     default:
       return state;

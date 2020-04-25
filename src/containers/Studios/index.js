@@ -21,7 +21,7 @@ class Studios extends React.Component {
   handleChange = e => this.setState({searchString: e.target.value})
 
   searchStudios = () => {
-    this.props.getStudios(this.state.searchString);
+    this.props.getStudios(this.state.searchString || null);
   };
 
   renderStudio = studio => (

@@ -1,5 +1,6 @@
 import * as constants from "./constants";
 import {api} from "../../api/app";
+import {apiErrorHandler} from "../../utils";
 
 export function getStudios(searchString) {
   return dispatch => {
@@ -7,40 +8,42 @@ export function getStudios(searchString) {
       type: constants.GET_STUDIOS_REQUEST,
     });
     api.getStudios(searchString).then(
-      data => {
+      response => {
         dispatch({
           type: constants.GET_STUDIOS_SUCCESS,
-          data,
+          data: response.data,
         })
       },
-      errorMessage => {
+      error => {
         dispatch({
           type: constants.GET_STUDIOS_FAILURE,
-          payload: errorMessage
-        })
+          payload: error.message
+        });
+        apiErrorHandler(error)
       }
     )
   }
 }
 
-export function registerStudio(data) {
+export function registerStudio(data, cb) {
   return dispatch => {
     dispatch({
       type: constants.REGISTER_STUDIO_REQUEST,
     });
     api.registerStudio(data).then(
-      userData => {
+      response => {
         dispatch({
           type: constants.REGISTER_STUDIO_SUCCESS,
-          userData,
-        })
-        window.location.reload();
+          userData: response.data,
+        });
+        cb && cb();
       },
-      errorMessage => {
+      error => {
         dispatch({
           type: constants.REGISTER_STUDIO_FAILURE,
-          payload: errorMessage
-        })
+          payload: error.message
+        });
+        apiErrorHandler(error)
       }
     )
   }

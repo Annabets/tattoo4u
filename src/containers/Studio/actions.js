@@ -1,5 +1,6 @@
 import * as constants from "./constants";
 import {api} from "../../api/app";
+import {apiErrorHandler} from "../../utils";
 
 export function getStudioData(studioId) {
   return dispatch => {
@@ -7,17 +8,18 @@ export function getStudioData(studioId) {
       type: constants.GET_STUDIO_DATA_REQUEST,
     });
     api.getStudioData(studioId).then(
-      data => {
+      response => {
         dispatch({
           type: constants.GET_STUDIO_DATA_SUCCESS,
-          data,
+          data: response.data,
         })
       },
-      errorMessage => {
+      error => {
         dispatch({
           type: constants.GET_STUDIO_DATA_FAILURE,
-          payload: errorMessage
-        })
+          payload: error.message
+        });
+        apiErrorHandler(error)
       }
     )
   }
@@ -29,17 +31,18 @@ export function getMasters() {
       type: constants.GET_MASTERS_REQUEST,
     });
     api.getMasters().then(
-      data => {
+      response => {
         dispatch({
           type: constants.GET_MASTERS_SUCCESS,
-          data,
+          data: response.data,
         })
       },
-      errorMessage => {
+      error => {
         dispatch({
           type: constants.GET_MASTERS_FAILURE,
-          payload: errorMessage
-        })
+          payload: error.message
+        });
+        apiErrorHandler(error)
       }
     )
   }
@@ -51,18 +54,19 @@ export function registerMaster(data, cb) {
       type: constants.REGISTER_MASTERS_REQUEST,
     });
     api.registerMaster(data).then(
-      data => {
+      response => {
         dispatch({
           type: constants.REGISTER_MASTERS_SUCCESS,
-          data,
+          data: response.data,
         });
         cb && cb(data)
       },
-      errorMessage => {
+      error => {
         dispatch({
           type: constants.REGISTER_MASTERS_FAILURE,
-          payload: errorMessage
-        })
+          payload: error.message
+        });
+        apiErrorHandler(error)
       }
     )
   }

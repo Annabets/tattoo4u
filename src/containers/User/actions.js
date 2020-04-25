@@ -1,5 +1,6 @@
 import * as constants from './constants';
 import  {api} from "../../api/app";
+import {apiErrorHandler, history} from "../../utils";
 
 export function signIn(data) {
   return dispatch => {
@@ -7,18 +8,19 @@ export function signIn(data) {
       type: constants.SIGN_IN_USER_REQUEST
     });
     api.signInUser(data).then(
-      userData => {
+      response => {
         dispatch({
           type: constants.SIGN_IN_USER_SUCCESS,
-          userData,
-        })
-        window.location.replace('/');
+          userData: response.data,
+        });
+        history.goBack();
       },
-      errorMessage => {
+      error => {
         dispatch({
           type: constants.SIGN_IN_USER_FAILURE,
-          payload: errorMessage
-        })
+          payload: error.message
+        });
+        apiErrorHandler(error)
       }
     )
   }
@@ -30,18 +32,19 @@ export function signUp(data) {
       type: constants.SIGN_UP_USER_REQUEST,
     });
     api.signUpUser(data).then(
-      userData => {
+      response => {
         dispatch({
           type: constants.SIGN_UP_USER_SUCCESS,
-          userData,
-        })
-        window.location.replace('/');
+          userData: response.data,
+        });
+        history.goBack();
       },
-      errorMessage => {
+      error => {
         dispatch({
           type: constants.SIGN_UP_USER_FAILURE,
-          payload: errorMessage
-        })
+          payload: error.message
+        });
+        apiErrorHandler(error)
       }
     )
   }
@@ -53,7 +56,7 @@ export function signOut() {
       dispatch({
         type: constants.SIGN_OUT_USER
       });
-      window.location.replace('/')
+      history.go(0);
     })
   }
 }

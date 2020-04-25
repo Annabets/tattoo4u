@@ -5,6 +5,7 @@ import {signUp} from '../actions'
 import bgImg from '../../../assets/images/tattoo.jpg';
 import {connect} from "react-redux";
 import {SIGN_IN} from "../../../routes";
+import {history} from "../../../utils";
 
 class SignUp extends React.Component {
   constructor(props) {
@@ -42,6 +43,7 @@ class SignUp extends React.Component {
     return (
       <>
         <div className="sign-in" style={{backgroundImage: `url(${bgImg})`}}>
+          <Button variant="link" className="--close" onClick={() => history.goBack()}>Back</Button>
           <div className="form-container">
             <div className="form-content">
               {this.topNav()}
@@ -82,9 +84,10 @@ class SignUp extends React.Component {
                 <Button variant="primary" type="submit" block className="form-btn">
                   Sign Up
                 </Button>
-                <Form.Text className="text-secondary mt-2">
-                  Or <a href={SIGN_IN}>sign in now!</a>
-                </Form.Text>
+                <Form.Label className="text-secondary mt-2">
+                  <span className="align-middle">Or </span>
+                  <Button variant="link" className="p-0" onClick={() => history.replace(SIGN_IN)}>sign in now!</Button>
+                </Form.Label>
               </Form>
             </div>
           </div>

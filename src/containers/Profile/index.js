@@ -14,28 +14,28 @@ class Profile extends React.Component {
     e.preventDefault();
 
     const tags = document.getElementById('tags').value.split(',');
-    const selectedFile = document.getElementById('customFile').files[0];
+    const file = document.getElementById('customFile').files[0];
     const description = document.getElementById('description').value;
 
-    this.props.uploadPhoto(selectedFile, tags, description);
+    this.props.uploadPhoto({file, tags, description}, () => document.getElementById('uploadPhoto').reset());
   }
 
   handleRegisterStudio = e => {
     e.preventDefault();
 
-    const selectedFile = document.getElementById('studioPhoto').files[0];
+    const file = document.getElementById('studioPhoto').files[0];
     const name = document.getElementById('studioName').value;
     const description = document.getElementById('studioDescription').value;
     const address = document.getElementById('studioAddress').value;
     const contact = document.getElementById('studioContact').value;
 
     this.props.registerStudio({
-      selectedFile,
+      file,
       name,
       description,
       address,
       contact,
-    })
+    }, () => document.getElementById('registerStudio').reset())
   }
 
   render() {
@@ -46,7 +46,7 @@ class Profile extends React.Component {
           <Tab eventKey="addPost" title="Upload Photo">
             <h3>Upload photo</h3>
             <br/>
-            <Form onSubmit={this.handleSubmit}>
+            <Form id="uploadPhoto" onSubmit={this.handleSubmit}>
               <Form.Group>
                 <Form.Control
                   type="file"
@@ -75,7 +75,7 @@ class Profile extends React.Component {
           <Tab eventKey="registerStudio" title="Register Studio">
             <h3>Register studio</h3>
             <br/>
-            <Form onSubmit={this.handleRegisterStudio}>
+            <Form id="registerStudio" onSubmit={this.handleRegisterStudio}>
               <Form.Group>
                 <Form.Group>
                   <FormLabel>Studio Photo</FormLabel>
@@ -123,6 +123,6 @@ class Profile extends React.Component {
 }
 
 export default connect(null, dispatch => ({
-  uploadPhoto: (file,tags,description) => dispatch(uploadPhoto(file,tags,description)),
-  registerStudio: data => dispatch(registerStudio(data))
+  uploadPhoto: (data, cb) => dispatch(uploadPhoto(data, cb)),
+  registerStudio: (data, cb) => dispatch(registerStudio(data, cb))
 }))(Profile);

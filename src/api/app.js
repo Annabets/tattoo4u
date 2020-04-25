@@ -1,84 +1,70 @@
-import {API_URL, SIGN_IN, SIGN_UP, GET, POST, DELETE} from "../constants";
+import {
+  API_URL,
+  SIGN_IN,
+  SIGN_UP,
+  UPLOAD_PHOTO,
+  PHOTOS,
+  DELETE_PHOTO,
+  GET_PHOTOS, STUDIOS, STUDIO, SIGN_OUT, MASTERS, MASTER, USERS
+} from "../constants";
 import axios from 'axios';
 import {getToken} from "../utils";
 
-const handleResponse = resp =>
-  resp.text()
-    .then(text => resp.ok ? Promise.resolve(JSON.parse(text)) : Promise.reject(text))
-    .catch(error => Promise.reject(JSON.parse(error)));
+axios.defaults.baseURL = API_URL;
 
+axios.interceptors.request.use(config => {
+  getToken && (config.headers['Authorization'] = `Bearer_${getToken()}`);
 
-const signInUser = data => fetch(`${API_URL + SIGN_IN}`, {method: POST, headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)}).then(handleResponse);
+  return config;
+});
 
-const signUpUser = data => fetch(`${API_URL + SIGN_UP}`, {method: POST, headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)}).then(handleResponse);
-
-const uploadPhoto = (file, tags, description) => {
-  const data = new FormData();
-  data.append('file', file);
-  data.append('tags', tags);
-  data.append('description', description);
-
-  return axios.post(`${API_URL + '/add-post'}`, data, {
-    headers: {
-      'content-type': 'multipart/form-data',
-      Authorization: `Bearer_${getToken()}`
-    }
-  }).then(resp => Promise.resolve(resp))
-    .catch(error => Promise.reject(error))
-
-}
-
-const getPhotos = () => fetch(`${API_URL + '/posts'}`, {method: GET, headers: {'Authorization':`Bearer_${getToken()}`}}).then(handleResponse)
-
-const deletePhoto = photoId => fetch(API_URL + `/delete-post/${photoId}`, {method: DELETE, headers: {'Authorization':`Bearer_${getToken()}`}}).then(handleResponse)
-
-const getMasterPhotos = masterId => fetch(API_URL + `/take-posts/${masterId}`, {method: GET, headers: {'Authorization':`Bearer_${getToken()}`}}).then(handleResponse)
-
-const searchPhotos = tags => fetch(API_URL + `/take-posts?tags=${tags}`, {method: GET}).then(handleResponse)
-
-const getStudios = searchString => fetch(`${API_URL + '/studios' + (searchString ? `?name=${searchString}` : '')}`, {method: GET}).then(handleResponse);
-
-const getStudioData = studioId => fetch(API_URL + `/studio?studioId=${studioId}`, {method: GET}).then(handleResponse);
-
-const registerStudio = studioData => {
-  const data = new FormData();
-  data.append('file', studioData.selectedFile);
-  data.append('name', studioData.name);
-  data.append('description', studioData.description);
-  data.append('address', studioData.address);
-  data.append('contact', studioData.contact);
-
-  return axios.post(`${API_URL + '/studio'}`, data, {
-    headers: {
-      'content-type': 'multipart/form-data',
-      Authorization: `Bearer_${getToken()}`
-    }
-  }).then(resp => Promise.resolve(resp))
-    .catch(error => Promise.reject(error))
+const formData = data => {
+  const formData = new FormData();
+  for(let prop in data){
+    formData.append(prop, data[prop])
+  }
+  return formData
 };
 
-const getMasters = searchString => fetch(`${API_URL + '/masters' + (searchString ? `?name=${searchString}` : '')}`, {method: GET}).then(handleResponse);
+const signInUser = data => axios.post(SIGN_IN, data);
 
-const registerMaster = data => fetch(API_URL + '/master', {
-  method: POST,
-  headers: {
-    'Authorization':`Bearer_${getToken()}`,
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify(data),
-})
+const signUpUser = data => axios.post(SIGN_UP, data);
 
-const signOutUser = () => fetch(`${API_URL + '/signOut'}`, {method: GET, headers:{'Authorization':`Bearer_${getToken()}`}}).then(handleResponse);
+const signOutUser = () => axios.get(SIGN_OUT);
 
-const getCurrentUser = () => fetch(
-  API_URL + '/users/currentUser',
-  {
-    method: GET,
-    headers: {
-      'Authorization':`Bearer_${getToken()}`
-    }
+const uploadPhoto = data => axios.post(UPLOAD_PHOTO, formData(data));
+
+const getPhotos = () => axios.get(PHOTOS);
+
+const searchPhotos = tags => axios.get(GET_PHOTOS, {params: {tags: tags}});
+
+const deletePhoto = photoId => axios.delete(`${DELETE_PHOTO}/${photoId}`);
+
+const getMasterPhotos = masterId => axios.get(`${GET_PHOTOS}/${masterId}`);
+
+const getStudios = (searchString, page = 0, size = 10) => axios.get(STUDIOS, {
+  params: {
+    name: searchString,
+    page: page,
+    size: size
   }
-).then(handleResponse);
+});
+
+const getStudioData = studioId => axios.get(STUDIO, {params: {studioId: studioId}});
+
+const registerStudio = studioData => axios.post(STUDIO, formData(studioData));
+
+const getMasters = (searchString, page = 0, size = 10) => axios.get(MASTERS, {
+  params: {
+    name: searchString,
+    page: page,
+    size: size
+  }
+});
+
+const registerMaster = data => axios.post(MASTER, data);
+
+const getCurrentUser = () => axios.get(`${USERS}/currentUser`);
 
 export const api = {
   signInUser,
