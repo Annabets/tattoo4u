@@ -20,7 +20,7 @@ public class AuthenticationResponseDto {
         authenticationResponseDto.setId(user.getId());
         authenticationResponseDto.setEmail(user.getEmail());
         authenticationResponseDto.setRole(user.getRoles().get(0).getName());
-        authenticationResponseDto.setPhoto(user.getPhoto().getUrl());
+        authenticationResponseDto.setPhoto((user.getPhoto()==null)?null:user.getPhoto().getUrl());
 
         return authenticationResponseDto;
     }

@@ -16,6 +16,6 @@ public class UserWithRoleResponseDto {
         this.username = user.getUsername();
         this.email = user.getEmail();
         this.role = user.getRoles().get(0).getName();
-        this.photo = user.getPhoto().getUrl();
+        this.photo = user.getPhoto()!=null?user.getPhoto().getUrl():null;
     }
 }
