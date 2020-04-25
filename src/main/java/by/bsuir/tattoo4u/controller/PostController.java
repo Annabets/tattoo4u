@@ -8,7 +8,6 @@ import by.bsuir.tattoo4u.entity.*;
 import by.bsuir.tattoo4u.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -161,12 +160,12 @@ public class PostController {
         }
     }
 
-    @GetMapping("tr")
-    public ResponseEntity<?> tr(@RequestHeader("Authorization") String token) {
+    @GetMapping("trends")
+    public ResponseEntity<?> takeTrends(@RequestHeader("Authorization") String token) {
         try {
             User user = tokenService.getUser(token);
 
-            Iterable<Post> posts = postService.takeTr();
+            Iterable<Post> posts = postService.takeTrends();
 
             Iterable<PostResponseDto> postDtoList = toDto(posts, user);
 
@@ -192,7 +191,7 @@ public class PostController {
 
                 postService.save(post);
 
-                return new ResponseEntity<>("Comment added", HttpStatus.OK);
+                return new ResponseEntity<>("Comment added", HttpStatus.CREATED);
             } else {
                 return new ResponseEntity<>("Post with the specified id does not exist", HttpStatus.BAD_REQUEST);
             }

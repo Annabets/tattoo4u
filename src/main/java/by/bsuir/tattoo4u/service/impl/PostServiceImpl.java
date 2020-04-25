@@ -41,8 +41,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Iterable<Post> takeTr() throws ServiceException {
-        return postRepository.findTr();
+    public Iterable<Post> takeTrends() throws ServiceException {
+        return postRepository.findTrends();
     }
 
     @Override

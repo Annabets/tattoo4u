@@ -20,5 +20,5 @@ public interface PostRepository extends CrudRepository<Post, Long> {
     @Query(nativeQuery = true,
             value = "SELECT post.* FROM post INNER JOIN post_likes ON post.id=post_likes.post_id GROUP BY post.id" +
                     " ORDER BY COUNT(post_likes.user_id) DESC")
-    Iterable<Post> findTr();
+    Iterable<Post> findTrends();
 }

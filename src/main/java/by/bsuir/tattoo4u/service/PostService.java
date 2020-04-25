@@ -13,7 +13,7 @@ public interface PostService {
 
     Iterable<Post> takePosts(String tags) throws ServiceException;
 
-    Iterable<Post> takeTr() throws ServiceException;
+    Iterable<Post> takeTrends() throws ServiceException;
 
     void delete(Post post) throws ServiceException;
 
