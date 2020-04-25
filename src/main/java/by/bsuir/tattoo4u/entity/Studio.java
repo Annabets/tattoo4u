@@ -1,8 +1,9 @@
 package by.bsuir.tattoo4u.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
-import org.hibernate.annotations.Cascade;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -50,6 +51,11 @@ public class Studio extends BaseEntity {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<Order> orders;
+
+    @OneToMany(mappedBy = "studio", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<StudioFeedback> feedbacks;
 
     public Studio() {
         masters = new ArrayList<>();

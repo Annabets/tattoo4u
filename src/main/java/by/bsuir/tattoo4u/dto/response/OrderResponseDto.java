@@ -11,6 +11,7 @@ public class OrderResponseDto {
     private String userId;
     private String studioId;
     private String photoUrl;
+    private String status;
 
     public OrderResponseDto(Order order) {
         this.description = order.getDescription();
@@ -19,5 +20,6 @@ public class OrderResponseDto {
         this.photoUrl = order.getPhoto().getUrl();
         this.userId = order.getAuthor().getId().toString();
         this.userName = order.getAuthor().getUsername();
+        this.status = order.getStatus();
     }
 }

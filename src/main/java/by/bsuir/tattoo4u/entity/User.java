@@ -69,4 +69,3 @@ public class User extends BaseEntity {
     @JoinColumn(name = "photo_id")
     private Photo photo;
 }
-
