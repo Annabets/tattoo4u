@@ -10,6 +10,7 @@ public class UserWithRoleResponseDto {
     private String email;
     private String role;
     private String photo;
+    private boolean isBanned;
 
     public UserWithRoleResponseDto(User user) {
         this.id = user.getId();
@@ -17,5 +18,6 @@ public class UserWithRoleResponseDto {
         this.email = user.getEmail();
         this.role = user.getRoles().get(0).getName();
         this.photo = user.getPhoto()!=null?user.getPhoto().getUrl():null;
+        this.isBanned =user.isBanned();
     }
 }

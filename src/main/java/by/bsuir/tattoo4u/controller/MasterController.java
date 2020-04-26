@@ -3,6 +3,7 @@ package by.bsuir.tattoo4u.controller;
 import by.bsuir.tattoo4u.dto.request.MasterCommentRequestDto;
 import by.bsuir.tattoo4u.dto.response.MasterCommentResponseDto;
 import by.bsuir.tattoo4u.dto.response.MasterResponseDto;
+import by.bsuir.tattoo4u.dto.response.MasterWithCheckingResponseDto;
 import by.bsuir.tattoo4u.entity.*;
 import by.bsuir.tattoo4u.service.MasterCommentService;
 import by.bsuir.tattoo4u.service.MasterService;
@@ -38,7 +39,7 @@ public class MasterController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getMasterByUsername(@PageableDefault(sort = "rating", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam(required = false) String name, @RequestParam(required = false) String page) {
+    public ResponseEntity<?> getMasterByUsername(@RequestHeader(value = "Authorization", required = false) String bearerToken, @PageableDefault(sort = "rating", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam(required = false) String name, @RequestParam(required = false) String page) {
 
         List<Master> masterList = new ArrayList<>();
         if (name == null) {
@@ -47,29 +48,59 @@ public class MasterController {
             masterList = masterService.getAllUsernameContain(name, pageable);
         }
 
-        List<MasterResponseDto> masterResponseDto = new ArrayList<>();
-        for (Master master : masterList) {
-            masterResponseDto.add(new MasterResponseDto(master));
-        }
+        if(bearerToken!=null) {
+            String token = tokenService.clearBearerToken(bearerToken);
+            User currentUser = userService.getByUsername(tokenService.getUsername(token));
 
-        return new ResponseEntity<>(masterResponseDto, HttpStatus.OK);
+            List<MasterWithCheckingResponseDto> masterResponseDto = new ArrayList<>();
+            for (Master master : masterList) {
+                boolean containsThisMaster = new ArrayList<>(currentUser.getFavourites()).contains(master);
+                masterResponseDto.add(new MasterWithCheckingResponseDto(master, containsThisMaster));
+            }
+
+            return new ResponseEntity<>(masterResponseDto, HttpStatus.OK);
+        }else {
+            List<MasterResponseDto> masterResponseDto = new ArrayList<>();
+            for (Master master : masterList) {
+                masterResponseDto.add(new MasterResponseDto(master));
+            }
+
+            return new ResponseEntity<>(masterResponseDto, HttpStatus.OK);
+        }
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<?> getMasterById(@PathVariable("id") User user) {
+    public ResponseEntity<?> getMasterById(@RequestHeader(value = "Authorization", required = false) String bearerToken, @PathVariable("id") User user) {
 
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        MasterResponseDto masterResponseDto = null;
-        if (user.getRoles().get(0).getName().equals(RoleType.MASTER.name())) {
-            masterResponseDto = new MasterResponseDto(user.getMasterInfo());
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        if(bearerToken!=null) {
+            String token = tokenService.clearBearerToken(bearerToken);
+            User currentUser = userService.getByUsername(tokenService.getUsername(token));
 
-        return new ResponseEntity<>(masterResponseDto, HttpStatus.OK);
+            MasterWithCheckingResponseDto masterResponseDto;
+            if (user.getRoles().get(0).getName().equals(RoleType.MASTER.name())) {
+                Master master = user.getMasterInfo();
+                boolean containsThisMaster = new ArrayList<>(currentUser.getFavourites()).contains(master);
+                masterResponseDto = new MasterWithCheckingResponseDto(master, containsThisMaster);
+            } else {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
+            return new ResponseEntity<>(masterResponseDto, HttpStatus.OK);
+        }else {
+            MasterResponseDto masterResponseDto;
+            if (user.getRoles().get(0).getName().equals(RoleType.MASTER.name())) {
+                Master master = user.getMasterInfo();
+                masterResponseDto = new MasterResponseDto(master);
+            } else {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
+            return new ResponseEntity<>(masterResponseDto, HttpStatus.OK);
+        }
     }
 
     @PostMapping("/comments")

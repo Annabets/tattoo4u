@@ -10,6 +10,7 @@ public class UserResponseDto {
     private String username;
     private String email;
     private String photo;
+    private boolean isBanned;
 
     public UserResponseDto() {
     }
@@ -19,6 +20,7 @@ public class UserResponseDto {
         this.username = user.getUsername();
         this.email = user.getEmail();
         this.photo = user.getPhoto()!=null?user.getPhoto().getUrl():null;
+        this.isBanned =user.isBanned();
     }
 
     public User toUser() {
@@ -35,7 +37,7 @@ public class UserResponseDto {
         userDto.setId(user.getId());
         userDto.setUsername(user.getUsername());
         userDto.setEmail(user.getEmail());
-        userDto.setPhoto(user.getPhoto().getUrl());
+        userDto.setPhoto(user.getPhoto()!=null?user.getPhoto().getUrl():null);
 
         return userDto;
     }
