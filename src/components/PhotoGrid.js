@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Modal from './Modal';
+import notLikedBtn from '../assets/icons/n-active-like-btn.svg';
+import likedBtn from '../assets/icons/active-like-btn.svg';
+import {isAuth} from "../utils";
 
 class PhotoGrid extends React.Component {
     constructor(props){
@@ -13,7 +16,7 @@ class PhotoGrid extends React.Component {
     }
 
     renderColumn=(colNum,colLen)=>{
-        const {photos, deletePhoto, username, userRole} = this.props;
+        const {photos, deletePhoto, username, userRole, likePhoto} = this.props;
         let columnPhotos = photos.filter((item, index) => {
             return (index % colLen === colNum)
         })
@@ -25,6 +28,11 @@ class PhotoGrid extends React.Component {
                         <a>
                             {`${photo.authorName}`}
                         </a>
+                        {isAuth() &&
+                        <button className="transparent-btn" value={photo.id} onClick={() => likePhoto(photo.id)}>
+                            {photo.liked || <img src={notLikedBtn} width="24" height="24" alt=""/>}
+                            {photo.liked && <img src={likedBtn} width="24" height="24" alt=""/>}
+                        </button>}
                     </div>
                     {(userRole === "ADMIN" || username === photo.authorName) &&
                     <span className="--delete text-danger" onClick={()=> deletePhoto(photo.id)}>&times;</span>}
@@ -96,6 +104,7 @@ class PhotoGrid extends React.Component {
             isModalOpen,
             modalPhoto,
             setModalOpenFlag,
+            likePhoto,
         } = this.props;
         return(
             <>
@@ -114,6 +123,7 @@ class PhotoGrid extends React.Component {
                 <Modal
                     modalPhoto={modalPhoto}
                     setModalOpenFlag={setModalOpenFlag}
+                    likePhoto={likePhoto}
                 />}
             </>
         )

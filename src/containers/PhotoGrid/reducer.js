@@ -28,7 +28,8 @@ export function photoGridReducer(state = initialState,action){
                 ...state,
                 modalPhoto: {
                     ...state.modalPhoto,
-                    liked: !state.modalPhoto.liked
+                    liked: !state.modalPhoto.liked,
+                    likesNumber: state.modalPhoto.liked ? state.modalPhoto.likesNumber - 1 : state.modalPhoto.likesNumber + 1
                 }
             }
 

@@ -7,6 +7,7 @@ export const SIGN_OUT = '/signOut';
 export const UPLOAD_PHOTO = '/add-post';
 export const PHOTOS = '/posts';
 export const DELETE_PHOTO = '/delete-post';
+export const LIKE_PHOTO = '/like-post';
 export const GET_PHOTOS = '/take-posts';
 export const STUDIOS = '/studios';
 export const STUDIO = '/studio';

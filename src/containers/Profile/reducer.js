@@ -38,10 +38,14 @@ export function profileReducer(state = initialState, action) {
         photos: state.photos.filter(photo => photo.id !== action.id)
       };
     case constants.CLEAR_PHOTOS:
-      console.log('hi')
       return {
         ...state,
         photos: [],
+      };
+    case constants.TOGGLE_LIKE:
+      return {
+        ...state,
+        photos: state.photos.map(photo => photo.id === action.payload ? {...photo, liked: !photo.liked} : photo)
       };
 
     default:

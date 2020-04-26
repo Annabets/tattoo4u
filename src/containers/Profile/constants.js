@@ -15,3 +15,5 @@ export const GET_PHOTOS_FAILURE = 'GET_PHOTOS_FAILURE';
 export const DELETE_PHOTO = 'DELETE_PHOTO';
 
 export const CLEAR_PHOTOS = 'CLEAR_PHOTOS';
+
+export const TOGGLE_LIKE = 'TOGGLE_LIKE';

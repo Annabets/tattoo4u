@@ -58,9 +58,39 @@ function deletePhoto(photoId, cb) {
     }
 }
 
+function likePhoto(photoId) {
+    return dispatch => {
+        dispatch({
+            type: _.LIKE_PHOTO_REQUEST
+        });
+        api.likePhoto(photoId).then(
+          () => {
+              dispatch({
+                  type: _.LIKE_PHOTO_SUCCESS,
+              });
+              dispatch({
+                  type: _.TOGGLE_LIKE,
+                  payload: photoId,
+              });
+              dispatch({
+                  type: _.TOGGLE_MODAL_PHOTO_LIKE,
+              })
+          },
+          error => {
+              dispatch({
+                  type: _.LIKE_PHOTO_FAILURE,
+                  payload: error.message
+              });
+              apiErrorHandler(error);
+          }
+        )
+    }
+}
+
 export const photoGridActions = {
     setColumns,
     setModalOpenFlag,
     setModalPhoto,
     deletePhoto,
+    likePhoto,
 };

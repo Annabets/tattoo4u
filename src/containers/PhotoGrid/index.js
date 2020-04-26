@@ -19,6 +19,8 @@ function PhotoGridContainer(props) {
     username,
     userRole,
     onMount,
+    likePhoto,
+    toggleModalPhotoLike,
   } = props;
   return (
     <>
@@ -37,6 +39,7 @@ function PhotoGridContainer(props) {
         username={username}
         userRole={userRole}
         onMount={onMount}
+        likePhoto={likePhoto}
       />
     </>
   )
@@ -63,6 +66,7 @@ const mapDispatchToProps = dispatch => {
     setModalOpenFlag: flag => dispatch(photoGridActions.setModalOpenFlag(flag)),
     setModalPhoto: photo => dispatch(photoGridActions.setModalPhoto(photo)),
     deletePhoto: (photoId, cb) => dispatch(photoGridActions.deletePhoto(photoId, cb)),
+    likePhoto: photoId => dispatch(photoGridActions.likePhoto(photoId))
   }
 };
 

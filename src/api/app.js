@@ -5,7 +5,7 @@ import {
   UPLOAD_PHOTO,
   PHOTOS,
   DELETE_PHOTO,
-  GET_PHOTOS, STUDIOS, STUDIO, SIGN_OUT, MASTERS, MASTER, USERS
+  GET_PHOTOS, STUDIOS, STUDIO, SIGN_OUT, MASTERS, MASTER, USERS, LIKE_PHOTO
 } from "../constants";
 import axios from 'axios';
 import {getToken} from "../utils";
@@ -13,7 +13,7 @@ import {getToken} from "../utils";
 axios.defaults.baseURL = API_URL;
 
 axios.interceptors.request.use(config => {
-  getToken && (config.headers['Authorization'] = `Bearer_${getToken()}`);
+  config.headers['Authorization'] = getToken() ? `Bearer_${getToken()}` : null;
 
   return config;
 });
@@ -73,6 +73,8 @@ const registerMaster = data => axios.post(MASTER, data);
 
 const getCurrentUser = () => axios.get(`${USERS}/currentUser`);
 
+const likePhoto = photoId => axios.get(`${LIKE_PHOTO}/${photoId}`);
+
 export const api = {
   signInUser,
   signUpUser,
@@ -87,5 +89,6 @@ export const api = {
   registerMaster,
   deletePhoto,
   getMasterPhotos,
-  searchPhotos
+  searchPhotos,
+  likePhoto,
 };
