@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -40,8 +41,26 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public Iterable<Post> takeTrends() throws ServiceException {
+        return postRepository.findTrends();
+    }
+
+    @Override
     public void delete(Post post) throws ServiceException {
         postRepository.delete(post);
+    }
+
+    @Override
+    public void like(Post post, User user) throws ServiceException {
+        Set<User> likes = post.getLikes();
+
+        if (likes.contains(user)) {
+            likes.remove(user);
+        } else {
+            likes.add(user);
+        }
+
+        save(post);
     }
 
     private List<String> parseTags(String tags) {
