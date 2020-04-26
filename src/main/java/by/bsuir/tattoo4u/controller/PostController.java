@@ -68,7 +68,7 @@ public class PostController {
     }
 
     @GetMapping("posts")
-    public ResponseEntity<?> posts(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> posts(@RequestHeader(value = "Authorization", required = false) String token) {
         try {
             User user = tokenService.getUser(token);
 
@@ -85,7 +85,7 @@ public class PostController {
     @GetMapping("take-posts/{id}")
     public ResponseEntity<?> takeUserPosts(
             @PathVariable("id") User user,
-            @RequestHeader("Authorization") String token
+            @RequestHeader(value = "Authorization", required = false) String token
     ) {
         try {
             if (user != null) {
@@ -105,7 +105,10 @@ public class PostController {
     }
 
     @GetMapping("take-posts")
-    public ResponseEntity<?> takePosts(@RequestParam String tags, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> takePosts(
+            @RequestParam String tags,
+            @RequestHeader(value = "Authorization", required = false) String token
+    ) {
         try {
             User currentUser = tokenService.getUser(token);
 
@@ -163,7 +166,7 @@ public class PostController {
     }
 
     @GetMapping("trends")
-    public ResponseEntity<?> takeTrends(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> takeTrends(@RequestHeader(value = "Authorization", required = false) String token) {
         try {
             User user = tokenService.getUser(token);
 
