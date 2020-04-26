@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -207,13 +204,16 @@ public class PostController {
     }
 
     @GetMapping("comments/{id}")
-    public ResponseEntity<?> takeComment(@PathVariable("id") Post post){
-        if(post != null){
+    public ResponseEntity<?> takeComment(@PathVariable("id") Post post) {
+        if (post != null) {
             Set<Comment> comments = post.getComments();
 
-            Set<CommentResponseDto> commentDtoSet = toDto(comments);
+            List<CommentResponseDto> commentDtoList = toDto(comments);
 
-            return new ResponseEntity<>(commentDtoSet, HttpStatus.OK);
+            commentDtoList.sort(Comparator.comparing((CommentResponseDto::getDate)));
+            Collections.reverse(commentDtoList);
+
+            return new ResponseEntity<>(commentDtoList, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Post with the specified id does not exist", HttpStatus.BAD_REQUEST);
         }
@@ -231,15 +231,15 @@ public class PostController {
         return postDtoList;
     }
 
-    private Set<CommentResponseDto> toDto(Set<Comment> comments){
-        Set<CommentResponseDto> commentDtoSet = new HashSet<>();
+    private List<CommentResponseDto> toDto(Set<Comment> comments) {
+        List<CommentResponseDto> commentDtoList = new ArrayList<>();
 
-        for(Comment comment : comments){
+        for (Comment comment : comments) {
             CommentResponseDto commentDto = new CommentResponseDto();
             commentDto.fromComment(comment);
-            commentDtoSet.add(commentDto);
+            commentDtoList.add(commentDto);
         }
 
-        return commentDtoSet;
+        return commentDtoList;
     }
 }
