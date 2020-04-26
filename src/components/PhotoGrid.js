@@ -5,8 +5,6 @@ import Modal from './Modal';
 class PhotoGrid extends React.Component {
     constructor(props){
         super(props)
-        this.handleGetMorePhotos();
-        this.handleResize();
     }
 
     handleGetMorePhotos = () => {
@@ -15,7 +13,7 @@ class PhotoGrid extends React.Component {
     }
 
     renderColumn=(colNum,colLen)=>{
-        const {photos} = this.props;
+        const {photos, deletePhoto, username, userRole} = this.props;
         let columnPhotos = photos.filter((item, index) => {
             return (index % colLen === colNum)
         })
@@ -28,6 +26,8 @@ class PhotoGrid extends React.Component {
                             {`${photo.authorName}`}
                         </a>
                     </div>
+                    {(userRole === "ADMIN" || username === photo.authorName) &&
+                    <span className="--delete text-danger" onClick={()=> deletePhoto(photo.id)}>&times;</span>}
                 </div>
             )
         })
@@ -73,8 +73,13 @@ class PhotoGrid extends React.Component {
     }
 
     componentDidMount = ()=>{
+        this.props.onMount && this.props.onMount();
+
         window.addEventListener("resize", this.handleResize);
         window.addEventListener("scroll", this.handleScroll);
+
+        this.handleGetMorePhotos();
+        this.handleResize();
     }
 
     componentWillUnmount= ()=>{
@@ -126,6 +131,7 @@ PhotoGrid.propTypes = {
     setColumns: PropTypes.func.isRequired,
     setModalOpenFlag: PropTypes.func.isRequired,
     setModalPhoto: PropTypes.func.isRequired,
-}
+    deletePhoto: PropTypes.func,
+};
 
 export default PhotoGrid;

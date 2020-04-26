@@ -31,6 +31,19 @@
   margin-bottom: 1.45rem;
   position: relative;
   cursor: pointer;
+
+  .--delete {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    font-size: 30px;
+    line-height: 30px;
+    visibility: hidden;
+  }
+
+  &:hover .--delete {
+    visibility: visible;
+  }
 }
 
 .Column-item:hover .Column-item-content{

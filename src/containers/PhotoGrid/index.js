@@ -14,6 +14,11 @@ function PhotoGridContainer(props) {
     isLoadingPhotos,
     isUploadFailed,
     setModalPhoto,
+    deletePhoto,
+    onDeletePhoto,
+    username,
+    userRole,
+    onMount,
   } = props;
   return (
     <>
@@ -28,6 +33,10 @@ function PhotoGridContainer(props) {
         setColumns={setColumns}
         setModalOpenFlag={setModalOpenFlag}
         setModalPhoto={setModalPhoto}
+        deletePhoto={id => deletePhoto(id, () => onDeletePhoto(id))}
+        username={username}
+        userRole={userRole}
+        onMount={onMount}
       />
     </>
   )
@@ -38,20 +47,23 @@ PhotoGridContainer.propTypes = {
   isLoadingPhotos: PropTypes.bool.isRequired,
   isUploadFailed: PropTypes.bool.isRequired,
   pages: PropTypes.array.isRequired,
-}
+};
 
 const mapStateToProps = store => {
   return {
-    photoGrid: store.photoGrid
+    photoGrid: store.photoGrid,
+    username: store.user.username,
+    userRole: store.user.role,
   }
-}
+};
 
 const mapDispatchToProps = dispatch => {
   return {
     setColumns: colNum => dispatch(photoGridActions.setColumns(colNum)),
     setModalOpenFlag: flag => dispatch(photoGridActions.setModalOpenFlag(flag)),
     setModalPhoto: photo => dispatch(photoGridActions.setModalPhoto(photo)),
+    deletePhoto: (photoId, cb) => dispatch(photoGridActions.deletePhoto(photoId, cb)),
   }
-}
+};
 
 export default connect(mapStateToProps,mapDispatchToProps)(PhotoGridContainer);

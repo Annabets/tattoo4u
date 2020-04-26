@@ -1,4 +1,6 @@
 import {photoGridConstants as _} from "./constants";
+import {api} from "../../api/app";
+import {apiErrorHandler} from "../../utils";
 
 const getArr = (arrSize)=>{
     let i=0, temp=[];
@@ -33,8 +35,32 @@ function toggleModalPhotoLike() {
     }
 }
 
+function deletePhoto(photoId, cb) {
+    return dispatch => {
+        dispatch({
+            type: _.DELETE_PHOTO_REQUEST
+        });
+        api.deletePhoto(photoId).then(
+          () => {
+              dispatch({
+                  type: _.DELETE_PHOTO_SUCCESS,
+              });
+              cb && cb();
+          },
+          error => {
+              dispatch({
+                  type: _.DELETE_PHOTO_FAILURE,
+                  payload: error.message
+              });
+              apiErrorHandler(error)
+          }
+        )
+    }
+}
+
 export const photoGridActions = {
     setColumns,
     setModalOpenFlag,
     setModalPhoto,
-}
+    deletePhoto,
+};

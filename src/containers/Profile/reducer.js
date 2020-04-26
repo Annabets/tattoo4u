@@ -1,6 +1,9 @@
 import * as constants from './constants';
 
 const initialState = {
+  photos:[],
+  isLoadingPhotos: false,
+  isUploadFailed: false,
   error: '',
 };
 
@@ -8,9 +11,38 @@ export function profileReducer(state = initialState, action) {
   switch (action.type) {
     case constants.UPLOAD_PHOTO_FAILURE:
     case constants.REGISTER_STUDIO_FAILURE:
-      return {error: action.payload};
+      return { ...state, error: action.payload};
     case constants.RESET_ERROR:
-      return {error: ''}
+      return { ...state, error: ''};
+    case constants.GET_PHOTOS_REQUEST:
+      return {
+        ...state,
+        isLoadingPhotos: true,
+      };
+    case constants.GET_PHOTOS_SUCCESS:
+      return {
+        ...state,
+        photos: state.photos.concat(action.payload),
+        isLoadingPhotos: false
+      };
+    case constants.GET_PHOTOS_FAILURE:
+      return {
+        ...state,
+        isLoadingPhotos: false,
+        isUploadFailed: true,
+        error: action.payload,
+      };
+    case constants.DELETE_PHOTO:
+      return {
+        ...state,
+        photos: state.photos.filter(photo => photo.id !== action.id)
+      };
+    case constants.CLEAR_PHOTOS:
+      console.log('hi')
+      return {
+        ...state,
+        photos: [],
+      };
 
     default:
       return state;

@@ -55,3 +55,39 @@ export function resetError() {
     type: constants.RESET_ERROR
   }
 }
+
+export function getSelfPhotos() {
+  return (dispatch, getState) => {
+    dispatch({
+      type: constants.GET_PHOTOS_REQUEST,
+    });
+    api.getMasterPhotos(getState().user.id).then(
+      response => {
+        dispatch({
+          type: constants.GET_PHOTOS_SUCCESS,
+          payload: response.data,
+        })
+      },
+      error => {
+        dispatch({
+          type: constants.GET_PHOTOS_FAILURE,
+          payload: error.message,
+        });
+        apiErrorHandler(error)
+      }
+    )
+  }
+}
+
+export function clearPhotos() {
+  return {
+    type: constants.CLEAR_PHOTOS,
+  }
+}
+
+export function deletePhoto(id) {
+  return {
+    type: constants.DELETE_PHOTO,
+    id
+  }
+}
