@@ -202,8 +202,7 @@ public class PostController {
         }
     }
 
-    @GetMapping("comment/{id}")
-    @PreAuthorize("isAuthenticated()")
+    @GetMapping("comments/{id}")
     public ResponseEntity<?> takeComment(@PathVariable("id") Post post){
         if(post != null){
             Set<Comment> comments = post.getComments();

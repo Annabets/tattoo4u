@@ -32,6 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String GET_MASTERS = "/api/masters/**";
     private static final String TAKE_POSTS_ENDPOINT = "/api/take-posts/**";
     private static final String TRENDS_ENDPOINT = "/api/trends";
+    private static final String COMMENTS_ENDPOINT = "/api/comments/*";
 
     @Autowired
     public SecurityConfig(JwtTokenProvider jwtTokenProvider, TokenService tokenService, UserService userService) {
@@ -56,7 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(LOGIN_ENDPOINT, REGISTRATION_ENDPOINT, POSTS_ENDPOINT, STUDIO, GET_MASTERS, STUDIOS,
-                        TAKE_POSTS_ENDPOINT, TRENDS_ENDPOINT).permitAll()
+                        TAKE_POSTS_ENDPOINT, TRENDS_ENDPOINT, COMMENTS_ENDPOINT).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider, tokenService, userService));
