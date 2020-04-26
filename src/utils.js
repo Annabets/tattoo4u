@@ -29,10 +29,12 @@ export function apiErrorHandler(error) {
 
     if (error.response.status === 401) {
       clearLocalStorage();
+      history.go(0);
     }
 
     if (error.response.status === 403) {
       clearLocalStorage();
+      history.go(0);
     }
   }
 }

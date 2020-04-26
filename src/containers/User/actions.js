@@ -60,3 +60,9 @@ export function signOut() {
     })
   }
 }
+
+export function resetError() {
+  return {
+    type: constants.RESET_ERROR
+  }
+}

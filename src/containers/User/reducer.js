@@ -38,6 +38,8 @@ export function userReducer(state = initialState, action) {
     case constants.SIGN_OUT_USER:
       clearLocalStorage();
       return initialState;
+    case constants.RESET_ERROR:
+      return {...state, error: ''};
     default:
       return state;
   }

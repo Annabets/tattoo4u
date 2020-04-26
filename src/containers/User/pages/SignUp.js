@@ -1,11 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Form, Button, Nav} from "react-bootstrap";
-import {signUp} from '../actions'
+import {Form, Button, Nav, Alert} from "react-bootstrap";
+import {resetError, signUp} from '../actions'
 import bgImg from '../../../assets/images/tattoo.jpg';
 import {connect} from "react-redux";
 import {SIGN_IN} from "../../../routes";
 import {history} from "../../../utils";
+import * as yup from "yup";
+
+const schema = yup.object({
+  username: yup.string()
+    .required('Username required'),
+  email: yup.string()
+    .email('Invalid email')
+    .required('Email required'),
+  password: yup
+    .string()
+    .matches(
+      /(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}/,
+      'Password must contain at least one uppercase letter, one lowercase letter, one digit and its minimum length is 6')
+    .required('Password required'),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref('password'), ''], 'Passwords must match')
+    .required('Confirm password')
+});
 
 class SignUp extends React.Component {
   constructor(props) {
@@ -17,14 +36,27 @@ class SignUp extends React.Component {
       confirmPassword: '',
       email: '',
       role: 'USER',
+      errors: {},
     }
   }
 
+  setError = (field, error) => this.setState(state => ({errors: {...state.errors, [field]: error}}));
+
+  removeError = (field) => this.setState(state => ({errors: field ? {...state.errors, [field]: ''} : {}}));
+
+  handleChange = field => e => {
+    this.setState({[field]: e.target.value});
+    this.removeError(field);
+    this.props.resetError();
+  };
+
   handleSubmit = e => {
     e.preventDefault();
-    if (this.state.password === this.state.confirmPassword){
-      this.props.signUp(this.state);
-    }
+
+    this.removeError();
+    schema.validate(this.state, {abortEarly: false})
+      .then(() => this.props.signUp(this.state))
+      .catch(reason => reason.inner.forEach(er => this.setError(er.path, er.message)))
   };
 
   topNav = () => (
@@ -39,7 +71,8 @@ class SignUp extends React.Component {
   )
 
   render() {
-    const {username, password, confirmPassword, email, role} = this.state;
+    const {username, password, confirmPassword, email, role, errors} = this.state;
+    const { error } = this.props;
     return (
       <>
         <div className="sign-in" style={{backgroundImage: `url(${bgImg})`}}>
@@ -54,33 +87,42 @@ class SignUp extends React.Component {
                     type="text"
                     placeholder="Username"
                     value={username}
-                    onChange={e => this.setState({username: e.target.value})}
+                    onChange={this.handleChange('username')}
+                    isInvalid={!!errors.username}
                   />
+                  <span className="text-danger">{errors.username}</span>
                 </Form.Group>
                 <Form.Group>
                   <Form.Control
                     type="email"
                     placeholder="Email"
                     value={email}
-                    onChange={e => this.setState({email: e.target.value})}
+                    onChange={this.handleChange('email')}
+                    isInvalid={!!errors.email}
                   />
+                  <span className="text-danger">{errors.email}</span>
                 </Form.Group>
                 <Form.Group>
                   <Form.Control
                     type="password"
                     placeholder="Password"
                     value={password}
-                    onChange={e => this.setState({password: e.target.value})}
+                    onChange={this.handleChange('password')}
+                    isInvalid={!!errors.password}
                   />
+                  <span className="text-danger">{errors.password}</span>
                 </Form.Group>
                 <Form.Group>
                   <Form.Control
                     type="password"
                     placeholder="Confirm Password"
                     value={confirmPassword}
-                    onChange={e => this.setState({confirmPassword: e.target.value})}
+                    onChange={this.handleChange('confirmPassword')}
+                    isInvalid={!!errors.confirmPassword}
                   />
+                  <span className="text-danger">{errors.confirmPassword}</span>
                 </Form.Group>
+                {error && <Alert variant="danger">{error}</Alert>}
                 <Button variant="primary" type="submit" block className="form-btn">
                   Sign Up
                 </Button>
@@ -100,6 +142,16 @@ class SignUp extends React.Component {
 
 SignUp.propTypes = {
   signUp: PropTypes.func,
+  error: PropTypes.string,
+  resetError: PropTypes.func,
 };
 
-export default connect(null, dispatch => ({signUp: data => dispatch(signUp(data))}))(SignUp);
+export default connect(
+  state => ({
+    error: state.user.error
+  }),
+  dispatch => ({
+    signUp: data => dispatch(signUp(data)),
+    resetError: () => dispatch(resetError())
+  })
+)(SignUp);

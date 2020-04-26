@@ -25,26 +25,3 @@ export function getStudios(searchString) {
   }
 }
 
-export function registerStudio(data, cb) {
-  return dispatch => {
-    dispatch({
-      type: constants.REGISTER_STUDIO_REQUEST,
-    });
-    api.registerStudio(data).then(
-      response => {
-        dispatch({
-          type: constants.REGISTER_STUDIO_SUCCESS,
-          userData: response.data,
-        });
-        cb && cb();
-      },
-      error => {
-        dispatch({
-          type: constants.REGISTER_STUDIO_FAILURE,
-          payload: error.message
-        });
-        apiErrorHandler(error)
-      }
-    )
-  }
-}

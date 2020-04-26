@@ -18,6 +18,13 @@ axios.interceptors.request.use(config => {
   return config;
 });
 
+axios.interceptors.response.use(null, error => {
+  if (error.response && error.response.data && error.response.data.error)
+    error.message = error.response.data.error;
+
+  return Promise.reject(error);
+});
+
 const formData = data => {
   const formData = new FormData();
   for(let prop in data){
