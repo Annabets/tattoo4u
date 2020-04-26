@@ -265,7 +265,7 @@ public class UserController {
 
         List<StudioResponseDto> responseDto = new ArrayList<>();
         for (Studio studio : user.getFavouritesStudios()) {
-            responseDto.add(new StudioResponseDto(studio));
+            responseDto.add(new StudioResponseDto(studio, true));
         }
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -280,7 +280,7 @@ public class UserController {
 
         List<StudioResponseDto> responseDto = new ArrayList<>();
         for (Studio studio : studiSet) {
-            responseDto.add(new StudioResponseDto(studio));
+            responseDto.add(new StudioResponseDto(studio, true));
         }
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -305,7 +305,7 @@ public class UserController {
 
         List<StudioResponseDto> responseDto = new ArrayList<>();
         for (Studio studio : userWithFavourite.getFavouritesStudios()) {
-            responseDto.add(new StudioResponseDto(studio));
+            responseDto.add(new StudioResponseDto(studio, true));
         }
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
