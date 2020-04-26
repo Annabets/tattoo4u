@@ -41,7 +41,7 @@ public class StudioServiceImpl implements StudioService {
     @Override
     public void save(Studio studio) throws ServiceException {
         Studio temp = studioRepository.getByOwner(studio.getOwner());
-        if(temp == null) {
+        if(temp != null) {
             throw new ServiceException("You can create only one studio");
         }
 
@@ -134,7 +134,7 @@ public class StudioServiceImpl implements StudioService {
         Master master = user.getMasterInfo();
         Studio studio = studioRepository.getById(studioId);
 
-        List<Master> masters = studio.getMasters();//.remove(master);
+        List<Master> masters = studio.getMasters();
         masters.remove(master);
         studio.setMasters(masters);
         studioRepository.save(studio);
