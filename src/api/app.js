@@ -16,6 +16,7 @@ import {
   TREND_PHOTOS,
   COMMENT,
   FAVORITE_STUDIO,
+  FEEDBACK
 } from "../constants";
 import axios from 'axios';
 import {getToken} from "../utils";

@@ -17,6 +17,7 @@ export const MASTER = '/master';
 export const USERS = '/users';
 export const COMMENT = '/comment';
 export const FAVORITE_STUDIO = '/favouritesStudio';
+export const FEEDBACK = '/feedback';
 
 //methods
 export const GET = 'GET';
