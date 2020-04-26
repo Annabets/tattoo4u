@@ -9,7 +9,8 @@ import Profile from '../containers/Profile';
 import Studios from '../containers/Studios';
 import Studio from '../containers/Studio';
 import Masters from '../containers/Masters';
-import {SIGN_IN, SIGN_UP, PROFILE, STUDIOS, MASTERS} from "../routes";
+import Gallery from '../containers/Gallery';
+import {SIGN_IN, SIGN_UP, PROFILE, STUDIOS, MASTERS, GALLERY} from "../routes";
 import Navbar from "./Navbar";
 import {history} from "../utils";
 
@@ -34,6 +35,7 @@ export default () => (
       </Route>
       <Route path={`${STUDIOS}/:studioId`} component={Studio}/>
       <Route path={MASTERS} component={Masters}/>
+      <Route path={GALLERY} component={Gallery}/>
     </Router>
   </Provider>
 );

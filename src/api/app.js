@@ -5,7 +5,7 @@ import {
   UPLOAD_PHOTO,
   PHOTOS,
   DELETE_PHOTO,
-  GET_PHOTOS, STUDIOS, STUDIO, SIGN_OUT, MASTERS, MASTER, USERS, LIKE_PHOTO
+  GET_PHOTOS, STUDIOS, STUDIO, SIGN_OUT, MASTERS, MASTER, USERS, LIKE_PHOTO, TREND_PHOTOS
 } from "../constants";
 import axios from 'axios';
 import {getToken} from "../utils";
@@ -42,6 +42,8 @@ const signOutUser = () => axios.get(SIGN_OUT);
 const uploadPhoto = data => axios.post(UPLOAD_PHOTO, formData(data));
 
 const getPhotos = () => axios.get(PHOTOS);
+
+const getTrendPhotos = () => axios.get(TREND_PHOTOS);
 
 const searchPhotos = tags => axios.get(GET_PHOTOS, {params: {tags: tags}});
 
@@ -91,4 +93,5 @@ export const api = {
   getMasterPhotos,
   searchPhotos,
   likePhoto,
+  getTrendPhotos,
 };

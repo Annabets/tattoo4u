@@ -10,12 +10,14 @@ class UploadPhotoForm extends React.Component {
   constructor(props){
     super(props);
 
-    this.state = {
+    this.initialState = {
       file: null,
       tags: '',
       description: '',
       errors: {},
-    }
+    };
+
+    this.state = this.initialState;
   }
 
   setError = (field, error) => this.setState(state => ({errors: {...state.errors, [field]: error}}));
