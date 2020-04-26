@@ -71,3 +71,49 @@ export function registerMaster(data, cb) {
     )
   }
 }
+
+export function addStudioToFavorites(studioId, cb) {
+  return dispatch => {
+    dispatch({
+      type: constants.ADD_STUDIO_TO_FAVORITES_REQUEST,
+    });
+    api.addStudioToFav(studioId).then(
+      () => {
+        dispatch({
+          type: constants.ADD_STUDIO_TO_FAVORITES_SUCCESS,
+        });
+        cb && cb()
+      },
+      error => {
+        dispatch({
+          type: constants.ADD_STUDIO_TO_FAVORITES_FAILURE,
+          payload: error.message
+        });
+        apiErrorHandler(error)
+      }
+    )
+  }
+}
+
+export function removeStudioFromFavorites(studioId, cb) {
+  return dispatch => {
+    dispatch({
+      type: constants.REMOVE_STUDIO_FROM_FAVORITES_REQUEST,
+    });
+    api.removeStudioFromFav(studioId).then(
+      () => {
+        dispatch({
+          type: constants.REMOVE_STUDIO_FROM_FAVORITES_SUCCESS,
+        });
+        cb && cb()
+      },
+      error => {
+        dispatch({
+          type: constants.REMOVE_STUDIO_FROM_FAVORITES_FAILURE,
+          payload: error.message
+        });
+        apiErrorHandler(error)
+      }
+    )
+  }
+}

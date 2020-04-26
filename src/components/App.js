@@ -1,6 +1,6 @@
 import React from 'react';
 import {store} from "../configureStore";
-import {Router, Route} from "react-router";
+import {Router, Route, Redirect} from "react-router";
 import {Provider} from "react-redux";
 import HomePage from '../containers/HomePage';
 import SignIn from '../containers/User/pages/SignIn';
@@ -12,7 +12,7 @@ import Masters from '../containers/Masters';
 import Gallery from '../containers/Gallery';
 import {SIGN_IN, SIGN_UP, PROFILE, STUDIOS, MASTERS, GALLERY} from "../routes";
 import Navbar from "./Navbar";
-import {history} from "../utils";
+import {history, isAuth} from "../utils";
 
 export default () => (
   <Provider store={store}>
@@ -28,7 +28,7 @@ export default () => (
         <SignUp/>
       </Route>
       <Route exact path={PROFILE}>
-        <Profile />
+        {isAuth() ? <Profile /> : <Redirect to="/"/>}
       </Route>
       <Route exact path={STUDIOS}>
         <Studios />

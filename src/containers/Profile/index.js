@@ -1,10 +1,20 @@
 import React from 'react';
 import {connect} from "react-redux";
 import {Tabs, Tab} from 'react-bootstrap';
-import {registerStudio, uploadPhoto, resetError, getSelfPhotos, deletePhoto, clearPhotos} from "./actions";
+import {
+  registerStudio,
+  uploadPhoto,
+  resetError,
+  getSelfPhotos,
+  deletePhoto,
+  clearPhotos,
+  getFavoriteStudios,
+  removeStudioFromFavorites,
+} from "./actions";
 import UploadPhotoForm from './forms/UploadPhotoForm';
 import RegisterStudioForm from './forms/RegisterStudioForm';
 import PhotoGridContainer from "../PhotoGrid";
+import Favorites from '../../components/Favorites';
 
 class Profile extends React.Component {
   constructor(props){
@@ -13,6 +23,7 @@ class Profile extends React.Component {
 
   render() {
     const {
+      role,
       error,
       uploadPhoto,
       registerStudio,
@@ -22,12 +33,17 @@ class Profile extends React.Component {
       isLoadingPhotos,
       isUploadFailed,
       deletePhoto,
-      clearPhotos
+      clearPhotos,
+      favoriteStudios,
+      getFavoriteStudios,
+      removeStudioFromFavorites,
     } = this.props;
+    const isMaster = role === 'MASTER';
+    console.log(isMaster)
     return (
       <>
-        {this.props.role === 'MASTER' &&
-        <Tabs defaultActiveKey="selfPhotos" id="uncontrolled-tab-example" unmountOnExit>
+        <Tabs defaultActiveKey={isMaster ? "selfPhotos" : "favorites"} id="uncontrolled-tab-example" unmountOnExit>
+          {isMaster &&
           <Tab eventKey="selfPhotos" title="My photos">
             <PhotoGridContainer
               pages={photos}
@@ -37,14 +53,23 @@ class Profile extends React.Component {
               onDeletePhoto={deletePhoto}
               onMount={clearPhotos}
             />
-          </Tab>
+          </Tab>}
+          {isMaster &&
           <Tab eventKey="addPhoto" title="Upload Photo">
             <UploadPhotoForm uploadPhoto={uploadPhoto} error={error} resetError={resetError}/>
-          </Tab>
+          </Tab>}
+          {isMaster &&
           <Tab eventKey="registerStudio" title="Register Studio">
             <RegisterStudioForm registerStudio={registerStudio} error={error} resetError={resetError}/>
+          </Tab>}
+          <Tab eventKey="favorites" title="Favorites">
+            <Favorites
+              favoriteStudios={favoriteStudios}
+              getFavoriteStudios={getFavoriteStudios}
+              removeStudioFromFavorites={removeStudioFromFavorites}
+            />
           </Tab>
-        </Tabs>}
+        </Tabs>
       </>
     )
   }
@@ -57,6 +82,7 @@ export default connect(
     photos: state.profile.photos,
     isLoadingPhotos: state.profile.isLoadingPhotos,
     isUploadFailed: state.profile.isUploadFailed,
+    favoriteStudios: state.profile.favoriteStudios,
   }),
   dispatch => ({
     uploadPhoto: (data, cb) => dispatch(uploadPhoto(data, cb)),
@@ -65,4 +91,7 @@ export default connect(
     getSelfPhotos: () => dispatch(getSelfPhotos()),
     deletePhoto: id => dispatch(deletePhoto(id)),
     clearPhotos: () => dispatch(clearPhotos()),
+    getFavoriteStudios: () => dispatch(getFavoriteStudios()),
+    removeStudioFromFavorites: (studioId, cb) =>
+      dispatch(removeStudioFromFavorites(studioId, cb)),
   }))(Profile);

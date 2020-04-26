@@ -47,7 +47,7 @@ class Studios extends React.Component {
           <FormControl type="text" placeholder="Search" className="mr-sm-2 w-100" value={searchString} onChange={this.handleChange} />
           <Button variant="outline-success" onClick={this.searchStudios}>Search</Button>
         </Form>
-        <div className="d-flex">
+        <div className="d-flex flex-wrap">
           {this.props.studiosList.map((studio, index) => (
             <React.Fragment key={index}>
               {this.renderStudio(studio)}

@@ -4,6 +4,7 @@ const initialState = {
   photos:[],
   isLoadingPhotos: false,
   isUploadFailed: false,
+  favoriteStudios: [],
   error: '',
 };
 
@@ -50,6 +51,11 @@ export function profileReducer(state = initialState, action) {
           liked: !photo.liked,
           likesNumber: photo.liked ? photo.likesNumber - 1 : photo.likesNumber + 1
         } : photo)
+      };
+    case constants.GET_FAVORITE_STUDIOS_SUCCESS:
+      return {
+        ...state,
+        favoriteStudios: action.data,
       };
 
     default:

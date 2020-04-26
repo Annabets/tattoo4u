@@ -91,3 +91,49 @@ export function deletePhoto(id) {
     id
   }
 }
+
+export function getFavoriteStudios() {
+  return dispatch => {
+    dispatch({
+      type: constants.GET_FAVORITE_STUDIOS_REQUEST,
+    });
+    api.getFavStudios().then(
+      response => {
+        dispatch({
+          type: constants.GET_FAVORITE_STUDIOS_SUCCESS,
+          data: response.data,
+        })
+      },
+      error => {
+        dispatch({
+          type: constants.GET_FAVORITE_STUDIOS_FAILURE,
+          payload: error.message,
+        });
+        apiErrorHandler(error)
+      }
+    )
+  }
+}
+
+export function removeStudioFromFavorites(studioId, cb) {
+  return dispatch => {
+    dispatch({
+      type: constants.REMOVE_STUDIO_FROM_FAVORITES_REQUEST,
+    });
+    api.removeStudioFromFav(studioId).then(
+      () => {
+        dispatch({
+          type: constants.REMOVE_STUDIO_FROM_FAVORITES_SUCCESS,
+        });
+        cb && cb()
+      },
+      error => {
+        dispatch({
+          type: constants.REMOVE_STUDIO_FROM_FAVORITES_FAILURE,
+          payload: error.message
+        });
+        apiErrorHandler(error)
+      }
+    )
+  }
+}

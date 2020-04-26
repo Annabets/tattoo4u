@@ -5,7 +5,7 @@ import {
   UPLOAD_PHOTO,
   PHOTOS,
   DELETE_PHOTO,
-  GET_PHOTOS, STUDIOS, STUDIO, SIGN_OUT, MASTERS, MASTER, USERS, LIKE_PHOTO, TREND_PHOTOS, COMMENT
+  GET_PHOTOS, STUDIOS, STUDIO, SIGN_OUT, MASTERS, MASTER, USERS, LIKE_PHOTO, TREND_PHOTOS, COMMENT, FAVORITE_STUDIO
 } from "../constants";
 import axios from 'axios';
 import {getToken} from "../utils";
@@ -13,7 +13,7 @@ import {getToken} from "../utils";
 axios.defaults.baseURL = API_URL;
 
 axios.interceptors.request.use(config => {
-  config.headers['Authorization'] = getToken() ? `Bearer_${getToken()}` : null;
+  getToken() && (config.headers['Authorization'] = `Bearer_${getToken()}`);
 
   return config;
 });
@@ -81,6 +81,12 @@ const getComments = photoId => axios.get(`${COMMENT}/${photoId}`);
 
 const addComment = (photoId, data) => axios.post(`${COMMENT}/${photoId}`, data);
 
+const getFavStudios = () => axios.get(`${USERS + FAVORITE_STUDIO}s`);
+
+const addStudioToFav = studioId => axios.post(`${USERS + FAVORITE_STUDIO}`, {id: studioId});
+
+const removeStudioFromFav = studioId => axios.delete(`${USERS + FAVORITE_STUDIO}`, {data: {id: studioId}});
+
 export const api = {
   signInUser,
   signUpUser,
@@ -100,4 +106,7 @@ export const api = {
   getTrendPhotos,
   getComments,
   addComment,
+  getFavStudios,
+  addStudioToFav,
+  removeStudioFromFav,
 };

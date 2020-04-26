@@ -66,6 +66,7 @@ class Modal extends React.Component {
                 <img src={`${modalPhoto.photoUrl}`} alt=""/>
               </div>
               <div className="comments-section">
+                <p className="border-bottom">{modalPhoto.description}</p>
                 <h5>Comments</h5>
                 {comments.length ?
                   comments.map(comment => (
