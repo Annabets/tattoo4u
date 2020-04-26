@@ -211,7 +211,6 @@ public class PostController {
             List<CommentResponseDto> commentDtoList = toDto(comments);
 
             commentDtoList.sort(Comparator.comparing((CommentResponseDto::getDate)));
-            Collections.reverse(commentDtoList);
 
             return new ResponseEntity<>(commentDtoList, HttpStatus.OK);
         } else {
