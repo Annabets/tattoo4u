@@ -1,6 +1,7 @@
 package by.bsuir.tattoo4u.dto.response;
 
 import by.bsuir.tattoo4u.entity.Studio;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Data;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class StudioWithMastersResponseDto {
     private String contact;
     private List<MasterResponseDto> masters;
     private String photo;
+    private String favourite;
 
     public StudioWithMastersResponseDto(Studio studio, List<MasterResponseDto> masters) {
         this.id = studio.getId().toString();
@@ -29,5 +31,20 @@ public class StudioWithMastersResponseDto {
         this.contact = studio.getContact();
         this.masters = masters;
         this.photo = studio.getPhoto().getUrl();
+        this.favourite = Boolean.toString(false);
+    }
+
+    public StudioWithMastersResponseDto(StudioResponseDto studio, List<MasterResponseDto> masters) {
+        this.id = studio.getId();
+        this.address = studio.getAddress();
+        this.description = studio.getDescription();
+        this.name = studio.getName();
+        this.rating = studio.getRating();
+        this.owner = studio.getOwner();
+        this.ownerId = studio.getOwnerId();
+        this.contact = studio.getContact();
+        this.masters = masters;
+        this.photo = studio.getPhoto();
+        this.favourite = studio.getFavourite();
     }
 }
