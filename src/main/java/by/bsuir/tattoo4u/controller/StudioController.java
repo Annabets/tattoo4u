@@ -85,8 +85,10 @@ public class StudioController {
     }
 
     @GetMapping("/studio")
-    public ResponseEntity<?> takeStudioById(@RequestParam Long studioId,
-                                            @RequestHeader("Authorization") String bearerToken) {
+    public ResponseEntity<?> takeStudioById(
+            @RequestParam Long studioId,
+            @RequestHeader(value = "Authorization", required = false) String bearerToken
+    ) {
         StudioWithMastersResponseDto studio;
 
         User user = null;
@@ -113,7 +115,7 @@ public class StudioController {
     @GetMapping("/studios")
     public ResponseEntity<?> takeStudios(@RequestParam(defaultValue = "") String name,
                                          @PageableDefault(sort = {"rating"}, direction = Sort.Direction.DESC) Pageable pageable,
-                                         @RequestHeader("Authorization") String bearerToken) {
+                                         @RequestHeader(value = "Authorization", required = false) String bearerToken) {
         List<StudioResponseDto> studios;
         User user = null;
         if(bearerToken != null) {
