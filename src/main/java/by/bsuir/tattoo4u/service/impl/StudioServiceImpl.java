@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class StudioServiceImpl implements StudioService {
@@ -39,12 +40,34 @@ public class StudioServiceImpl implements StudioService {
 
     @Override
     public void save(Studio studio) throws ServiceException {
+        Studio temp = studioRepository.getByOwner(studio.getOwner());
+        if(temp == null) {
+            throw new ServiceException("You can create only one studio");
+        }
+
         studioRepository.save(studio);
     }
 
     @Override
     public Studio takeStudioById(Long id) throws ServiceException {
         return studioRepository.getById(id);
+    }
+
+    @Override
+    public StudioResponseDto takeStudioResponseDtoById(Long id) throws ServiceException {
+        Studio studio  = studioRepository.getById(id);
+        return new StudioResponseDto(studio);
+    }
+
+    @Override
+    public StudioResponseDto takeStudioByIdWithFavourites(Long id, User user) throws ServiceException {
+        Studio studio  = studioRepository.getById(id);
+        if(user.getFavouritesStudios().contains(studio)) {
+            return new StudioResponseDto(studio, true);
+        } else {
+            return new StudioResponseDto(studio, false);
+        }
+
     }
 
     @Override
@@ -65,6 +88,35 @@ public class StudioServiceImpl implements StudioService {
         List<StudioResponseDto> page = new LinkedList<>();
         for (Studio studio : studios) {
             page.add(new StudioResponseDto(studio));
+        }
+        return page;
+    }
+
+    @Override
+    public List<StudioResponseDto> takeStudiosWithFavourites(Pageable pageable, User user) throws ServiceException {
+        Page<Studio> studios = studioRepository.findAll(pageable);
+
+        return compileStudioWithFavouritesResponseList(studios, user);
+    }
+
+    @Override
+    public List<StudioResponseDto> takeStudiosByNameWithFavourites(String name, Pageable pageable, User user)
+            throws ServiceException {
+
+        Page<Studio> studios = studioRepository.findAllByNameContainingIgnoreCase(name, pageable);
+
+        return compileStudioWithFavouritesResponseList(studios, user);
+    }
+
+    private List<StudioResponseDto> compileStudioWithFavouritesResponseList(Page<Studio> studios, User user) {
+        List<StudioResponseDto> page = new LinkedList<>();
+        Set<Studio> studioSet = user.getFavouritesStudios();
+        for (Studio studio : studios) {
+            if(studioSet.contains(studio)) {
+                page.add(new StudioResponseDto(studio, true));
+            } else {
+                page.add(new StudioResponseDto(studio, false));
+            }
         }
         return page;
     }

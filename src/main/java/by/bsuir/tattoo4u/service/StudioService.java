@@ -15,9 +15,17 @@ public interface StudioService {
 
     Studio takeStudioById(Long id) throws ServiceException;
 
+    StudioResponseDto takeStudioResponseDtoById(Long id) throws ServiceException;
+
+    StudioResponseDto takeStudioByIdWithFavourites(Long id, User user) throws ServiceException;
+
     List<StudioResponseDto> takeStudios(Pageable pageable) throws ServiceException;
 
+    List<StudioResponseDto> takeStudiosWithFavourites(Pageable pageable, User user) throws ServiceException;
+
     List<StudioResponseDto> takeByName(String name, Pageable pageable) throws ServiceException;
+
+    List<StudioResponseDto> takeStudiosByNameWithFavourites(String name, Pageable pageable, User user) throws ServiceException;
 
     void addMaster(User master, Long studioId) throws ServiceException;
 

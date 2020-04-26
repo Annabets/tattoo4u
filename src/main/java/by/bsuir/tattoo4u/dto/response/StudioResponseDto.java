@@ -14,6 +14,7 @@ public class StudioResponseDto {
     private String ownerId;
     private String contact;
     private String photo;
+    private String favourite;
 
     public StudioResponseDto(Studio studio) {
         this.id = studio.getId().toString();
@@ -25,5 +26,18 @@ public class StudioResponseDto {
         this.ownerId = studio.getOwner().getId().toString();
         this.contact = studio.getContact();
         this.photo = studio.getPhoto().getUrl();
+    }
+
+    public StudioResponseDto(Studio studio, Boolean favourite) {
+        this.id = studio.getId().toString();
+        this.address = studio.getAddress();
+        this.description = studio.getDescription();
+        this.name = studio.getName();
+        this.rating = studio.getRating().toString();
+        this.owner = studio.getOwner().getUsername();
+        this.ownerId = studio.getOwner().getId().toString();
+        this.contact = studio.getContact();
+        this.photo = studio.getPhoto().getUrl();
+        this.favourite = favourite.toString();
     }
 }

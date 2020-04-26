@@ -85,10 +85,22 @@ public class StudioController {
     }
 
     @GetMapping("/studio")
-    public ResponseEntity<?> takeStudioById(@RequestParam Long studioId) {
+    public ResponseEntity<?> takeStudioById(@RequestParam Long studioId,
+                                            @RequestHeader("Authorization") String bearerToken) {
         StudioWithMastersResponseDto studio;
+
+        User user = null;
+        if(bearerToken != null) {
+            String username = tokenService.getUsername(tokenService.clearBearerToken(bearerToken));
+            user = userService.getByUsername(username);
+        }
         try {
-            Studio tempStudio = studioService.takeStudioById(studioId);
+            StudioResponseDto tempStudio;
+            if(user == null) {
+                tempStudio = studioService.takeStudioResponseDtoById(studioId);
+            } else {
+                tempStudio = studioService.takeStudioByIdWithFavourites(studioId, user);
+            }
             List<MasterResponseDto> masters = studioService.takeMasters(studioId);
 
             studio = new StudioWithMastersResponseDto(tempStudio, masters);
@@ -100,13 +112,27 @@ public class StudioController {
 
     @GetMapping("/studios")
     public ResponseEntity<?> takeStudios(@RequestParam(defaultValue = "") String name,
-                                         @PageableDefault(sort = {"rating"}, direction = Sort.Direction.DESC) Pageable pageable) {
+                                         @PageableDefault(sort = {"rating"}, direction = Sort.Direction.DESC) Pageable pageable,
+                                         @RequestHeader("Authorization") String bearerToken) {
         List<StudioResponseDto> studios;
+        User user = null;
+        if(bearerToken != null) {
+            String username = tokenService.getUsername(tokenService.clearBearerToken(bearerToken));
+            user = userService.getByUsername(username);
+        }
         try {
             if (name == null || name.equals("")) {
-                studios = studioService.takeStudios(pageable);
+                if(user != null) {
+                    studios = studioService.takeStudiosWithFavourites(pageable, user);
+                } else {
+                    studios = studioService.takeStudios(pageable);
+                }
             } else {
-                studios = studioService.takeByName(name, pageable);
+                if(user != null) {
+                    studios = studioService.takeStudiosByNameWithFavourites(name, pageable, user);
+                } else {
+                    studios = studioService.takeByName(name, pageable);
+                }
             }
         } catch (ServiceException ex) {
             throw new ControllerException(ex);
