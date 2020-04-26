@@ -12,7 +12,13 @@ public interface PostRepository extends CrudRepository<Post, Long> {
 
     Iterable<Post> findByAuthor(User user);
 
-    @Query(nativeQuery = true, value = "SELECT * FROM post WHERE id IN (SELECT post_id FROM post_tags WHERE tags" +
-            " IN (:tags)) ORDER BY id DESC")
+    @Query(nativeQuery = true,
+            value = "SELECT * FROM post WHERE id IN (SELECT post_id FROM post_tags WHERE tags IN (:tags))" +
+                    " ORDER BY id DESC")
     Iterable<Post> findByTags(@Param("tags") List<String> tags);
+
+    @Query(nativeQuery = true,
+            value = "SELECT post.* FROM post INNER JOIN post_likes ON post.id=post_likes.post_id GROUP BY post.id" +
+                    " ORDER BY COUNT(post_likes.user_id) DESC")
+    Iterable<Post> findTrends();
 }

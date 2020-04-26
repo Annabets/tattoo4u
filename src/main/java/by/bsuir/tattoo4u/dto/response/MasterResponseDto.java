@@ -42,7 +42,9 @@ public class MasterResponseDto {
 
             List<PostResponseDto> postResponseDtos=new ArrayList<>();
             for (Post post:postList){
-                postResponseDtos.add(new PostResponseDto(post));
+                PostResponseDto postResponseDto = new PostResponseDto();
+                postResponseDto.fromPost(post, master.getUser());
+                postResponseDtos.add(postResponseDto);
             }
             this.posts=postResponseDtos;
         }

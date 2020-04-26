@@ -1,8 +1,10 @@
 package by.bsuir.tattoo4u.service.impl;
 
 import by.bsuir.tattoo4u.entity.Token;
+import by.bsuir.tattoo4u.entity.User;
 import by.bsuir.tattoo4u.repository.TokenRepository;
 import by.bsuir.tattoo4u.service.TokenService;
+import by.bsuir.tattoo4u.service.UserService;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,9 +18,12 @@ public class TokenServiceImpl implements TokenService {
 
     private final TokenRepository tokenRepository;
 
+    private final UserService userService;
+
     @Autowired
-    public TokenServiceImpl(TokenRepository tokenRepository) {
+    public TokenServiceImpl(TokenRepository tokenRepository, UserService userService) {
         this.tokenRepository = tokenRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -51,5 +56,20 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public boolean exists(String string) {
         return tokenRepository.existsByToken(string);
+    }
+
+    @Override
+    public User getUser(String bearerToken) {
+        User user = null;
+
+        String token = clearBearerToken(bearerToken);
+
+        if (token != null) {
+            String username = getUsername(token);
+
+            user = userService.getByUsername(username);
+        }
+
+        return user;
     }
 }

@@ -69,7 +69,7 @@ public class PhotoServiceImpl implements PhotoService {
 
             return photo;
         } catch (IOException | RuntimeException e) {
-            throw new ServiceException(e);
+            throw new ServiceException("File could not be uploaded.");
         }
     }
 
