@@ -5,7 +5,18 @@ import {
   UPLOAD_PHOTO,
   PHOTOS,
   DELETE_PHOTO,
-  GET_PHOTOS, STUDIOS, STUDIO, SIGN_OUT, MASTERS, MASTER, USERS, LIKE_PHOTO, TREND_PHOTOS, COMMENT, FAVORITE_STUDIO
+  GET_PHOTOS,
+  STUDIOS,
+  STUDIO,
+  SIGN_OUT,
+  MASTERS,
+  MASTER,
+  USERS,
+  LIKE_PHOTO,
+  TREND_PHOTOS,
+  COMMENT,
+  FAVORITE_STUDIO,
+  FEEDBACK
 } from "../constants";
 import axios from 'axios';
 import {getToken} from "../utils";
@@ -77,7 +88,7 @@ const getCurrentUser = () => axios.get(`${USERS}/currentUser`);
 
 const likePhoto = photoId => axios.get(`${LIKE_PHOTO}/${photoId}`);
 
-const getComments = photoId => axios.get(`${COMMENT}/${photoId}`);
+const getComments = photoId => axios.get(`${COMMENT}s/${photoId}`);
 
 const addComment = (photoId, data) => axios.post(`${COMMENT}/${photoId}`, data);
 
@@ -109,4 +120,5 @@ export const api = {
   getFavStudios,
   addStudioToFav,
   removeStudioFromFav,
+  giveStudioFeedback
 };
