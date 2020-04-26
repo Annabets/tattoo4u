@@ -1,7 +1,6 @@
 package by.bsuir.tattoo4u.dto.response;
 
 import by.bsuir.tattoo4u.entity.Studio;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Data;
 
 import java.util.List;
