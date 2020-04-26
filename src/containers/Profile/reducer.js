@@ -45,7 +45,11 @@ export function profileReducer(state = initialState, action) {
     case constants.TOGGLE_LIKE:
       return {
         ...state,
-        photos: state.photos.map(photo => photo.id === action.payload ? {...photo, liked: !photo.liked} : photo)
+        photos: state.photos.map(photo => photo.id === action.payload ? {
+          ...photo,
+          liked: !photo.liked,
+          likesNumber: photo.liked ? photo.likesNumber - 1 : photo.likesNumber + 1
+        } : photo)
       };
 
     default:

@@ -15,6 +15,7 @@ export const STUDIO = '/studio';
 export const MASTERS = '/masters';
 export const MASTER = '/master';
 export const USERS = '/users';
+export const COMMENT = '/comment';
 
 //methods
 export const GET = 'GET';

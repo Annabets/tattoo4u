@@ -20,7 +20,9 @@ function PhotoGridContainer(props) {
     userRole,
     onMount,
     likePhoto,
-    toggleModalPhotoLike,
+    comments,
+    getComments,
+    addComment,
   } = props;
   return (
     <>
@@ -40,6 +42,9 @@ function PhotoGridContainer(props) {
         userRole={userRole}
         onMount={onMount}
         likePhoto={likePhoto}
+        comments={comments}
+        getComments={getComments}
+        addComment={addComment}
       />
     </>
   )
@@ -57,6 +62,7 @@ const mapStateToProps = store => {
     photoGrid: store.photoGrid,
     username: store.user.username,
     userRole: store.user.role,
+    comments: store.photoGrid.comments,
   }
 };
 
@@ -66,7 +72,9 @@ const mapDispatchToProps = dispatch => {
     setModalOpenFlag: flag => dispatch(photoGridActions.setModalOpenFlag(flag)),
     setModalPhoto: photo => dispatch(photoGridActions.setModalPhoto(photo)),
     deletePhoto: (photoId, cb) => dispatch(photoGridActions.deletePhoto(photoId, cb)),
-    likePhoto: photoId => dispatch(photoGridActions.likePhoto(photoId))
+    likePhoto: photoId => dispatch(photoGridActions.likePhoto(photoId)),
+    getComments: photoId => dispatch(photoGridActions.getComments(photoId)),
+    addComment: (photoId, data, cb) => dispatch(photoGridActions.addComment(photoId, data, cb))
   }
 };
 
