@@ -12,6 +12,7 @@ public class AuthenticationResponseDto {
     private String email;
     private String role;
     private String photo;
+    private boolean isBanned;
 
     public static AuthenticationResponseDto fromUserAndToken(User user, String token) {
         AuthenticationResponseDto authenticationResponseDto = new AuthenticationResponseDto();
@@ -21,6 +22,7 @@ public class AuthenticationResponseDto {
         authenticationResponseDto.setEmail(user.getEmail());
         authenticationResponseDto.setRole(user.getRoles().get(0).getName());
         authenticationResponseDto.setPhoto((user.getPhoto()==null)?null:user.getPhoto().getUrl());
+        authenticationResponseDto.setBanned(user.isBanned());
 
         return authenticationResponseDto;
     }
