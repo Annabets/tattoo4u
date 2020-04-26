@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -187,7 +188,7 @@ public class PostController {
             if (post != null) {
                 User user = tokenService.getUser(token);
 
-                Comment comment = new Comment(commentDto.getComment(), user, LocalDateTime.now());
+                Comment comment = new Comment(commentDto.getComment(), user, LocalDateTime.now(ZoneId.of("UTC+3")));
 
                 post.getComments().add(commentService.save(comment));
 
