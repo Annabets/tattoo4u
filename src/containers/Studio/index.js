@@ -15,7 +15,7 @@ import {isAuth} from "../../utils";
 import EmptyRatingSymbol from '../../assets/icons/star-empty.svg';
 import FullRatingSymbol from '../../assets/icons/star-full.svg';
 
-class Studios extends React.Component {
+class Studio extends React.Component {
   constructor(props){
     super(props)
 
@@ -105,10 +105,19 @@ class Studios extends React.Component {
             Add to favorites
           </Button> :
           null}
-        <h1>{name}</h1>
-        <p>Rating: {rating}</p>
-        <p>Owner: {owner}</p>
+        <div className="d-flex align-items-center">
+          <h1>{name}</h1>
+          <Rating
+            emptySymbol={<img width={30} height={30} src={EmptyRatingSymbol} alt=""/>}
+            fullSymbol={<img width={30} height={30} src={FullRatingSymbol} alt=""/>}
+            initialRating={rating}
+            readonly
+            className="ml-4"/>
+        </div>
+        <p>{description}</p>
+        <p>{address}</p>
         <p>Contact: {contact}</p>
+        <p>Owner: {owner}</p>
         <div className="d-flex align-items-center">
           {masters && <p>Masters: {masters.map(master => master.username).toString()}</p>}
           {ownerId === userId &&
@@ -124,13 +133,11 @@ class Studios extends React.Component {
             </Form.Group>
           </Form>}
         </div>
-        <p>{address}</p>
-        <p>{description}</p>
         <div>
           <h4>Feedbacks</h4>
           {feedbacks.length ?
-            feedbacks.map(fbck => (
-              <Card className="mb-3">
+            feedbacks.map((fbck, i) => (
+              <Card className="mb-3" key={i}>
                 <Card.Body>
                   <Card.Text>
                     <b className="d-flex justify-content-between">
@@ -190,4 +197,4 @@ export default connect(
     removeFromFavorites: (studioId, cb) => dispatch(removeStudioFromFavorites(studioId, cb)),
     getStudioFeebacks: studioId => dispatch(getStudioFeebacks(studioId)),
     giveStudioFeedback: (data, cb) => dispatch(giveStudioFeedback(data, cb))
-  }))(Studios);
+  }))(Studio);
