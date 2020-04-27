@@ -56,7 +56,7 @@ public class MasterResponseDto {
             Collections.sort(masterCommentsList);
 
             if(masterCommentsList.size()>3){
-                masterCommentsList.removeAll(masterCommentsList.subList(0, masterCommentsList.size()-3));
+                masterCommentsList.removeAll(masterCommentsList.subList(3, masterCommentsList.size()));
             }
 
             List<MasterCommentResponseDto> masterCommentResponseDtos=new ArrayList<>();

@@ -131,7 +131,7 @@ public class MasterController {
     }
 
     @GetMapping("/comments")
-    public ResponseEntity<?> getMasterComment(@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam(name = "masterId") User user){
+    public ResponseEntity<?> getMasterComment(@PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable, @RequestParam(name = "masterId") User user){
 
         if(user==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
