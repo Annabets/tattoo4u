@@ -1,7 +1,8 @@
 import * as constants from './constants';
 
 const initialState = {
-  masterData: {}
+  masterData: {},
+  comments: [],
 };
 
 export function masterReducer(state = initialState, action) {
@@ -29,6 +30,8 @@ export function masterReducer(state = initialState, action) {
         }
 
       };
+    case constants.GET_MASTER_FEEDBACKS_SUCCESS:
+      return {...state, comments: action.data};
 
     default:
       return state;

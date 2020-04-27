@@ -195,7 +195,6 @@ class Studio extends React.Component {
                   rows={3}
                   value={feedback}
                   onChange={this.handleChangeFeedback}
-                  required
                 />
                 <Button className="mt-2" type="submit">Add feedback</Button>
               </Form>}

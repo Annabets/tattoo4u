@@ -16,7 +16,7 @@ import {
   TREND_PHOTOS,
   COMMENT,
   FAVORITE_STUDIO,
-  FEEDBACK, STUDIOS_ORDERS, ORDER, ORDERS, ACCEPTANCE, CONFIRMATION_ORDER, FAVOURITES
+  FEEDBACK, STUDIOS_ORDERS, ORDER, ORDERS, ACCEPTANCE, CONFIRMATION_ORDER, FAVOURITES, COMMENTS
 } from "../constants";
 import axios from 'axios';
 import {getToken} from "../utils";
@@ -118,7 +118,11 @@ const getFavMasters = () => axios.get(USERS + FAVOURITES);
 
 const addMasterToFav = masterId => axios.post(USERS + FAVOURITES, {id: masterId});
 
-const removeMasterFromFav = masterId =>axios.delete(USERS + FAVOURITES, {data: {id: masterId}});
+const removeMasterFromFav = masterId => axios.delete(USERS + FAVOURITES, {data: {id: masterId}});
+
+const getMasterFeedbacks = (masterId, page = 0, size = 10) => axios.get(MASTERS + COMMENTS, {params: {masterId, page, size}});
+
+const giveMasterFeedback = data => axios.post(MASTERS + COMMENTS, data);
 
 export const api = {
   signInUser,
@@ -153,4 +157,6 @@ export const api = {
   getFavMasters,
   addMasterToFav,
   removeMasterFromFav,
+  getMasterFeedbacks,
+  giveMasterFeedback,
 };
