@@ -11,6 +11,7 @@ import java.util.Set;
 public class PostResponseDto {
     private Long id;
     private String description;
+    private Long authorId;
     private String authorName;
     private String photoUrl;
     private List<String> tags;
@@ -20,6 +21,7 @@ public class PostResponseDto {
     public void fromPost(Post post, User user) {
         id = post.getId();
         description = post.getDescription();
+        authorId = post.getAuthor().getId();
         authorName = post.getAuthor().getUsername();
         photoUrl = post.getPhoto().getUrl();
         tags = post.getTags();
