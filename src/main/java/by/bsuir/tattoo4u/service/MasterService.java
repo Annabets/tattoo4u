@@ -15,4 +15,6 @@ public interface MasterService {
     Master getByUser(User user);
     List<Master> getAllUsernameContain(String username, Pageable pageable);
     List<Master> getAll(Pageable pageable);
+
+    List<Master> getUnemployedMasters() throws ServiceException;
 }

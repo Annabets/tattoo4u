@@ -44,6 +44,8 @@ public class StudioServiceImpl implements StudioService {
         if(temp != null) {
             throw new ServiceException("You can create only one studio");
         }
+        studio.getOwner().getMasterInfo().setJob(studio);
+        //userRepository.save()
 
         studioRepository.save(studio);
     }
