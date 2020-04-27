@@ -53,6 +53,10 @@ public class AuthenticationController {
                 throw new UsernameNotFoundException("User with username " + username + " not found");
             }
 
+            if(user.isBanned()){
+                throw new ControllerException("User is banned");
+            }
+
             String token = jwtTokenProvider.createToken(username, user.getRoles());
 
             tokenService.add(token);
