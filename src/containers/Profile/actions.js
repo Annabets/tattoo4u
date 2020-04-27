@@ -137,3 +137,50 @@ export function removeStudioFromFavorites(studioId, cb) {
     )
   }
 }
+
+export function getFavoriteMasters() {
+  return dispatch => {
+    dispatch({
+      type: constants.GET_FAVORITE_MASTERS_REQUEST,
+    });
+    api.getFavMasters().then(
+      response => {
+        dispatch({
+          type: constants.GET_FAVORITE_MASTERS_SUCCESS,
+          data: response.data,
+        })
+      },
+      error => {
+        dispatch({
+          type: constants.GET_FAVORITE_MASTERS_FAILURE,
+          payload: error.message,
+        });
+        apiErrorHandler(error)
+      }
+    )
+  }
+}
+
+export function removeMasterFromFavorites(masterId, cb) {
+  return dispatch => {
+    dispatch({
+      type: constants.REMOVE_MASTER_FROM_FAVORITES_REQUEST,
+    });
+    api.removeMasterFromFav(masterId).then(
+      response => {
+        dispatch({
+          type: constants.REMOVE_MASTER_FROM_FAVORITES_SUCCESS,
+          data: response.data
+        });
+        cb && cb()
+      },
+      error => {
+        dispatch({
+          type: constants.REMOVE_MASTER_FROM_FAVORITES_FAILURE,
+          payload: error.message
+        });
+        apiErrorHandler(error)
+      }
+    )
+  }
+}

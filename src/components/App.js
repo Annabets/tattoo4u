@@ -2,6 +2,9 @@ import React from 'react';
 import {store} from "../configureStore";
 import {Router, Route, Redirect} from "react-router";
 import {Provider} from "react-redux";
+import {SIGN_IN, SIGN_UP, PROFILE, STUDIOS, MASTERS, GALLERY} from "../routes";
+import {history, isAuth} from "../utils";
+import Navbar from "./Navbar";
 import HomePage from '../containers/HomePage';
 import SignIn from '../containers/User/pages/SignIn';
 import SignUp from "../containers/User/pages/SignUp";
@@ -10,9 +13,7 @@ import Studios from '../containers/Studios';
 import Studio from '../containers/Studio';
 import Masters from '../containers/Masters';
 import Gallery from '../containers/Gallery';
-import {SIGN_IN, SIGN_UP, PROFILE, STUDIOS, MASTERS, GALLERY} from "../routes";
-import Navbar from "./Navbar";
-import {history, isAuth} from "../utils";
+import Master from '../containers/Master';
 
 export default () => (
   <Provider store={store}>
@@ -34,7 +35,8 @@ export default () => (
         <Studios />
       </Route>
       <Route path={`${STUDIOS}/:studioId`} component={Studio}/>
-      <Route path={MASTERS} component={Masters}/>
+      <Route path={`${MASTERS}/:masterId`} component={Master} />
+      <Route exact path={MASTERS} component={Masters}/>
       <Route path={GALLERY} component={Gallery}/>
     </Router>
   </Provider>

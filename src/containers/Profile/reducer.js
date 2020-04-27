@@ -5,6 +5,7 @@ const initialState = {
   isLoadingPhotos: false,
   isUploadFailed: false,
   favoriteStudios: [],
+  favoriteMasters: [],
   error: '',
 };
 
@@ -57,6 +58,9 @@ export function profileReducer(state = initialState, action) {
         ...state,
         favoriteStudios: action.data,
       };
+    case constants.GET_FAVORITE_MASTERS_SUCCESS:
+    case constants.REMOVE_MASTER_FROM_FAVORITES_SUCCESS:
+      return {...state, favoriteMasters: action.data};
 
     default:
       return state;

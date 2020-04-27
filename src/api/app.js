@@ -16,7 +16,7 @@ import {
   TREND_PHOTOS,
   COMMENT,
   FAVORITE_STUDIO,
-  FEEDBACK, STUDIOS_ORDERS, ORDER, ORDERS, ACCEPTANCE, CONFIRMATION_ORDER
+  FEEDBACK, STUDIOS_ORDERS, ORDER, ORDERS, ACCEPTANCE, CONFIRMATION_ORDER, FAVOURITES
 } from "../constants";
 import axios from 'axios';
 import {getToken} from "../utils";
@@ -82,6 +82,8 @@ const getMasters = (searchString, page = 0, size = 10) => axios.get(MASTERS, {
   }
 });
 
+const getMasterData = masterId => axios.get(`${MASTERS}/${masterId}`);
+
 const registerMaster = data => axios.post(MASTER, data);
 
 const getCurrentUser = () => axios.get(`${USERS}/currentUser`);
@@ -112,6 +114,12 @@ const acceptOrder = orderId => axios.post(ACCEPTANCE, null,{params: {id: orderId
 
 const confirmOrder = orderId => axios.post(CONFIRMATION_ORDER, null,{params: {id: orderId}});
 
+const getFavMasters = () => axios.get(USERS + FAVOURITES);
+
+const addMasterToFav = masterId => axios.post(USERS + FAVOURITES, {id: masterId});
+
+const removeMasterFromFav = masterId =>axios.delete(USERS + FAVOURITES, {data: {id: masterId}});
+
 export const api = {
   signInUser,
   signUpUser,
@@ -141,4 +149,8 @@ export const api = {
   getUserOrders,
   acceptOrder,
   confirmOrder,
+  getMasterData,
+  getFavMasters,
+  addMasterToFav,
+  removeMasterFromFav,
 };

@@ -114,7 +114,7 @@ class Studio extends React.Component {
 
     return (
       <div className="container-fluid">
-        {isAuth() ? favourite === "true" ?
+        {isAuth() ? favourite ?
           <Button
             className="float-right mt-2"
             onClick={() => removeFromFavorites(id, this.getStudioData)}>

@@ -17,6 +17,7 @@ export const MASTER = '/master';
 export const USERS = '/users';
 export const COMMENT = '/comment';
 export const FAVORITE_STUDIO = '/favouritesStudio';
+export const FAVOURITES = '/favourites';
 export const FEEDBACK = '/feedback';
 export const STUDIOS_ORDERS = '/studiosOrders';
 export const ORDER = '/order';

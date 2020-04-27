@@ -1,7 +1,9 @@
 import React from 'react';
 import {connect} from "react-redux";
 import { Card, Form, FormControl, Button } from 'react-bootstrap';
+import {Link} from "react-router-dom";
 import {getMasters} from "./actions";
+import {MASTERS} from "../../routes";
 
 class Masters extends React.Component {
   constructor(props){
@@ -25,7 +27,7 @@ class Masters extends React.Component {
   renderMaster = master => (
     <Card className="m-2" style={{ width: '18rem' }}>
       <Card.Body>
-        <Card.Title>{master.username}</Card.Title>
+        <Card.Title><Link to={`${MASTERS}/${master.id}`}>{master.username}</Link></Card.Title>
         <Card.Subtitle className="mb-2 text-muted">{master.email}</Card.Subtitle>
       </Card.Body>
     </Card>

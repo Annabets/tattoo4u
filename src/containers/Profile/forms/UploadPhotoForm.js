@@ -43,7 +43,7 @@ class UploadPhotoForm extends React.Component {
     this.removeError();
     schema.validate(this.state, {abortEarly: false})
       .then(() => this.props.uploadPhoto({file, description, tags: tags.split(',')}, cb))
-      .catch(reason => {console.log(reason);reason.inner.forEach(er => this.setError(er.path, er.message))})
+      .catch(reason => reason.inner.forEach(er => this.setError(er.path, er.message)))
   };
 
   render() {

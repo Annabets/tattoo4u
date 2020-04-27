@@ -10,6 +10,8 @@ import {
   clearPhotos,
   getFavoriteStudios,
   removeStudioFromFavorites,
+  getFavoriteMasters,
+  removeMasterFromFavorites,
 } from "./actions";
 import UploadPhotoForm from './forms/UploadPhotoForm';
 import RegisterStudioForm from './forms/RegisterStudioForm';
@@ -37,9 +39,11 @@ class Profile extends React.Component {
       favoriteStudios,
       getFavoriteStudios,
       removeStudioFromFavorites,
+      favoriteMasters,
+      getFavoriteMasters,
+      removeMasterFromFavorites,
     } = this.props;
     const isMaster = role === 'MASTER';
-    console.log(isMaster)
     return (
       <>
         <Tabs defaultActiveKey={isMaster ? "selfPhotos" : "favorites"} id="uncontrolled-tab-example" unmountOnExit>
@@ -67,6 +71,9 @@ class Profile extends React.Component {
               favoriteStudios={favoriteStudios}
               getFavoriteStudios={getFavoriteStudios}
               removeStudioFromFavorites={removeStudioFromFavorites}
+              favoriteMasters={favoriteMasters}
+              getFavoriteMasters={getFavoriteMasters}
+              removeMasterFromFavorites={removeMasterFromFavorites}
             />
           </Tab>
         </Tabs>
@@ -83,6 +90,7 @@ export default connect(
     isLoadingPhotos: state.profile.isLoadingPhotos,
     isUploadFailed: state.profile.isUploadFailed,
     favoriteStudios: state.profile.favoriteStudios,
+    favoriteMasters: state.profile.favoriteMasters,
   }),
   dispatch => ({
     uploadPhoto: (data, cb) => dispatch(uploadPhoto(data, cb)),
@@ -92,6 +100,7 @@ export default connect(
     deletePhoto: id => dispatch(deletePhoto(id)),
     clearPhotos: () => dispatch(clearPhotos()),
     getFavoriteStudios: () => dispatch(getFavoriteStudios()),
-    removeStudioFromFavorites: (studioId, cb) =>
-      dispatch(removeStudioFromFavorites(studioId, cb)),
+    removeStudioFromFavorites: (studioId, cb) => dispatch(removeStudioFromFavorites(studioId, cb)),
+    getFavoriteMasters: () => dispatch(getFavoriteMasters()),
+    removeMasterFromFavorites: masterId => dispatch(removeMasterFromFavorites(masterId)),
   }))(Profile);
