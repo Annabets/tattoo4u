@@ -64,6 +64,6 @@ public class PostServiceImpl implements PostService {
     }
 
     private List<String> parseTags(String tags) {
-        return Arrays.asList(tags.split("#"));
+        return Arrays.asList(tags.split(" "));
     }
 }

@@ -9,11 +9,13 @@ public class CommentResponseDto {
     private String text;
     private String author;
     private String date;
+    private String photoUrl;
 
     public void fromComment(Comment comment){
         id = comment.getId();
         text = comment.getComment();
         author = comment.getAuthor().getUsername();
         date = comment.getDate().toString();
+        photoUrl = comment.getAuthor().getPhoto().getUrl();
     }
 }
