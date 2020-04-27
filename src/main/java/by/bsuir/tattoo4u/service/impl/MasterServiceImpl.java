@@ -75,4 +75,9 @@ public class MasterServiceImpl implements MasterService {
         }
         return masters;
     }
+
+    @Override
+    public List<Master> getUnemployedMasters() throws ServiceException {
+        return masterRepository.findAllByJob(null);
+    }
 }
