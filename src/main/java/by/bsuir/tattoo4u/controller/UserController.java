@@ -42,16 +42,16 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
+    public ResponseEntity<?> getAllUsers() {
         List<User> userList = userService.getAll();
 
         if (userList == null || userList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        List<UserResponseDto> userDtoList = new ArrayList<>();
+        List<UserWithRoleResponseDto> userDtoList = new ArrayList<>();
         for (User user : userList) {
-            userDtoList.add(UserResponseDto.fromUser(user));
+            userDtoList.add(new UserWithRoleResponseDto(user));
         }
 
         return new ResponseEntity<>(userDtoList, HttpStatus.OK);
@@ -59,14 +59,14 @@ public class UserController {
 
     @GetMapping(value = "{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<UserResponseDto> getUserById(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<?> getUserById(@PathVariable(name = "id") Long id) {
         User user = userService.getById(id);
 
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        UserResponseDto userDto = UserResponseDto.fromUser(user);
+        UserWithRoleResponseDto userDto = new UserWithRoleResponseDto(user);
 
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
