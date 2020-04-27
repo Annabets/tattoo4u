@@ -31,7 +31,7 @@ public class OrderServiceImpl implements OrderService {
     private String username;
 
     private final String subject = "Tattoo acceptance";
-    private final String textPartOne = "Your order is accepted. Your master is  You can contact him by mail:";
+    private final String textPartOne = "Your order is accepted. Your master is  ";
     private final String textPartTwo = ". You can contact him by mail: ";
 
     @Autowired
