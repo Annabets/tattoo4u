@@ -117,3 +117,50 @@ export function removeStudioFromFavorites(studioId, cb) {
     )
   }
 }
+
+export function getStudioFeebacks(studioId) {
+  return dispatch => {
+    dispatch({
+      type: constants.GET_STUDIO_FEEDBACKS_REQUEST
+    });
+    api.getStudioFeedbacks(studioId).then(
+      response => {
+        dispatch({
+          type: constants.GET_STUDIO_FEEDBACKS_SUCCESS,
+          data: response.data
+        })
+      },
+      error => {
+        dispatch({
+          type: constants.GET_STUDIO_FEEDBACKS_FAILURE,
+          payload: error.message
+        });
+        apiErrorHandler(error);
+      }
+    )
+  }
+}
+
+export function giveStudioFeedback(data, cb) {
+  return dispatch => {
+    dispatch({
+      type: constants.GIVE_STUDIO_FEEDBACK_REQUEST,
+    });
+    api.giveStudioFeedback(data).then(
+      response => {
+        dispatch({
+          type: constants.GIVE_STUDIO_FEEDBACK_SUCCESS,
+          data: response.data,
+        });
+        cb && cb()
+      },
+      error => {
+        dispatch({
+          type: constants.GIVE_STUDIO_FEEDBACK_FAILURE,
+          payload: error.message
+        });
+        apiErrorHandler(error)
+      }
+    )
+  }
+}

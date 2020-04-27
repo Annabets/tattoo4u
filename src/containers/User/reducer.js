@@ -1,10 +1,11 @@
 import * as constants from './constants';
-import {AUTH_KEY, EMAIL, ROLE, USER_ID, USER_NAME} from "../../constants";
+import {AUTH_KEY, EMAIL, PHOTO_URL, ROLE, USER_ID, USER_NAME} from "../../constants";
 import {clearLocalStorage} from "../../utils";
 
 const initialState = {
   id: localStorage.getItem(USER_ID) || '',
   username: localStorage.getItem(USER_NAME) || '',
+  photoUrl: localStorage.getItem(PHOTO_URL) || '',
   email: localStorage.getItem(EMAIL) || '',
   authKey: localStorage.getItem(AUTH_KEY) || '',
   role: localStorage.getItem(ROLE) || '',
@@ -21,6 +22,7 @@ export function userReducer(state = initialState, action) {
       case constants.SIGN_UP_USER_SUCCESS:
       localStorage.setItem(AUTH_KEY, action.userData.token);
       localStorage.setItem(USER_NAME, action.userData.username);
+      localStorage.setItem(PHOTO_URL, action.userData.photo);
       localStorage.setItem(EMAIL, action.userData.email);
       localStorage.setItem(USER_ID, action.userData.id);
       localStorage.setItem(ROLE, action.userData.role);

@@ -98,6 +98,8 @@ const addStudioToFav = studioId => axios.post(`${USERS + FAVORITE_STUDIO}`, {id:
 
 const removeStudioFromFav = studioId => axios.delete(`${USERS + FAVORITE_STUDIO}`, {data: {id: studioId}});
 
+const getStudioFeedbacks = studioId => axios.get(FEEDBACK, {params: {id: studioId}});
+
 const giveStudioFeedback = data => axios.post(FEEDBACK, data);
 
 export const api = {
@@ -123,4 +125,5 @@ export const api = {
   addStudioToFav,
   removeStudioFromFav,
   giveStudioFeedback,
+  getStudioFeedbacks
 };

@@ -78,7 +78,7 @@ class Modal extends React.Component {
                       <div>{comment.text}</div>
                     </div>
                   )) :
-                  <i className="text-muted">no comments yet</i>}
+                  <i className="text-muted">No comments yet</i>}
                   {isAuth() &&
                   <Form className="mt-3" onSubmit={this.handleAddComment}>
                     <FormControl

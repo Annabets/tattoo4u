@@ -1,4 +1,4 @@
-import {AUTH_KEY, EMAIL, ROLE, USER_ID, USER_NAME} from "./constants";
+import {AUTH_KEY, EMAIL, PHOTO_URL, ROLE, USER_ID, USER_NAME} from "./constants";
 import {SIGN_IN, SIGN_UP} from "./routes";
 import {createBrowserHistory} from "history";
 
@@ -19,6 +19,7 @@ export function withNavigation(pathname){
 export function clearLocalStorage() {
   localStorage.removeItem(AUTH_KEY);
   localStorage.removeItem(USER_NAME);
+  localStorage.removeItem(PHOTO_URL);
   localStorage.removeItem(EMAIL);
   localStorage.removeItem(USER_ID);
   localStorage.removeItem(ROLE);

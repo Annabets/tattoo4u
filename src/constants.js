@@ -31,3 +31,4 @@ export const USER_NAME = 'userName';
 export const EMAIL = 'email';
 export const ROLE = 'ROLE';
 export const USER_ID = 'userId';
+export const PHOTO_URL = 'photoUrl';
