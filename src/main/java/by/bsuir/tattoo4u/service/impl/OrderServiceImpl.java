@@ -9,6 +9,9 @@ import by.bsuir.tattoo4u.repository.UserRepository;
 import by.bsuir.tattoo4u.service.OrderService;
 import by.bsuir.tattoo4u.service.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -20,6 +23,16 @@ public class OrderServiceImpl implements OrderService {
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
     private final MasterRepository masterRepository;
+
+    @Autowired
+    private JavaMailSender mailSender;
+
+    @Value("${spring.mail.username}")
+    private String username;
+
+    private final String subject = "Tattoo acceptance";
+    private final String textPartOne = "Your order is accepted. Your master is  You can contact him by mail:";
+    private final String textPartTwo = ". You can contact him by mail: ";
 
     @Autowired
     public OrderServiceImpl(OrderRepository orderRepository, StudioRepository studioRepository,
@@ -73,5 +86,16 @@ public class OrderServiceImpl implements OrderService {
 
         master.getOrders().add(order);
         masterRepository.save(master);
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+
+        mailMessage.setFrom(username);
+        mailMessage.setTo(order.getAuthor().getEmail());
+        mailMessage.setSubject(subject);
+        String text = textPartOne + order.getMaster().getUser().getUsername() + textPartTwo
+                + order.getMaster().getUser().getEmail();
+        mailMessage.setText(text);
+
+        mailSender.send(mailMessage);
     }
 }

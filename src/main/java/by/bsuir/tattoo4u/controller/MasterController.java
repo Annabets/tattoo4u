@@ -4,11 +4,9 @@ import by.bsuir.tattoo4u.dto.request.MasterCommentRequestDto;
 import by.bsuir.tattoo4u.dto.response.MasterCommentResponseDto;
 import by.bsuir.tattoo4u.dto.response.MasterResponseDto;
 import by.bsuir.tattoo4u.dto.response.MasterWithCheckingResponseDto;
+import by.bsuir.tattoo4u.dto.response.UserResponseDto;
 import by.bsuir.tattoo4u.entity.*;
-import by.bsuir.tattoo4u.service.MasterCommentService;
-import by.bsuir.tattoo4u.service.MasterService;
-import by.bsuir.tattoo4u.service.TokenService;
-import by.bsuir.tattoo4u.service.UserService;
+import by.bsuir.tattoo4u.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -19,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.rmi.server.ServerCloneException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,6 +100,24 @@ public class MasterController {
 
             return new ResponseEntity<>(masterResponseDto, HttpStatus.OK);
         }
+    }
+
+    @GetMapping("/unemployed")
+    @PreAuthorize("hasAuthority('MASTER')")
+    public ResponseEntity<?> getUnemployedMasters() {
+        List<Master> userList;
+        try {
+            userList = masterService.getUnemployedMasters();
+        } catch (ServiceException ex) {
+            throw new ControllerException(ex);
+        }
+
+        List<UserResponseDto> userResponseDto = new ArrayList<>();
+        for (Master user : userList) {
+            userResponseDto.add(new UserResponseDto(user.getUser()));
+        }
+
+        return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
     }
 
     @PostMapping("/comments")

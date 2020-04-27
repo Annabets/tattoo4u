@@ -3,10 +3,7 @@ package by.bsuir.tattoo4u.controller;
 import by.bsuir.tattoo4u.dto.request.AddingMasterRequestDto;
 import by.bsuir.tattoo4u.dto.request.StudioFeedbackRequestDto;
 import by.bsuir.tattoo4u.dto.request.StudioRegistrationRequestDto;
-import by.bsuir.tattoo4u.dto.response.MasterResponseDto;
-import by.bsuir.tattoo4u.dto.response.StudioFeedbackResponseDto;
-import by.bsuir.tattoo4u.dto.response.StudioResponseDto;
-import by.bsuir.tattoo4u.dto.response.StudioWithMastersResponseDto;
+import by.bsuir.tattoo4u.dto.response.*;
 import by.bsuir.tattoo4u.entity.*;
 import by.bsuir.tattoo4u.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -166,6 +163,7 @@ public class StudioController {
     }
 
     @DeleteMapping("/master")
+    @PreAuthorize("hasAuthority('MASTER')")
     public ResponseEntity<?> dismissMasterFromStudio(@RequestBody AddingMasterRequestDto requestDto) {
         User master = userService.getById(requestDto.getMasterId());
         try {
@@ -184,7 +182,7 @@ public class StudioController {
         String username = tokenService.getUsername(tokenService.clearBearerToken(bearerToken));
 
         User user = userService.getByUsername(username);
-        List<StudioFeedbackResponseDto> feedbacks;
+        StudioWithRatingAndFeedbackResponseDto feedbackResponseDto;
         try {
             Studio studio = studioService.takeStudioById(requestDto.getStudioId());
             studioFeedback.setStudio(studio);
@@ -193,11 +191,12 @@ public class StudioController {
 
             studioService.addFeedback(studioFeedback);
 
-            feedbacks = studioService.takeStudiosFeedbacks(requestDto.getStudioId());
+            List<StudioFeedbackResponseDto> feedbacks = studioService.takeStudiosFeedbacks(requestDto.getStudioId());
+            feedbackResponseDto = new StudioWithRatingAndFeedbackResponseDto(studio.getRating(), feedbacks);
         } catch (ServiceException ex) {
             throw new ControllerException(ex);
         }
-        return new ResponseEntity<>(feedbacks, HttpStatus.CREATED);
+        return new ResponseEntity<>(feedbackResponseDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/feedback")

@@ -17,7 +17,7 @@ public class StudioWithMastersResponseDto {
     private String contact;
     private List<MasterResponseDto> masters;
     private String photo;
-    private String favourite;
+    private Boolean favourite;
 
     public StudioWithMastersResponseDto(Studio studio, List<MasterResponseDto> masters) {
         this.id = studio.getId().toString();
@@ -30,7 +30,7 @@ public class StudioWithMastersResponseDto {
         this.contact = studio.getContact();
         this.masters = masters;
         this.photo = studio.getPhoto().getUrl();
-        this.favourite = Boolean.toString(false);
+        this.favourite = false;
     }
 
     public StudioWithMastersResponseDto(StudioResponseDto studio, List<MasterResponseDto> masters) {
