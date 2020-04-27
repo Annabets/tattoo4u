@@ -46,7 +46,6 @@ public class OrderController {
         Order order = requestDto.getOrder();
         try {
             User user = userService.getByUsername(username);
-            Studio studio = studioService.takeStudioById(requestDto.getStudioId());
 
             PhotoUpload photoUpload = new PhotoUpload(requestDto.getFile());
             Photo photo = photoService.save(photoUpload);
@@ -56,10 +55,7 @@ public class OrderController {
             order.setStudio(studioService.takeStudioById(requestDto.getStudioId()));
 
             user.getOrders().add(order);
-            studio.getOrders().add(order);
 
-            userService.save(user);
-            studioService.save(studio);
             orderService.add(order);
         } catch (ServiceException ex) {
             throw new ControllerException(ex);
