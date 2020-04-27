@@ -1,7 +1,7 @@
 import React from 'react';
 import {Nav, Navbar, NavDropdown} from "react-bootstrap";
 import * as routes from '../routes';
-import {isAuth, withNavigation} from "../utils";
+import {isAdmin, isAuth, withNavigation} from "../utils";
 import {connect} from "react-redux";
 import {signOut} from "../containers/User/actions";
 
@@ -26,6 +26,7 @@ export default connect(
         {isAuth() ?
           <NavDropdown bsPrefix="nav-link user-dropdown" title={username} id="profile-nav-dropdown">
             <NavDropdown.Item href={routes.PROFILE}>Your Profile</NavDropdown.Item>
+            {isAdmin() && <NavDropdown.Item href={routes.ADMIN}>Manage users</NavDropdown.Item>}
             <NavDropdown.Divider/>
             <NavDropdown.Item onClick={signOut}>Sign Out</NavDropdown.Item>
           </NavDropdown> :

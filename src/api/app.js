@@ -16,7 +16,7 @@ import {
   TREND_PHOTOS,
   COMMENT,
   FAVORITE_STUDIO,
-  FEEDBACK, STUDIOS_ORDERS, ORDER, ORDERS, ACCEPTANCE, CONFIRMATION_ORDER, FAVOURITES, COMMENTS
+  FEEDBACK, STUDIOS_ORDERS, ORDER, ORDERS, ACCEPTANCE, CONFIRMATION_ORDER, FAVOURITES, COMMENTS, ADMIN, BAN, UNBAN
 } from "../constants";
 import axios from 'axios';
 import {getToken} from "../utils";
@@ -124,6 +124,12 @@ const getMasterFeedbacks = (masterId, page = 0, size = 10) => axios.get(MASTERS 
 
 const giveMasterFeedback = data => axios.post(MASTERS + COMMENTS, data);
 
+const getUsersList = () => axios.get(USERS);
+
+const banUser = userId => axios.post(ADMIN + BAN, {id: userId});
+
+const unbanUser = userId => axios.post(ADMIN + UNBAN, {id: userId});
+
 export const api = {
   signInUser,
   signUpUser,
@@ -159,4 +165,7 @@ export const api = {
   removeMasterFromFav,
   getMasterFeedbacks,
   giveMasterFeedback,
+  getUsersList,
+  banUser,
+  unbanUser,
 };

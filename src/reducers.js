@@ -8,6 +8,7 @@ import {studioReducer} from "./containers/Studio/reducer";
 import {mastersReducer} from "./containers/Masters/reducer";
 import {galleryReducer} from "./containers/Gallery/reducer";
 import {masterReducer} from "./containers/Master/reducer";
+import {adminReducer} from "./containers/Admin/reducer";
 
 export const rootReducer = combineReducers({
   user: userReducer,
@@ -19,4 +20,5 @@ export const rootReducer = combineReducers({
   masters: mastersReducer,
   gallery: galleryReducer,
   master: masterReducer,
+  admin: adminReducer
 });

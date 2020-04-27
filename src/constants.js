@@ -25,6 +25,9 @@ export const ORDER = '/order';
 export const ORDERS = '/orders';
 export const ACCEPTANCE = '/acceptance';
 export const CONFIRMATION_ORDER = '/confirmationOrder';
+export const ADMIN = '/admin';
+export const BAN = '/ban';
+export const UNBAN = '/unban';
 
 //methods
 export const GET = 'GET';

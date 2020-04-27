@@ -1,7 +1,9 @@
 import * as constants from './constants';
 
 const initialState = {
-  masterData: {},
+  masterData: {
+    posts: [],
+  },
   comments: [],
 };
 

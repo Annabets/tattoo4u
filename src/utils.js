@@ -12,6 +12,10 @@ export function isAuth() {
   return !!localStorage.getItem(AUTH_KEY);
 }
 
+export function isAdmin() {
+  return localStorage.getItem(ROLE) === 'ADMIN';
+}
+
 export function withNavigation(pathname){
   return pathname !== SIGN_IN && pathname !== SIGN_UP
 }
