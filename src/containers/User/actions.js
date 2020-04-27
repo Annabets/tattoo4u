@@ -52,7 +52,7 @@ export function signUp(data) {
 
 export function signOut() {
   return dispatch => {
-    api.signOutUser().then(() => {
+    api.signOutUser().finally(() => {
       dispatch({
         type: constants.SIGN_OUT_USER
       });
