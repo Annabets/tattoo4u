@@ -57,6 +57,7 @@ class Master extends React.Component {
         inFavorites
       },
       userId,
+      currentUsername,
       addMasterToFavorites,
       removeMasterFromFavorites,
       deletePhoto,
@@ -122,7 +123,7 @@ class Master extends React.Component {
                   </Card>
                 )) :
                 <div className="mb-3"><i className="text-muted">No feedbacks yet</i></div>}
-              {isAuth() &&
+              {isAuth() && !comments.some(comment => comment.username === currentUsername) &&
               <Form onSubmit={this.handleAddFeedback} className="border p-3">
                 Rating:
                 <Rating
@@ -155,6 +156,7 @@ class Master extends React.Component {
 export default connect(
   state => ({
     userId: state.user.id,
+    currentUsername: state.user.username,
     masterData: state.master.masterData,
     comments: state.master.comments,
   }),

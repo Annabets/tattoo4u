@@ -96,6 +96,7 @@ class Studio extends React.Component {
         }
       },
       role,
+      username,
       mastersToSelect,
       userId,
       addToFavorites,
@@ -176,7 +177,7 @@ class Studio extends React.Component {
                   </Card>
                 )) :
                 <div className="mb-3"><i className="text-muted">No feedbacks yet</i></div>}
-              {isAuth() &&
+              {isAuth() && !feedbacks.some(fbck => fbck.username === username) &&
               <Form onSubmit={this.handleAddFeedback} className="border p-3">
                 Rating:
                 <Rating
@@ -224,6 +225,7 @@ export default connect(
   state => ({
     role: state.user.role,
     userId: state.user.id,
+    username: state.user.username,
     studioData: state.studio.studioData,
     mastersToSelect: state.studio.mastersToSelect,
     feedbacks: state.studio.feedbacks,
