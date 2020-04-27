@@ -7,10 +7,17 @@ import {
   addStudioToFavorites,
   removeStudioFromFavorites,
   getStudioFeebacks,
-  giveStudioFeedback
+  giveStudioFeedback,
+  getStudioOrders,
+  addOrder,
+  resetError,
+  getUserOrders,
+  acceptOrder,
+  confirmOrder,
 } from "./actions";
-import {Button, Form, FormControl, Card} from "react-bootstrap";
+import {Button, Form, FormControl, Card, Tabs, Tab} from "react-bootstrap";
 import Rating from 'react-rating';
+import Orders from '../../components/Orders';
 import {isAuth} from "../../utils";
 import EmptyRatingSymbol from '../../assets/icons/star-empty.svg';
 import FullRatingSymbol from '../../assets/icons/star-full.svg';
@@ -83,11 +90,25 @@ class Studio extends React.Component {
         masters,
         favourite,
       },
+      match:{
+        params:{
+          studioId
+        }
+      },
+      role,
       mastersToSelect,
       userId,
       addToFavorites,
       removeFromFavorites,
       feedbacks,
+      orders,
+      getStudioOrders,
+      addOrder,
+      error,
+      resetError,
+      getUserOrders,
+      acceptOrder,
+      confirmOrder,
     } = this.props;
     const { feedback } = this.state;
 
@@ -133,50 +154,68 @@ class Studio extends React.Component {
             </Form.Group>
           </Form>}
         </div>
-        <div>
-          <h4>Feedbacks</h4>
-          {feedbacks.length ?
-            feedbacks.map((fbck, i) => (
-              <Card className="mb-3" key={i}>
-                <Card.Body>
-                  <Card.Text>
-                    <b className="d-flex justify-content-between">
-                      {fbck.username}
-                      <Rating
-                        emptySymbol={<img width={10} height={10} src={EmptyRatingSymbol} alt=""/>}
-                        fullSymbol={<img width={10} height={10} src={FullRatingSymbol} alt=""/>}
-                        initialRating={fbck.rating}
-                        readonly/>
-                    </b>
-                  </Card.Text>
-                  {fbck.feedback && <Card.Text>{fbck.feedback}</Card.Text>}
-                </Card.Body>
-              </Card>
-            )) :
-            <div className="mb-3"><i className="text-muted">No feedbacks yet</i></div>}
-          {isAuth() &&
-          <Form onSubmit={this.handleAddFeedback} className="border p-3">
-            Rating:
-            <Rating
-              start={0}
-              stop={5}
-              emptySymbol={<img width={15} height={15} src={EmptyRatingSymbol} alt=""/>}
-              fullSymbol={<img width={15} height={15} src={FullRatingSymbol} alt=""/>}
-              fractions={2}
-              initialRating={this.state.rating}
-              onChange={this.handleChangeRating}
-              className="mb-2 ml-2"
+        <Tabs defaultActiveKey="feedbacks">
+          <Tab eventKey="feedbacks" title="Feedbacks">
+            <div>
+              {feedbacks.length ?
+                feedbacks.map((fbck, i) => (
+                  <Card className="my-3" key={i}>
+                    <Card.Body>
+                      <Card.Text>
+                        <b className="d-flex justify-content-between">
+                          {fbck.username}
+                          <Rating
+                            emptySymbol={<img width={10} height={10} src={EmptyRatingSymbol} alt=""/>}
+                            fullSymbol={<img width={10} height={10} src={FullRatingSymbol} alt=""/>}
+                            initialRating={fbck.rating}
+                            readonly/>
+                        </b>
+                      </Card.Text>
+                      {fbck.feedback && <Card.Text>{fbck.feedback}</Card.Text>}
+                    </Card.Body>
+                  </Card>
+                )) :
+                <div className="mb-3"><i className="text-muted">No feedbacks yet</i></div>}
+              {isAuth() &&
+              <Form onSubmit={this.handleAddFeedback} className="border p-3">
+                Rating:
+                <Rating
+                  start={0}
+                  stop={5}
+                  emptySymbol={<img width={15} height={15} src={EmptyRatingSymbol} alt=""/>}
+                  fullSymbol={<img width={15} height={15} src={FullRatingSymbol} alt=""/>}
+                  fractions={2}
+                  initialRating={this.state.rating}
+                  onChange={this.handleChangeRating}
+                  className="mb-2 ml-2"
+                />
+                <FormControl
+                  type="text"
+                  as="textarea"
+                  rows={3}
+                  value={feedback}
+                  onChange={this.handleChangeFeedback}
+                  required
+                />
+                <Button className="mt-2" type="submit">Add feedback</Button>
+              </Form>}
+            </div>
+          </Tab>
+          {isAuth() && (role === 'USER' || masters && masters.some(master => master.id === userId)) &&
+          <Tab eventKey="orders" title="Orders">
+            <Orders
+              role={role}
+              studioId={id || studioId}
+              orders={role === 'USER' ? orders.filter(order => order.studioId === studioId) : orders}
+              getOrders={role === 'USER' ? getUserOrders : getStudioOrders}
+              addOrder={addOrder}
+              error={error}
+              resetError={resetError}
+              acceptOrder={acceptOrder}
+              confirmOrder={confirmOrder}
             />
-            <FormControl
-              type="text"
-              as="textarea"
-              rows={3}
-              value={feedback}
-              onChange={this.handleChangeFeedback}
-            />
-            <Button className="mt-2" type="submit">Add feedback</Button>
-          </Form>}
-        </div>
+          </Tab>}
+        </Tabs>
       </div>
     )
   }
@@ -184,10 +223,13 @@ class Studio extends React.Component {
 
 export default connect(
   state => ({
+    role: state.user.role,
     userId: state.user.id,
     studioData: state.studio.studioData,
     mastersToSelect: state.studio.mastersToSelect,
     feedbacks: state.studio.feedbacks,
+    orders: state.studio.studioOrders,
+    error: state.studio.error,
   }),
   dispatch => ({
     getStudioData: (studioId) => dispatch(getStudioData(studioId)),
@@ -196,5 +238,11 @@ export default connect(
     addToFavorites: (studioIid, cb) => dispatch(addStudioToFavorites(studioIid, cb)),
     removeFromFavorites: (studioId, cb) => dispatch(removeStudioFromFavorites(studioId, cb)),
     getStudioFeebacks: studioId => dispatch(getStudioFeebacks(studioId)),
-    giveStudioFeedback: (data, cb) => dispatch(giveStudioFeedback(data, cb))
+    giveStudioFeedback: (data, cb) => dispatch(giveStudioFeedback(data, cb)),
+    getStudioOrders: studioId => dispatch(getStudioOrders(studioId)),
+    addOrder: orderData => dispatch(addOrder(orderData)),
+    resetError: () => dispatch(resetError()),
+    getUserOrders: () => dispatch(getUserOrders()),
+    acceptOrder: (orderId, cb) => dispatch(acceptOrder(orderId, cb)),
+    confirmOrder: (orderId, cb) => dispatch(confirmOrder(orderId, cb)),
   }))(Studio);

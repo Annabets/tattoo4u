@@ -16,7 +16,7 @@ import {
   TREND_PHOTOS,
   COMMENT,
   FAVORITE_STUDIO,
-  FEEDBACK
+  FEEDBACK, STUDIOS_ORDERS, ORDER, ORDERS, ACCEPTANCE, CONFIRMATION_ORDER
 } from "../constants";
 import axios from 'axios';
 import {getToken} from "../utils";
@@ -102,6 +102,16 @@ const getStudioFeedbacks = studioId => axios.get(FEEDBACK, {params: {id: studioI
 
 const giveStudioFeedback = data => axios.post(FEEDBACK, data);
 
+const getStudioOrders = studioId => axios.get(STUDIOS_ORDERS, {params: {studioId}});
+
+const getUserOrders = () => axios.get(ORDERS);
+
+const addOrder = orderData => axios.post(ORDER, formData(orderData));
+
+const acceptOrder = orderId => axios.post(ACCEPTANCE, null,{params: {id: orderId}});
+
+const confirmOrder = orderId => axios.post(CONFIRMATION_ORDER, null,{params: {id: orderId}});
+
 export const api = {
   signInUser,
   signUpUser,
@@ -125,5 +135,10 @@ export const api = {
   addStudioToFav,
   removeStudioFromFav,
   giveStudioFeedback,
-  getStudioFeedbacks
+  getStudioFeedbacks,
+  getStudioOrders,
+  addOrder,
+  getUserOrders,
+  acceptOrder,
+  confirmOrder,
 };

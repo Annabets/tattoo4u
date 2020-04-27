@@ -164,3 +164,124 @@ export function giveStudioFeedback(data, cb) {
     )
   }
 }
+
+export function getStudioOrders(studioId) {
+  return dispatch => {
+    dispatch({
+      type: constants.GET_STUDIO_ORDERS_REQUEST
+    });
+    api.getStudioOrders(studioId).then(
+      response => {
+        dispatch({
+          type: constants.GET_STUDIO_ORDERS_SUCCESS,
+          data: response.data
+        })
+      },
+      error => {
+        dispatch({
+          type: constants.GET_STUDIO_ORDERS_FAILURE,
+          payload: error.message
+        });
+        apiErrorHandler(error);
+      }
+    )
+  }
+}
+
+export function getUserOrders() {
+  return dispatch => {
+    dispatch({
+      type: constants.GET_USER_ORDERS_REQUEST
+    });
+    api.getUserOrders().then(
+      response => {
+        dispatch({
+          type: constants.GET_USER_ORDERS_SUCCESS,
+          data: response.data
+        })
+      },
+      error => {
+        dispatch({
+          type: constants.GET_USER_ORDERS_FAILURE,
+          payload: error.message
+        });
+        apiErrorHandler(error);
+      }
+    )
+  }
+}
+
+export function addOrder(orderData, cb) {
+  return dispatch => {
+    dispatch({
+      type: constants.ADD_ORDER_REQUEST,
+    });
+    api.addOrder(orderData).then(
+      () => {
+        dispatch({
+          type: constants.ADD_ORDER_SUCCESS,
+        });
+        cb && cb()
+      },
+      error => {
+        dispatch({
+          type: constants.ADD_ORDER_FAILURE,
+          payload: error.message
+        });
+        apiErrorHandler(error)
+      }
+    )
+  }
+}
+
+export function resetError() {
+  return {
+    type: constants.RESET_ERROR,
+  }
+}
+
+export function acceptOrder(orderId, cb) {
+  return dispatch => {
+    dispatch({
+      type: constants.ACCEPT_ORDER_REQUEST,
+    });
+    api.acceptOrder(orderId).then(
+      () => {
+        dispatch({
+          type: constants.ACCEPT_ORDER_SUCCESS,
+        });
+        cb && cb()
+      },
+      error => {
+        dispatch({
+          type: constants.ACCEPT_ORDER_FAILURE,
+          payload: error.message
+        });
+        apiErrorHandler(error)
+      }
+    )
+  }
+}
+
+export function confirmOrder(orderId, cb) {
+  return dispatch => {
+    dispatch({
+      type: constants.CONFIRM_ORDER_REQUEST,
+    });
+    api.confirmOrder(orderId).then(
+      () => {
+        dispatch({
+          type: constants.CONFIRM_ORDER_SUCCESS,
+        });
+        cb && cb()
+      },
+      error => {
+        dispatch({
+          type: constants.CONFIRM_ORDER_FAILURE,
+          payload: error.message
+        });
+        apiErrorHandler(error)
+      }
+    )
+  }
+}

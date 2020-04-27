@@ -18,6 +18,11 @@ export const USERS = '/users';
 export const COMMENT = '/comment';
 export const FAVORITE_STUDIO = '/favouritesStudio';
 export const FEEDBACK = '/feedback';
+export const STUDIOS_ORDERS = '/studiosOrders';
+export const ORDER = '/order';
+export const ORDERS = '/orders';
+export const ACCEPTANCE = '/acceptance';
+export const CONFIRMATION_ORDER = '/confirmationOrder';
 
 //methods
 export const GET = 'GET';
