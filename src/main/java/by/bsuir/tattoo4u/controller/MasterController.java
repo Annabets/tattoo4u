@@ -1,6 +1,7 @@
 package by.bsuir.tattoo4u.controller;
 
 import by.bsuir.tattoo4u.dto.request.MasterCommentRequestDto;
+import by.bsuir.tattoo4u.dto.response.MasterCommentAfterAddingResponseDto;
 import by.bsuir.tattoo4u.dto.response.MasterCommentResponseDto;
 import by.bsuir.tattoo4u.dto.response.MasterResponseDto;
 import by.bsuir.tattoo4u.dto.response.MasterWithCheckingResponseDto;
@@ -105,7 +106,7 @@ public class MasterController {
 
     @PostMapping("/comments")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> addMasterComment(@RequestHeader("Authorization") String bearerToken, @RequestBody @Validated MasterCommentRequestDto requestDto){
+    public ResponseEntity<?> addMasterComment(@RequestHeader("Authorization") String bearerToken, @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable, @RequestBody @Validated MasterCommentRequestDto requestDto){
 
         if(requestDto==null || (requestDto.getComment()==null && requestDto.getRating()==null)){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -127,7 +128,16 @@ public class MasterController {
 
         masterCommentService.add(masterComment);
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        List<MasterComment> masterComments=masterCommentService.getByMaster(master, pageable);
+        List<MasterCommentResponseDto> masterCommentResponseDtos=new ArrayList<>();
+        for(MasterComment comment:masterComments){
+            masterCommentResponseDtos.add(new MasterCommentResponseDto(comment));
+        }
+        Double masterNewRating=masterService.getById(requestDto.getMasterId()).getRating();
+
+        MasterCommentAfterAddingResponseDto responseDto=new MasterCommentAfterAddingResponseDto(masterNewRating, masterCommentResponseDtos);
+
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/comments")
