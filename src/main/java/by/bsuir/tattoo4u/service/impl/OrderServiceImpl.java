@@ -49,8 +49,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderResponseDto> takeUsersOrders(User user) throws ServiceException {
-        return compileList(orderRepository.findAllByAuthor(user));
+    public List<OrderResponseDto> takeUsersOrders(User user, Long studioId) throws ServiceException {
+        if(studioId == 0) {
+            return compileList(orderRepository.findAllByAuthor(user));
+        } else {
+            return compileList(orderRepository.findAllByAuthorAndStudioId(user, studioId));
+        }
     }
 
     @Override
