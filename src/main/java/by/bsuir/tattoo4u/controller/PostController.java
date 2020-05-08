@@ -13,11 +13,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.ZoneId;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -25,7 +24,6 @@ import java.util.stream.Collectors;
 public class PostController {
     private final PostService postService;
     private final TokenService tokenService;
-    private final UserService userService;
     private final PhotoService photoService;
     private final CommentService commentService;
 
@@ -33,13 +31,11 @@ public class PostController {
     public PostController(
             PostService postService,
             TokenService tokenService,
-            UserService userService,
             PhotoService photoService,
             CommentService commentService
     ) {
         this.postService = postService;
         this.tokenService = tokenService;
-        this.userService = userService;
         this.photoService = photoService;
         this.commentService = commentService;
     }
@@ -48,7 +44,7 @@ public class PostController {
     @PreAuthorize("hasAuthority('MASTER')")
     public ResponseEntity<?> addPost(
             @RequestHeader("Authorization") String token,
-            @ModelAttribute PostRequestDto postRequestDto
+            @ModelAttribute @Valid PostRequestDto postRequestDto
     ) {
         User user = tokenService.getUser(token);
 
@@ -67,7 +63,7 @@ public class PostController {
     }
 
     @GetMapping("posts")
-    public ResponseEntity<?> posts(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> posts(@RequestHeader(value = "Authorization", required = false) String token) {
         try {
             User user = tokenService.getUser(token);
 
@@ -84,7 +80,7 @@ public class PostController {
     @GetMapping("take-posts/{id}")
     public ResponseEntity<?> takeUserPosts(
             @PathVariable("id") User user,
-            @RequestHeader("Authorization") String token
+            @RequestHeader(value = "Authorization", required = false) String token
     ) {
         try {
             if (user != null) {
@@ -104,7 +100,10 @@ public class PostController {
     }
 
     @GetMapping("take-posts")
-    public ResponseEntity<?> takePosts(@RequestParam String tags, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> takePosts(
+            @RequestParam String tags,
+            @RequestHeader(value = "Authorization", required = false) String token
+    ) {
         try {
             User currentUser = tokenService.getUser(token);
 
@@ -162,7 +161,7 @@ public class PostController {
     }
 
     @GetMapping("trends")
-    public ResponseEntity<?> takeTrends(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> takeTrends(@RequestHeader(value = "Authorization", required = false) String token) {
         try {
             User user = tokenService.getUser(token);
 
@@ -180,14 +179,14 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> addComment(
             @RequestHeader("Authorization") String token,
-            @RequestBody CommentRequestDto commentDto,
+            @RequestBody @Valid CommentRequestDto commentDto,
             @PathVariable("id") Post post
     ) {
         try {
             if (post != null) {
                 User user = tokenService.getUser(token);
 
-                Comment comment = new Comment(commentDto.getComment(), user, LocalDateTime.now());
+                Comment comment = new Comment(commentDto.getComment(), user, LocalDateTime.now(ZoneId.of("UTC+3")));
 
                 post.getComments().add(commentService.save(comment));
 
@@ -202,15 +201,16 @@ public class PostController {
         }
     }
 
-    @GetMapping("comment/{id}")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> takeComment(@PathVariable("id") Post post){
-        if(post != null){
+    @GetMapping("comments/{id}")
+    public ResponseEntity<?> takeComment(@PathVariable("id") Post post) {
+        if (post != null) {
             Set<Comment> comments = post.getComments();
 
-            Set<CommentResponseDto> commentDtoSet = toDto(comments);
+            List<CommentResponseDto> commentDtoList = toDto(comments);
 
-            return new ResponseEntity<>(commentDtoSet, HttpStatus.OK);
+            commentDtoList.sort(Comparator.comparing((CommentResponseDto::getDate)));
+
+            return new ResponseEntity<>(commentDtoList, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Post with the specified id does not exist", HttpStatus.BAD_REQUEST);
         }
@@ -228,15 +228,15 @@ public class PostController {
         return postDtoList;
     }
 
-    private Set<CommentResponseDto> toDto(Set<Comment> comments){
-        Set<CommentResponseDto> commentDtoSet = new HashSet<>();
+    private List<CommentResponseDto> toDto(Set<Comment> comments) {
+        List<CommentResponseDto> commentDtoList = new ArrayList<>();
 
-        for(Comment comment : comments){
+        for (Comment comment : comments) {
             CommentResponseDto commentDto = new CommentResponseDto();
             commentDto.fromComment(comment);
-            commentDtoSet.add(commentDto);
+            commentDtoList.add(commentDto);
         }
 
-        return commentDtoSet;
+        return commentDtoList;
     }
 }
