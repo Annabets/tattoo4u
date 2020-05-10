@@ -11,6 +11,7 @@ export function homePageReducer(state = initialState, action) {
     case constants.GET_PHOTOS_REQUEST:
       return {
         ...state,
+        isUploadFailed: false,
         isLoadingPhotos: true,
       };
     case constants.GET_PHOTOS_SUCCESS:

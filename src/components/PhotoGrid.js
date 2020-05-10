@@ -115,10 +115,12 @@ class PhotoGrid extends React.Component {
     return (
       <>
         <section className="Photo-grid">
-          {photos.length > 0 &&
-          <div className="Grid-container">
-            {this.renderContainerColumns(columns)}
-          </div>}
+          {photos.length > 0 ?
+            <div className="Grid-container">
+              {this.renderContainerColumns(columns)}
+            </div> :
+            !isLoadingPhotos && !isUploadFailed &&
+            <div className="h-100 w-100 text-center"><i className="fs-18">No photos</i></div>}
           {isLoadingPhotos &&
           <div className="Loading-indicator">
             Loading...
