@@ -3,6 +3,7 @@ package by.bsuir.tattoo4u.service.impl;
 import by.bsuir.tattoo4u.dto.response.MasterResponseDto;
 import by.bsuir.tattoo4u.dto.response.StudioFeedbackResponseDto;
 import by.bsuir.tattoo4u.dto.response.StudioResponseDto;
+import by.bsuir.tattoo4u.dto.response.StudioWithPageResponseDto;
 import by.bsuir.tattoo4u.entity.Master;
 import by.bsuir.tattoo4u.entity.Studio;
 import by.bsuir.tattoo4u.entity.StudioFeedback;
@@ -41,7 +42,7 @@ public class StudioServiceImpl implements StudioService {
     @Override
     public void save(Studio studio) throws ServiceException {
         Studio temp = studioRepository.getByOwner(studio.getOwner());
-        if(temp != null) {
+        if (temp != null) {
             throw new ServiceException("You can create only one studio");
         }
         studio.getOwner().getMasterInfo().setJob(studio);
@@ -57,14 +58,14 @@ public class StudioServiceImpl implements StudioService {
 
     @Override
     public StudioResponseDto takeStudioResponseDtoById(Long id) throws ServiceException {
-        Studio studio  = studioRepository.getById(id);
+        Studio studio = studioRepository.getById(id);
         return new StudioResponseDto(studio);
     }
 
     @Override
     public StudioResponseDto takeStudioByIdWithFavourites(Long id, User user) throws ServiceException {
-        Studio studio  = studioRepository.getById(id);
-        if(user.getFavouritesStudios().contains(studio)) {
+        Studio studio = studioRepository.getById(id);
+        if (user.getFavouritesStudios().contains(studio)) {
             return new StudioResponseDto(studio, true);
         } else {
             return new StudioResponseDto(studio, false);
@@ -73,10 +74,10 @@ public class StudioServiceImpl implements StudioService {
     }
 
     @Override
-    public List<StudioResponseDto> takeStudios(Pageable pageable) throws ServiceException {
-        Page<Studio> studios = studioRepository.findAllByConfirmationIsTrue(pageable);//findAll(pageable);
-
-        return compileStudioResponseListFromPage(studios);
+    public StudioWithPageResponseDto takeStudios(Pageable pageable) throws ServiceException {
+        Page<Studio> page = studioRepository.findAllByConfirmationIsTrue(pageable);
+        List<StudioResponseDto> studios = compileStudioResponseListFromPage(page);
+        return new StudioWithPageResponseDto(studios, page.getTotalPages());
     }
 
     @Override
@@ -85,11 +86,10 @@ public class StudioServiceImpl implements StudioService {
     }
 
     @Override
-    public List<StudioResponseDto> takeByName(String name, Pageable pageable) throws ServiceException {
-        Page<Studio> studios = studioRepository.findAllByNameContainingIgnoreCaseAndConfirmationIsTrue(name, pageable);
-        //studioRepository.findAllByNameContainingIgnoreCase(name, pageable);//studioRepository.findAllByName(name, pageable);
-
-        return compileStudioResponseListFromPage(studios);
+    public StudioWithPageResponseDto takeByName(String name, Pageable pageable) throws ServiceException {
+        Page<Studio> page = studioRepository.findAllByNameContainingIgnoreCaseAndConfirmationIsTrue(name, pageable);
+        List<StudioResponseDto> studios = compileStudioResponseListFromPage(page);
+        return new StudioWithPageResponseDto(studios, page.getTotalPages());
     }
 
     private List<StudioResponseDto> compileStudioResponseListFromPage(Page<Studio> studios) {
@@ -106,26 +106,28 @@ public class StudioServiceImpl implements StudioService {
     }
 
     @Override
-    public List<StudioResponseDto> takeStudiosWithFavourites(Pageable pageable, User user) throws ServiceException {
-        Page<Studio> studios = studioRepository.findAll(pageable);
+    public StudioWithPageResponseDto takeStudiosWithFavourites(Pageable pageable, User user) throws ServiceException {
+        Page<Studio> page = studioRepository.findAllByConfirmationIsTrue(pageable);
+        List<StudioResponseDto> studios = compileStudioWithFavouritesResponseList(page, user);
 
-        return compileStudioWithFavouritesResponseList(studios, user);
+        return new StudioWithPageResponseDto(studios, page.getTotalPages());
     }
 
     @Override
-    public List<StudioResponseDto> takeStudiosByNameWithFavourites(String name, Pageable pageable, User user)
+    public StudioWithPageResponseDto takeStudiosByNameWithFavourites(String name, Pageable pageable, User user)
             throws ServiceException {
 
-        Page<Studio> studios = studioRepository.findAllByNameContainingIgnoreCaseAndConfirmationIsTrue(name, pageable);
+        Page<Studio> page = studioRepository.findAllByNameContainingIgnoreCaseAndConfirmationIsTrue(name, pageable);
+        List<StudioResponseDto> studios = compileStudioWithFavouritesResponseList(page, user);
 
-        return compileStudioWithFavouritesResponseList(studios, user);
+        return new StudioWithPageResponseDto(studios, page.getTotalPages());
     }
 
     private List<StudioResponseDto> compileStudioWithFavouritesResponseList(Page<Studio> studios, User user) {
         List<StudioResponseDto> page = new LinkedList<>();
         Set<Studio> studioSet = user.getFavouritesStudios();
         for (Studio studio : studios) {
-            if(studioSet.contains(studio)) {
+            if (studioSet.contains(studio)) {
                 page.add(new StudioResponseDto(studio, true));
             } else {
                 page.add(new StudioResponseDto(studio, false));

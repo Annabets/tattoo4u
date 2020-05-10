@@ -3,6 +3,7 @@ package by.bsuir.tattoo4u.service;
 import by.bsuir.tattoo4u.dto.response.MasterResponseDto;
 import by.bsuir.tattoo4u.dto.response.StudioFeedbackResponseDto;
 import by.bsuir.tattoo4u.dto.response.StudioResponseDto;
+import by.bsuir.tattoo4u.dto.response.StudioWithPageResponseDto;
 import by.bsuir.tattoo4u.entity.Studio;
 import by.bsuir.tattoo4u.entity.StudioFeedback;
 import by.bsuir.tattoo4u.entity.User;
@@ -19,15 +20,15 @@ public interface StudioService {
 
     StudioResponseDto takeStudioByIdWithFavourites(Long id, User user) throws ServiceException;
 
-    List<StudioResponseDto> takeStudios(Pageable pageable) throws ServiceException;
+    StudioWithPageResponseDto takeStudios(Pageable pageable) throws ServiceException;
 
     List<StudioResponseDto> takeNotConfirmStudios() throws ServiceException;
 
-    List<StudioResponseDto> takeStudiosWithFavourites(Pageable pageable, User user) throws ServiceException;
+    StudioWithPageResponseDto takeStudiosWithFavourites(Pageable pageable, User user) throws ServiceException;
 
-    List<StudioResponseDto> takeByName(String name, Pageable pageable) throws ServiceException;
+    StudioWithPageResponseDto takeByName(String name, Pageable pageable) throws ServiceException;
 
-    List<StudioResponseDto> takeStudiosByNameWithFavourites(String name, Pageable pageable, User user) throws ServiceException;
+    StudioWithPageResponseDto takeStudiosByNameWithFavourites(String name, Pageable pageable, User user) throws ServiceException;
 
     void addMaster(User master, Long studioId) throws ServiceException;
 

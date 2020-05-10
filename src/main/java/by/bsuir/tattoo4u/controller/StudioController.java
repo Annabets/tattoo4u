@@ -113,7 +113,7 @@ public class StudioController {
     public ResponseEntity<?> takeStudios(@RequestParam(defaultValue = "") String name,
                                          @PageableDefault(sort = {"rating"}, direction = Sort.Direction.DESC) Pageable pageable,
                                          @RequestHeader(value = "Authorization", required = false) String bearerToken) {
-        List<StudioResponseDto> studios;
+        StudioWithPageResponseDto studio;
         User user = null;
         if(bearerToken != null) {
             String username = tokenService.getUsername(tokenService.clearBearerToken(bearerToken));
@@ -122,21 +122,21 @@ public class StudioController {
         try {
             if (name == null || name.equals("")) {
                 if(user != null) {
-                    studios = studioService.takeStudiosWithFavourites(pageable, user);
+                    studio = studioService.takeStudiosWithFavourites(pageable, user);
                 } else {
-                    studios = studioService.takeStudios(pageable);
+                    studio = studioService.takeStudios(pageable);
                 }
             } else {
                 if(user != null) {
-                    studios = studioService.takeStudiosByNameWithFavourites(name, pageable, user);
+                    studio = studioService.takeStudiosByNameWithFavourites(name, pageable, user);
                 } else {
-                    studios = studioService.takeByName(name, pageable);
+                    studio = studioService.takeByName(name, pageable);
                 }
             }
         } catch (ServiceException ex) {
             throw new ControllerException(ex);
         }
-        return new ResponseEntity<>(studios, HttpStatus.OK);
+        return new ResponseEntity<>(studio, HttpStatus.OK);
     }
 
     @PostMapping("/master")
