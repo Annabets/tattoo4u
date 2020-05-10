@@ -65,13 +65,14 @@ public class OrderController {
 
     @GetMapping("/orders")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<?> takeAllUsersOrders(@RequestHeader("Authorization") String bearerToken) {
+    public ResponseEntity<?> takeAllUsersOrders(@RequestHeader("Authorization") String bearerToken,
+                                                @RequestParam(defaultValue = "0") Long studioId) {
         String username = tokenService.getUsername(tokenService.clearBearerToken(bearerToken));
         User user = userService.getByUsername(username);
 
         List<OrderResponseDto> orders;
         try {
-            orders = orderService.takeUsersOrders(user);
+            orders = orderService.takeUsersOrders(user, studioId);
         } catch (ServiceException ex) {
             throw new ControllerException(ex);
         }

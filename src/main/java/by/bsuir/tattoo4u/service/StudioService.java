@@ -21,6 +21,8 @@ public interface StudioService {
 
     List<StudioResponseDto> takeStudios(Pageable pageable) throws ServiceException;
 
+    List<StudioResponseDto> takeNotConfirmStudios() throws ServiceException;
+
     List<StudioResponseDto> takeStudiosWithFavourites(Pageable pageable, User user) throws ServiceException;
 
     List<StudioResponseDto> takeByName(String name, Pageable pageable) throws ServiceException;
@@ -38,4 +40,6 @@ public interface StudioService {
     void addFeedback(StudioFeedback feedback) throws ServiceException;
 
     List<StudioFeedbackResponseDto> takeStudiosFeedbacks(Long studioId) throws ServiceException;
+
+    void confirmStudio(Long studioId) throws ServiceException;
 }

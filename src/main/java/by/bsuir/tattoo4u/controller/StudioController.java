@@ -209,4 +209,30 @@ public class StudioController {
         }
         return new ResponseEntity<>(feedbacks, HttpStatus.CREATED);
     }
+
+    @GetMapping("/notConfirmedStudios")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<?> takeNotConfirmedStudios() {
+        List<StudioResponseDto> studios;
+        try {
+            studios = studioService.takeNotConfirmStudios();
+        } catch (ServiceException ex) {
+            throw new ControllerException(ex);
+        }
+        return new ResponseEntity<>(studios, HttpStatus.OK);
+    }
+
+    @PostMapping("/studioConfirmation")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<?> studioConfirmation(@RequestParam Long studioId) {
+        List<StudioResponseDto> studios;
+        try {
+            studioService.confirmStudio(studioId);
+
+            studios = studioService.takeNotConfirmStudios();
+        } catch (ServiceException ex) {
+            throw new ControllerException(ex);
+        }
+        return new ResponseEntity<>(studios, HttpStatus.OK);
+    }
 }

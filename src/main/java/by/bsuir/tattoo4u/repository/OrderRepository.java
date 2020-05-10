@@ -12,5 +12,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findAllByStudio(Studio studio);
 
+    List<Order> findAllByAuthorAndStudioId(User user, Long studioId);
+
     Order getById(Long id);
 }

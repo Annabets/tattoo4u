@@ -10,7 +10,7 @@ import java.util.List;
 public interface OrderService {
     void add(Order order) throws ServiceException;
 
-    List<OrderResponseDto> takeUsersOrders(User user) throws ServiceException;
+    List<OrderResponseDto> takeUsersOrders(User user, Long stdioId) throws ServiceException;
 
     List<OrderResponseDto> takeStudiosOrders(Long studioId) throws ServiceException;
 

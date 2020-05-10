@@ -5,7 +5,6 @@ import by.bsuir.tattoo4u.entity.*;
 import by.bsuir.tattoo4u.repository.MasterRepository;
 import by.bsuir.tattoo4u.repository.OrderRepository;
 import by.bsuir.tattoo4u.repository.StudioRepository;
-import by.bsuir.tattoo4u.repository.UserRepository;
 import by.bsuir.tattoo4u.service.OrderService;
 import by.bsuir.tattoo4u.service.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import java.util.List;
 @Service
 public class OrderServiceImpl implements OrderService {
     private final StudioRepository studioRepository;
-    private final UserRepository userRepository;
     private final OrderRepository orderRepository;
     private final MasterRepository masterRepository;
 
@@ -31,15 +29,14 @@ public class OrderServiceImpl implements OrderService {
     private String username;
 
     private final String subject = "Tattoo acceptance";
-    private final String textPartOne = "Your order is accepted. Your master is  You can contact him by mail:";
+    private final String textPartOne = "Your order is accepted. Your master is  ";
     private final String textPartTwo = ". You can contact him by mail: ";
 
     @Autowired
     public OrderServiceImpl(OrderRepository orderRepository, StudioRepository studioRepository,
-                            UserRepository userRepository, MasterRepository masterRepository) {
+                            MasterRepository masterRepository) {
         this.orderRepository = orderRepository;
         this.studioRepository = studioRepository;
-        this.userRepository = userRepository;
         this.masterRepository = masterRepository;
     }
 
@@ -49,8 +46,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderResponseDto> takeUsersOrders(User user) throws ServiceException {
-        return compileList(orderRepository.findAllByAuthor(user));
+    public List<OrderResponseDto> takeUsersOrders(User user, Long studioId) throws ServiceException {
+        if (studioId == 0) {
+            return compileList(orderRepository.findAllByAuthor(user));
+        } else {
+            return compileList(orderRepository.findAllByAuthorAndStudioId(user, studioId));
+        }
     }
 
     @Override
