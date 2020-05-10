@@ -6,6 +6,8 @@ import by.bsuir.tattoo4u.repository.PostRepository;
 import by.bsuir.tattoo4u.service.PostService;
 import by.bsuir.tattoo4u.service.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -25,24 +27,25 @@ public class PostServiceImpl implements PostService {
         postRepository.save(post);
     }
 
-    public Iterable<Post> takePosts() {
-        return postRepository.findAll();
+    @Override
+    public Page<Post> takePosts(Pageable pageable) {
+        return postRepository.findAll(pageable);
     }
 
     @Override
-    public Iterable<Post> takePosts(User user) throws ServiceException {
-        return postRepository.findByAuthor(user);
+    public Page<Post> takePosts(User user, Pageable pageable) throws ServiceException {
+        return postRepository.findByAuthor(user, pageable);
     }
 
     @Override
-    public Iterable<Post> takePosts(String tags) throws ServiceException {
+    public Page<Post> takePosts(String tags, Pageable pageable) throws ServiceException {
         List<String> tagsList = parseTags(tags);
-        return postRepository.findByTags(tagsList);
+        return postRepository.findByTags(tagsList, pageable);
     }
 
     @Override
-    public Iterable<Post> takeTrends() throws ServiceException {
-        return postRepository.findTrends();
+    public Page<Post> takeTrends(Pageable pageable) throws ServiceException {
+        return postRepository.findTrends(pageable);
     }
 
     @Override
