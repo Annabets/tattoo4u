@@ -29,7 +29,7 @@ const mapStateToProps = store => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getPhotos: () => dispatch(getPhotos()),
+    getPhotos: (page, size) => dispatch(getPhotos(page, size)),
   }
 };
 

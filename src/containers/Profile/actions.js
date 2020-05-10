@@ -56,12 +56,12 @@ export function resetError() {
   }
 }
 
-export function getSelfPhotos() {
+export function getSelfPhotos(page, size) {
   return (dispatch, getState) => {
     dispatch({
       type: constants.GET_PHOTOS_REQUEST,
     });
-    api.getMasterPhotos(getState().user.id).then(
+    api.getMasterPhotos(getState().user.id, page, size).then(
       response => {
         dispatch({
           type: constants.GET_PHOTOS_SUCCESS,

@@ -16,7 +16,18 @@ import {
   TREND_PHOTOS,
   COMMENT,
   FAVORITE_STUDIO,
-  FEEDBACK, STUDIOS_ORDERS, ORDER, ORDERS, ACCEPTANCE, CONFIRMATION_ORDER, FAVOURITES, COMMENTS, ADMIN, BAN, UNBAN
+  FEEDBACK,
+  STUDIOS_ORDERS,
+  ORDER,
+  ORDERS,
+  ACCEPTANCE,
+  CONFIRMATION_ORDER,
+  FAVOURITES,
+  COMMENTS,
+  ADMIN,
+  BAN,
+  UNBAN,
+  UNEMPLOYED
 } from "../constants";
 import axios from 'axios';
 import {getToken} from "../utils";
@@ -52,15 +63,15 @@ const signOutUser = () => axios.get(SIGN_OUT);
 
 const uploadPhoto = data => axios.post(UPLOAD_PHOTO, formData(data));
 
-const getPhotos = () => axios.get(PHOTOS);
+const getPhotos = (page = 0, size = 20) => axios.get(PHOTOS, {params: {page, size}});
 
-const getTrendPhotos = () => axios.get(TREND_PHOTOS);
+const getTrendPhotos = (page = 0, size = 20) => axios.get(TREND_PHOTOS, {params: {page, size}});
 
-const searchPhotos = tags => axios.get(GET_PHOTOS, {params: {tags: tags}});
+const searchPhotos = (tags, page = 0, size = 20) => axios.get(GET_PHOTOS, {params: {tags, page, size}});
 
 const deletePhoto = photoId => axios.delete(`${DELETE_PHOTO}/${photoId}`);
 
-const getMasterPhotos = masterId => axios.get(`${GET_PHOTOS}/${masterId}`);
+const getMasterPhotos = (masterId, page = 0, size = 20) => axios.get(`${GET_PHOTOS}/${masterId}`, {params: {page, size}});
 
 const getStudios = (searchString, page = 0, size = 10) => axios.get(STUDIOS, {
   params: {

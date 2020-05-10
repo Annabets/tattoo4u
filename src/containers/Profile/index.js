@@ -96,7 +96,7 @@ export default connect(
     uploadPhoto: (data, cb) => dispatch(uploadPhoto(data, cb)),
     registerStudio: (data, cb) => dispatch(registerStudio(data, cb)),
     resetError: () => dispatch(resetError()),
-    getSelfPhotos: () => dispatch(getSelfPhotos()),
+    getSelfPhotos: (page, size) => dispatch(getSelfPhotos(page, size)),
     deletePhoto: id => dispatch(deletePhoto(id)),
     clearPhotos: () => dispatch(clearPhotos()),
     getFavoriteStudios: () => dispatch(getFavoriteStudios()),

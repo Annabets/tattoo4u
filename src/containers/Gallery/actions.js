@@ -2,12 +2,12 @@ import * as constants from "./constants";
 import {api} from "../../api/app";
 import {apiErrorHandler} from "../../utils";
 
-export function getNewPhotos() {
+export function getNewPhotos(page, size) {
   return dispatch => {
     dispatch({
       type: constants.GET_PHOTOS_REQUEST,
     });
-    api.getPhotos().then(
+    api.getPhotos(page, size).then(
       response => {
         dispatch({
           type: constants.GET_PHOTOS_SUCCESS,

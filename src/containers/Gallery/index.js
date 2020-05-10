@@ -82,7 +82,7 @@ export default connect(
     isUploadFailed: state.gallery.isUploadFailed,
   }),
   dispatch => ({
-    getNewPhotos: () => dispatch(getNewPhotos()),
+    getNewPhotos: (page, size) => dispatch(getNewPhotos(page, size)),
     getTrendingPhotos: () => dispatch(getTrendingPhotos()),
     searchPhotos: tags => dispatch(searchPhotos(tags)),
     deletePhoto: id => dispatch(deletePhoto(id)),

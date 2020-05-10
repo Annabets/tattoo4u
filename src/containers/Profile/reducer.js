@@ -24,7 +24,7 @@ export function profileReducer(state = initialState, action) {
     case constants.GET_PHOTOS_SUCCESS:
       return {
         ...state,
-        photos: state.photos.concat(action.payload),
+        photos: state.photos.concat(action.payload.postResponseDtoList),
         isLoadingPhotos: false
       };
     case constants.GET_PHOTOS_FAILURE:
