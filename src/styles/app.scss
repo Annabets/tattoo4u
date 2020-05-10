@@ -432,6 +432,7 @@ ul .search-categories li{
   justify-content: center
 }
 
+@import './helpers';
 @import './pages/signInForm';
 @import "./pages/navbar";
 @import "./pages/photoGrid";

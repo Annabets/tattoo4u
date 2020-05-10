@@ -54,7 +54,7 @@ class RegisterStudioForm extends React.Component {
     const {file, name, description, address, contact, errors} = this.state;
     const { error } = this.props;
     return(
-      <>
+      <div className="container-fluid">
         <h3>Register studio</h3>
         <br/>
         <Form id="registerStudioForm" onSubmit={this.handleSubmit}>
@@ -110,7 +110,7 @@ class RegisterStudioForm extends React.Component {
             <Button type="submit" block>Register</Button>
           </Form.Group>
         </Form>
-      </>
+      </div>
     )
   }
 }
