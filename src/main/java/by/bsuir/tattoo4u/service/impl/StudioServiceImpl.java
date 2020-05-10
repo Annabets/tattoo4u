@@ -74,19 +74,30 @@ public class StudioServiceImpl implements StudioService {
 
     @Override
     public List<StudioResponseDto> takeStudios(Pageable pageable) throws ServiceException {
-        Page<Studio> studios = studioRepository.findAll(pageable);
+        Page<Studio> studios = studioRepository.findAllByConfirmationIsTrue(pageable);//findAll(pageable);
 
-        return compileStudioResponseList(studios);
+        return compileStudioResponseListFromPage(studios);
+    }
+
+    @Override
+    public List<StudioResponseDto> takeNotConfirmStudios() throws ServiceException {
+        return compileStudioResponseList(studioRepository.findAllByConfirmationIsFalse());
     }
 
     @Override
     public List<StudioResponseDto> takeByName(String name, Pageable pageable) throws ServiceException {
-        Page<Studio> studios = studioRepository.findAllByNameContainingIgnoreCase(name, pageable);//studioRepository.findAllByName(name, pageable);
+        Page<Studio> studios = studioRepository.findAllByNameContainingIgnoreCaseAndConfirmationIsTrue(name, pageable);
+        //studioRepository.findAllByNameContainingIgnoreCase(name, pageable);//studioRepository.findAllByName(name, pageable);
 
-        return compileStudioResponseList(studios);
+        return compileStudioResponseListFromPage(studios);
     }
 
-    private List<StudioResponseDto> compileStudioResponseList(Page<Studio> studios) {
+    private List<StudioResponseDto> compileStudioResponseListFromPage(Page<Studio> studios) {
+        List<Studio> page = new LinkedList<Studio>(studios.getContent());
+        return compileStudioResponseList(page);
+    }
+
+    private List<StudioResponseDto> compileStudioResponseList(List<Studio> studios) {
         List<StudioResponseDto> page = new LinkedList<>();
         for (Studio studio : studios) {
             page.add(new StudioResponseDto(studio));
@@ -105,7 +116,7 @@ public class StudioServiceImpl implements StudioService {
     public List<StudioResponseDto> takeStudiosByNameWithFavourites(String name, Pageable pageable, User user)
             throws ServiceException {
 
-        Page<Studio> studios = studioRepository.findAllByNameContainingIgnoreCase(name, pageable);
+        Page<Studio> studios = studioRepository.findAllByNameContainingIgnoreCaseAndConfirmationIsTrue(name, pageable);
 
         return compileStudioWithFavouritesResponseList(studios, user);
     }
@@ -188,5 +199,12 @@ public class StudioServiceImpl implements StudioService {
             feedbacks.add(new StudioFeedbackResponseDto(feedback));
         }
         return feedbacks;
+    }
+
+    @Override
+    public void confirmStudio(Long studioId) throws ServiceException {
+        Studio studio = studioRepository.getById(studioId);
+        studio.setConfirmation(true);
+        studioRepository.save(studio);
     }
 }

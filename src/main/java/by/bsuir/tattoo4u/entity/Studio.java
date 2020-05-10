@@ -16,6 +16,9 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 public class Studio extends BaseEntity {
 
+    @Column
+    private boolean confirmation;
+
     private String name;
 
     @OneToOne(fetch = FetchType.EAGER)
@@ -58,6 +61,7 @@ public class Studio extends BaseEntity {
     private Set<StudioFeedback> feedbacks;
 
     public Studio() {
+        this.confirmation = false;
         masters = new ArrayList<>();
     }
 
@@ -67,5 +71,6 @@ public class Studio extends BaseEntity {
         this.address = address;
         this.contact = contact;
         this.rating = 0.0;
+        this.confirmation = false;
     }
 }
