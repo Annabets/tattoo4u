@@ -3,10 +3,15 @@ package by.bsuir.tattoo4u.controller;
 import by.bsuir.tattoo4u.dto.request.CommentRequestDto;
 import by.bsuir.tattoo4u.dto.request.PostRequestDto;
 import by.bsuir.tattoo4u.dto.response.CommentResponseDto;
+import by.bsuir.tattoo4u.dto.response.PostPagesResponseDto;
 import by.bsuir.tattoo4u.dto.response.PostResponseDto;
 import by.bsuir.tattoo4u.entity.*;
 import by.bsuir.tattoo4u.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,7 +21,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
@@ -63,15 +71,18 @@ public class PostController {
     }
 
     @GetMapping("posts")
-    public ResponseEntity<?> posts(@RequestHeader(value = "Authorization", required = false) String token) {
+    public ResponseEntity<?> posts(
+            @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestHeader(value = "Authorization", required = false) String token
+    ) {
         try {
             User user = tokenService.getUser(token);
 
-            Iterable<Post> posts = postService.takePosts();
+            Page<Post> posts = postService.takePosts(pageable);
 
-            Iterable<PostResponseDto> postDtoList = toDto(posts, user);
+            PostPagesResponseDto postDto = toDto(posts, user);
 
-            return new ResponseEntity<>(postDtoList, HttpStatus.OK);
+            return new ResponseEntity<>(postDto, HttpStatus.OK);
         } catch (ServiceException e) {
             throw new ControllerException(e);
         }
@@ -79,6 +90,7 @@ public class PostController {
 
     @GetMapping("take-posts/{id}")
     public ResponseEntity<?> takeUserPosts(
+            @PageableDefault Pageable pageable,
             @PathVariable("id") User user,
             @RequestHeader(value = "Authorization", required = false) String token
     ) {
@@ -86,11 +98,11 @@ public class PostController {
             if (user != null) {
                 User currentUser = tokenService.getUser(token);
 
-                Iterable<Post> posts = postService.takePosts(user);
+                Page<Post> posts = postService.takePosts(user, pageable);
 
-                Iterable<PostResponseDto> postDtoList = toDto(posts, currentUser);
+                PostPagesResponseDto postDto = toDto(posts, currentUser);
 
-                return new ResponseEntity<>(postDtoList, HttpStatus.OK);
+                return new ResponseEntity<>(postDto, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("User with the specified id does not exist", HttpStatus.BAD_REQUEST);
             }
@@ -102,16 +114,17 @@ public class PostController {
     @GetMapping("take-posts")
     public ResponseEntity<?> takePosts(
             @RequestParam String tags,
+            @PageableDefault Pageable pageable,
             @RequestHeader(value = "Authorization", required = false) String token
     ) {
         try {
-            User currentUser = tokenService.getUser(token);
+            User user = tokenService.getUser(token);
 
-            Iterable<Post> posts = postService.takePosts(tags);
+            Page<Post> posts = postService.takePosts(tags, pageable);
 
-            Iterable<PostResponseDto> postDtoList = toDto(posts, currentUser);
+            PostPagesResponseDto postDto = toDto(posts, user);
 
-            return new ResponseEntity<>(postDtoList, HttpStatus.OK);
+            return new ResponseEntity<>(postDto, HttpStatus.OK);
         } catch (ServiceException e) {
             throw new ControllerException(e);
         }
@@ -161,15 +174,18 @@ public class PostController {
     }
 
     @GetMapping("trends")
-    public ResponseEntity<?> takeTrends(@RequestHeader(value = "Authorization", required = false) String token) {
+    public ResponseEntity<?> takeTrends(
+            @PageableDefault Pageable pageable,
+            @RequestHeader(value = "Authorization", required = false) String token
+    ) {
         try {
             User user = tokenService.getUser(token);
 
-            Iterable<Post> posts = postService.takeTrends();
+            Page<Post> posts = postService.takeTrends(pageable);
 
-            Iterable<PostResponseDto> postDtoList = toDto(posts, user);
+            PostPagesResponseDto postDto = toDto(posts, user);
 
-            return new ResponseEntity<>(postDtoList, HttpStatus.OK);
+            return new ResponseEntity<>(postDto, HttpStatus.OK);
         } catch (ServiceException e) {
             throw new ControllerException(e);
         }
@@ -216,7 +232,7 @@ public class PostController {
         }
     }
 
-    private Iterable<PostResponseDto> toDto(Iterable<Post> posts, User user) {
+    private PostPagesResponseDto toDto(Page<Post> posts, User user) {
         List<PostResponseDto> postDtoList = new ArrayList<>();
 
         for (Post post : posts) {
@@ -225,7 +241,7 @@ public class PostController {
             postDtoList.add(postDto);
         }
 
-        return postDtoList;
+        return new PostPagesResponseDto(posts.getTotalPages(), postDtoList);
     }
 
     private List<CommentResponseDto> toDto(Set<Comment> comments) {
