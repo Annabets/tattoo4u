@@ -12,6 +12,7 @@ class Modal extends React.Component {
 
     this.state = {
       comment: '',
+      signInLinkVisible: false,
     }
   }
 
@@ -43,17 +44,22 @@ class Modal extends React.Component {
     addComment(modalPhoto.id, this.state, cb);
   };
 
+  showSignInLink = () => this.setState({signInLinkVisible: true})
+
   render() {
     const {modalPhoto, likePhoto, comments} = this.props;
-    const { comment } = this.state;
+    const { comment, signInLinkVisible } = this.state;
     return (
       <>
         <div className="Modal" onClick={this.handleCloseModal}>
           <span className="close-btn">&times;</span>
           <div className="Modal-content">
             <div className="Modal-action-bar">
-              <a className="modal-like-btn" onClick={isAuth() ? () => likePhoto(modalPhoto.id) : () => {
-              }}>
+              {signInLinkVisible &&
+              <div className="mr-2">
+                You're not signed in. <br/>Please <a href="/signIn">sign in</a> to like this photo!
+              </div>}
+              <a className="modal-like-btn" onClick={isAuth() ? () => likePhoto(modalPhoto.id) : () => this.showSignInLink()}>
                 {modalPhoto.liked ||
                 <img src={notLikedBtn} width="24" height="24" alt=""/>}
                 {modalPhoto.liked &&
