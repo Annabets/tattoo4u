@@ -61,8 +61,8 @@ class Modal extends React.Component {
                 <span className="ml-1">{modalPhoto.likesNumber}</span>
               </a>
             </div>
-            <div className="d-flex">
-              <div className="Modal-photo flex-grow-1">
+            <div className="Modal-photo-container">
+              <div className="Modal-photo">
                 <img src={`${modalPhoto.photoUrl}`} alt=""/>
               </div>
               <div className="comments-section">

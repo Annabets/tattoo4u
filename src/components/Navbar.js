@@ -15,24 +15,27 @@ export default connect(
     })
 )(({username, signOut}) => {
   return withNavigation(window.location.pathname) ? (
-    <Navbar bg="primary" variant="dark">
+    <Navbar bg="primary" variant="dark"  expand="sm">
       <Navbar.Brand href="/">TATTOO4U</Navbar.Brand>
-      <Nav className="mr-auto">
-        <Nav.Link href={routes.GALLERY}>Gallery</Nav.Link>
-        <Nav.Link href={routes.STUDIOS}>Studios</Nav.Link>
-        <Nav.Link href={routes.MASTERS}>Masters</Nav.Link>
-      </Nav>
-      <Nav>
-        {isAuth() ?
-          <NavDropdown bsPrefix="nav-link user-dropdown" title={username} id="profile-nav-dropdown">
-            <NavDropdown.Item href={routes.PROFILE}>Your Profile</NavDropdown.Item>
-            {isAdmin() && <NavDropdown.Item href={routes.ADMIN}>Manage users</NavDropdown.Item>}
-            <NavDropdown.Divider/>
-            <NavDropdown.Item onClick={signOut}>Sign Out</NavDropdown.Item>
-          </NavDropdown> :
-          <Nav.Link href={routes.SIGN_IN}>SIGN IN</Nav.Link>
-        }
-      </Nav>
+      <Navbar.Toggle aria-controls="navbar-nav" />
+      <Navbar.Collapse id="navbar-nav">
+        <Nav className="mr-auto">
+          <Nav.Link href={routes.GALLERY}>Gallery</Nav.Link>
+          <Nav.Link href={routes.STUDIOS}>Studios</Nav.Link>
+          <Nav.Link href={routes.MASTERS}>Masters</Nav.Link>
+        </Nav>
+        <Nav>
+          {isAuth() ?
+            <NavDropdown bsPrefix="nav-link user-dropdown" title={username} id="profile-nav-dropdown">
+              <NavDropdown.Item href={routes.PROFILE}>Your Profile</NavDropdown.Item>
+              {isAdmin() && <NavDropdown.Item href={routes.ADMIN}>Manage users</NavDropdown.Item>}
+              <NavDropdown.Divider/>
+              <NavDropdown.Item onClick={signOut}>Sign Out</NavDropdown.Item>
+            </NavDropdown> :
+            <Nav.Link href={routes.SIGN_IN}>SIGN IN</Nav.Link>
+          }
+        </Nav>
+      </Navbar.Collapse>
     </Navbar>
   ) : null
 });

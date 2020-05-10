@@ -242,10 +242,18 @@
   object-fit: contain;
 }
 
-.comments-section {
-  width: 30%;
-  margin-top: 30px;
-  margin-right: .6rem;
+.Modal-photo-container {
+  display: flex;
+
+  .comments-section {
+    min-width: 260px;
+    margin: 30px .6rem;
+  }
+
+  @media screen and (max-width: 768px) {
+    display: unset;
+
+  }
 }
 
 .no-scroll{
