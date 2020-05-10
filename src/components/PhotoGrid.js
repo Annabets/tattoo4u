@@ -4,6 +4,7 @@ import Modal from './Modal';
 import notLikedBtn from '../assets/icons/n-active-like-btn.svg';
 import likedBtn from '../assets/icons/active-like-btn.svg';
 import {isAuth} from "../utils";
+import {MASTERS} from "../routes";
 
 class PhotoGrid extends React.Component {
   constructor(props) {
@@ -25,7 +26,7 @@ class PhotoGrid extends React.Component {
         <div className="Column-item" key={photo.id} id={photo.id} onClick={this.handleGridItemClick}>
           <img className="Column-item-img" src={`${photo.photoUrl}`} alt=""/>
           <div className="Column-item-content">
-            <a>
+            <a href={`${MASTERS}/${photo.authorId}`}>
               {`${photo.authorName}`}
             </a>
             {isAuth() &&

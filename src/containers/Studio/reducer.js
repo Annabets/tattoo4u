@@ -12,7 +12,7 @@ export function studioReducer(state = initialState, action) {
   switch (action.type) {
     case constants.GET_STUDIO_DATA_SUCCESS:
       return {...state, studioData: action.data};
-    case constants.GET_MASTERS_SUCCESS:
+    case constants.GET_UNEMPLOYED_MASTERS_SUCCESS:
       return {...state, mastersToSelect: action.data};
     case constants.GIVE_STUDIO_FEEDBACK_SUCCESS:
       return {

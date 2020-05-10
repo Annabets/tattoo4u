@@ -76,7 +76,7 @@ class Orders extends React.Component {
     const { file, description } = this.state;
     return(
       <>
-        <Button className="my-3" onClick={this.showModal}>Left order</Button>
+        {role === 'USER' && <Button className="my-3" onClick={this.showModal}>Left order</Button>}
         <div className="row">
           <div className="col-4">
             <h5>New Orders</h5>

@@ -2,7 +2,6 @@ import React from 'react';
 import {connect} from "react-redux";
 import {
   getStudioData,
-  getMasters,
   registerMaster,
   addStudioToFavorites,
   removeStudioFromFavorites,
@@ -37,7 +36,6 @@ class Studio extends React.Component {
 
   componentDidMount() {
     this.props.getStudioData(this.props.match.params.studioId);
-    this.props.getMasters();
     this.props.getStudioFeebacks(this.props.match.params.studioId);
   }
 
@@ -234,7 +232,6 @@ export default connect(
   }),
   dispatch => ({
     getStudioData: (studioId) => dispatch(getStudioData(studioId)),
-    getMasters: () => dispatch(getMasters()),
     registerMaster: (data, cb) => dispatch(registerMaster(data, cb)),
     addToFavorites: (studioIid, cb) => dispatch(addStudioToFavorites(studioIid, cb)),
     removeFromFavorites: (studioId, cb) => dispatch(removeStudioFromFavorites(studioId, cb)),

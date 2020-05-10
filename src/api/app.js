@@ -141,6 +141,8 @@ const banUser = userId => axios.post(ADMIN + BAN, {id: userId});
 
 const unbanUser = userId => axios.post(ADMIN + UNBAN, {id: userId});
 
+const getUnemployedMasters = () => axios.get(MASTERS + UNEMPLOYED);
+
 export const api = {
   signInUser,
   signUpUser,
@@ -179,4 +181,5 @@ export const api = {
   getUsersList,
   banUser,
   unbanUser,
+  getUnemployedMasters,
 };

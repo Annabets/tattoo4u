@@ -3,7 +3,7 @@ import {api} from "../../api/app";
 import {apiErrorHandler} from "../../utils";
 
 export function getStudioData(studioId) {
-  return dispatch => {
+  return (dispatch, getState) => {
     dispatch({
       type: constants.GET_STUDIO_DATA_REQUEST,
     });
@@ -12,7 +12,9 @@ export function getStudioData(studioId) {
         dispatch({
           type: constants.GET_STUDIO_DATA_SUCCESS,
           data: response.data,
-        })
+        });
+        if(getState().user.id === response.data.ownerId)
+          dispatch(getUnemployedMasters())
       },
       error => {
         dispatch({
@@ -25,21 +27,21 @@ export function getStudioData(studioId) {
   }
 }
 
-export function getMasters() {
+export function getUnemployedMasters() {
   return dispatch => {
     dispatch({
-      type: constants.GET_MASTERS_REQUEST,
+      type: constants.GET_UNEMPLOYED_MASTERS_REQUEST,
     });
-    api.getMasters().then(
+    api.getUnemployedMasters().then(
       response => {
         dispatch({
-          type: constants.GET_MASTERS_SUCCESS,
+          type: constants.GET_UNEMPLOYED_MASTERS_SUCCESS,
           data: response.data,
         })
       },
       error => {
         dispatch({
-          type: constants.GET_MASTERS_FAILURE,
+          type: constants.GET_UNEMPLOYED_MASTERS_FAILURE,
           payload: error.message
         });
         apiErrorHandler(error)

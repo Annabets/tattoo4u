@@ -28,6 +28,7 @@ export const CONFIRMATION_ORDER = '/confirmationOrder';
 export const ADMIN = '/admin';
 export const BAN = '/ban';
 export const UNBAN = '/unban';
+export const UNEMPLOYED = '/unemployed';
 
 //methods
 export const GET = 'GET';
