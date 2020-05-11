@@ -6,6 +6,7 @@ import kong.unirest.Unirest;
 import kong.unirest.json.JSONArray;
 
 import java.io.File;
+import java.util.Map;
 
 public class ApiUtils {
 
@@ -24,8 +25,12 @@ public class ApiUtils {
         return jsonResponse.getBody().getArray().length();
     }
 
-    public static void postRequest(String url) {
+    public static void postApplicationJsonRequest(String url) {
         HttpResponse<JsonNode> jsonResponse = Unirest.post(url).asJson();
+    }
+
+    public static HttpResponse<JsonNode>  postApplicationJsonRequest(String url, Map<String, Object> fields) {
+        return  Unirest.post(url).header("Content-Type", "application/json").body(fields).asJson();
     }
 
     public static String postRequestFile(String uri, String pathOfFile, String typeOfFile) {

@@ -1,0 +1,13 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+
+<suite name="Suite1" verbose="1" >
+    <test name="tatoo4u_test" >
+        <classes>
+            <class name="tests.uiTests.UI001_MakeSureThatUrlOfSiteIsRight" />
+            <class name="tests.uiTests.UI002_MakeSureThatSignINButtonWorkCorrectly" />
+            <class name="tests.uiTests.UI003_MakeSureThatSignInWorksCorrectly" />
+            <class name="tests.uiTests.UI004_MakeSureMastersOpenCorrectly"/>
+            <class name="tests.uiTests.UI005_MakeSureAddMasterToFavoriteWorksCorrectly"/>
+        </classes>
+    </test>
+</suite>

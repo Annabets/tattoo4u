@@ -1,4 +1,4 @@
-package tests;
+package tests.uiTests;
 
 import framework.browser.DriverForBrowser;
 import framework.utils.CustomLogger;
@@ -7,7 +7,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 
-public class BaseTest {
+public class BaseUITest {
 
     protected DriverForBrowser browser;
 

@@ -1,0 +1,15 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+
+<suite name="Suite2" verbose="1" >
+    <test name="tatoo4u_test" >
+        <classes>
+            <class name="tests.apiTests.Api001_MakeSureSignInApiMethodWorkCorrectly" />
+            <class name="tests.apiTests.Api002_MakeSureUsersApiMethodWorkCorrectly" />
+            <class name="tests.apiTests.Api003_004_MakeSureSignUpAndDeleteApiMethodsWorkCorrectly" />
+            <class name="tests.apiTests.Api005_MakeSureSignOutMethodWorkCorrectly" />
+            <class name="tests.apiTests.Api006_MakeSureCurrentUserApiMethodWorkCorrectly" />
+            <class name="tests.apiTests.Api007_MakeSurePostsApiMethodWorkCorrectly" />
+            <class name="tests.apiTests.Api008_MakeSureGetAllStudiosMethodWorksCorrectly" />
+        </classes>
+    </test>
+</suite>
