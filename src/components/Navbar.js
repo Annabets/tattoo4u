@@ -28,7 +28,7 @@ export default connect(
           {isAuth() ?
             <NavDropdown bsPrefix="nav-link user-dropdown" title={username} id="profile-nav-dropdown">
               <NavDropdown.Item href={routes.PROFILE}>Your Profile</NavDropdown.Item>
-              {isAdmin() && <NavDropdown.Item href={routes.ADMIN}>Manage users</NavDropdown.Item>}
+              {isAdmin() && <NavDropdown.Item href={routes.ADMIN}>Admin</NavDropdown.Item>}
               <NavDropdown.Divider/>
               <NavDropdown.Item onClick={signOut}>Sign Out</NavDropdown.Item>
             </NavDropdown> :

@@ -27,7 +27,7 @@ import {
   ADMIN,
   BAN,
   UNBAN,
-  UNEMPLOYED
+  UNEMPLOYED, NOT_CONFIRMED_STUDIOS, STUDIO_CONFORMATION
 } from "../constants";
 import axios from 'axios';
 import {getToken} from "../utils";
@@ -143,6 +143,10 @@ const unbanUser = userId => axios.post(ADMIN + UNBAN, {id: userId});
 
 const getUnemployedMasters = () => axios.get(MASTERS + UNEMPLOYED);
 
+const getNotConfirmedStudios = () => axios.get(NOT_CONFIRMED_STUDIOS);
+
+const confirmStudio = studioId => axios.post(STUDIO_CONFORMATION, null, {params: {studioId}})
+
 export const api = {
   signInUser,
   signUpUser,
@@ -182,4 +186,6 @@ export const api = {
   banUser,
   unbanUser,
   getUnemployedMasters,
+  getNotConfirmedStudios,
+  confirmStudio,
 };

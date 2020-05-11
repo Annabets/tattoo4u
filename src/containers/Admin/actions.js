@@ -70,3 +70,49 @@ export function unbanUser(userId, cb) {
     )
   }
 }
+
+export function getNotConfirmedStudios() {
+  return dispatch => {
+    dispatch({
+      type: constants.GET_NOT_CONFIRMED_STUDIOS_REQUEST
+    });
+    api.getNotConfirmedStudios().then(
+      response => {
+        dispatch({
+          type: constants.GET_NOT_CONFIRMED_STUDIOS_SUCCESS,
+          data: response.data,
+        });
+      },
+      error => {
+        dispatch({
+          type: constants.GET_NOT_CONFIRMED_STUDIOS_FAILURE,
+          payload: error.message,
+        });
+        apiErrorHandler(error)
+      }
+    )
+  }
+}
+
+export function confirmStudio(studioId) {
+  return dispatch => {
+    dispatch({
+      type: constants.CONFIRM_STUDIO_REQUEST
+    });
+    api.confirmStudio(studioId).then(
+      response => {
+        dispatch({
+          type: constants.CONFIRM_STUDIO_SUCCESS,
+          data: response.data,
+        });
+      },
+      error => {
+        dispatch({
+          type: constants.CONFIRM_STUDIO_FAILURE,
+          payload: error.message,
+        });
+        apiErrorHandler(error)
+      }
+    )
+  }
+}

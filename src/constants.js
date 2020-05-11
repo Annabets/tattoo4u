@@ -29,6 +29,8 @@ export const ADMIN = '/admin';
 export const BAN = '/ban';
 export const UNBAN = '/unban';
 export const UNEMPLOYED = '/unemployed';
+export const NOT_CONFIRMED_STUDIOS = '/notConfirmedStudios';
+export const STUDIO_CONFORMATION = '/studioConfirmation';
 
 //methods
 export const GET = 'GET';
