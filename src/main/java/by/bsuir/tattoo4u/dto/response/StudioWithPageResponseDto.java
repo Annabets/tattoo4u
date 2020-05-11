@@ -8,6 +8,7 @@ import java.util.List;
 public class StudioWithPageResponseDto {
     private List<StudioResponseDto> studios;
     private Integer totalPages;
+    private Integer currentPage;
 
     public StudioWithPageResponseDto(List<StudioResponseDto> studios, Integer totalPages) {
         this.studios = studios;
