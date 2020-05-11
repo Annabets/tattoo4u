@@ -11,7 +11,8 @@ public class MainMenu {
     private Button galleryButton = new Button(By.xpath("//a[contains(@data-rb-event-key, 'gallery') ]"), "Gallery button");
     private Button studiosButton = new Button(By.xpath("//a[contains(@data-rb-event-key, 'studios') ]"), "Studio button");
     private Button mastersButton = new Button(By.xpath("//a[contains(@data-rb-event-key, 'masters') ]"), "Masters button");
-    private Button signInUserButton = new Button(By.xpath("//nav[contains(@class, 'navbar')]//a[@class='dropdown-toggle nav-link']"), "Sign in user button");
+    private Button signInUserButton = new Button(By.xpath("//nav[contains(@class, 'navbar')]//a[contains(@class, 'dropdown-toggle nav-link')]"), "Sign in user button");
+    public Button profileButton = new Button(By.xpath("//div[contains(@class, 'dropdown-menu') ]//a[text()='Your Profile']"), "Profile button");
 
     public MainMenu(){
 
@@ -26,8 +27,20 @@ public class MainMenu {
         return siteLogoLabel.isVisible();
     }
 
+    public void goToMasters() {
+        mastersButton.waitUntilVisible();
+        mastersButton.click();
+    }
+
     public String getSignInUserName() {
         signInUserButton.waitUntilVisible();
         return signInUserButton.getText();
+    }
+
+    public void goToMyProfile() {
+        signInUserButton.waitUntilVisible();
+        signInUserButton.click();
+        profileButton.waitUntilVisible();
+        profileButton.click();
     }
 }

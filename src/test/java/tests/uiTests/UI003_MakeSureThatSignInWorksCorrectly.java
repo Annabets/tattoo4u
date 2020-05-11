@@ -1,4 +1,4 @@
-package tests;
+package tests.uiTests;
 
 import framework.utils.CustomLogger;
 import framework.utils.PropertiesWorker;
@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 import pageObjects.forms.AuthorisationForm;
 import pageObjects.pages.MainPage;
 
-public class UI003_MakeSureThatSignInWorksCorrectly extends BaseTest{
+public class UI003_MakeSureThatSignInWorksCorrectly extends BaseUITest {
     @Test
     public void testScenario() {
         CustomLogger.makeStepLog(1, "Clicking to sign in button");
@@ -16,9 +16,11 @@ public class UI003_MakeSureThatSignInWorksCorrectly extends BaseTest{
         mainPage.goToMainMenu().goToSignIn();
         CustomLogger.makeStepLog(2, "Making authorisation");
         AuthorisationForm authorisationForm = new AuthorisationForm();
-        SignInUserModel userModel = new SignInUserModel(PropertiesWorker.getTestProperties("exampleUserName"), PropertiesWorker.getTestProperties("exampleUserPassword"));
+        SignInUserModel userModel = new SignInUserModel(
+                PropertiesWorker.getTestProperties("exampleUserName"),
+                PropertiesWorker.getTestProperties("exampleUserPassword"));
         authorisationForm.makeAuthorisation(userModel);
         CustomLogger.makeStepLog(3, "Checking authorisation was successful");
-        Assert.assertEquals(userModel.getName(),  mainPage.goToMainMenu().getSignInUserName(), "Right user didn't sign in!");
+        Assert.assertEquals(userModel.getName(),  mainPage.goToMainMenu().getSignInUserName());
     }
 }
