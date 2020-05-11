@@ -133,6 +133,7 @@ public class StudioController {
                     studio = studioService.takeByName(name, pageable);
                 }
             }
+            studio.setCurrentPage(pageable.getPageNumber());
         } catch (ServiceException ex) {
             throw new ControllerException(ex);
         }
