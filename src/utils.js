@@ -41,10 +41,5 @@ export function apiErrorHandler(error) {
       clearLocalStorage();
       history.replace('/');
     }
-
-    if (error.response.status === 500 && error.response.error.includes('JWT expired')) {
-      clearLocalStorage();
-      history.replace('/');
-    }
   }
 }

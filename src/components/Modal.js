@@ -41,7 +41,7 @@ class Modal extends React.Component {
       this.getComments();
     };
 
-    addComment(modalPhoto.id, this.state, cb);
+    addComment({postId: modalPhoto.id, text: this.state.comment}, cb);
   };
 
   showSignInLink = () => this.setState({signInLinkVisible: true})
@@ -69,7 +69,7 @@ class Modal extends React.Component {
             </div>
             <div className="Modal-photo-container">
               <div className="Modal-photo">
-                <img src={`${modalPhoto.photoUrl}`} alt=""/>
+                <img src={`${modalPhoto.photo}`} alt=""/>
               </div>
               <div className="comments-section">
                 <p className="border-bottom">{modalPhoto.description}</p>
@@ -78,7 +78,7 @@ class Modal extends React.Component {
                   comments.map(comment => (
                     <div key={comment.id}>
                       <div className="d-flex justify-content-between">
-                        <b>{comment.author}</b>
+                        <b>{comment.author.username}</b>
                         <span>{moment(comment.date).format('DD MMM hh:mm').toString()}</span>
                       </div>
                       <div>{comment.text}</div>

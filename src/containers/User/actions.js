@@ -2,6 +2,28 @@ import * as constants from './constants';
 import  {api} from "../../api/app";
 import {history} from "../../utils";
 
+export function getUserInfo() {
+  return dispatch => {
+    dispatch({
+      type: constants.GET_USER_INFO_REQUEST,
+    });
+    api.getUserInfo().then(
+      resp => {
+        dispatch({
+          type: constants.GET_USER_INFO_SUCCESS,
+          payload: resp.data,
+        });
+      },
+      error => {
+        dispatch({
+          type: constants.GET_USER_INFO_FAILURE,
+          payload: error.message,
+        })
+      }
+    )
+  }
+}
+
 export function signIn(data) {
   return dispatch => {
     dispatch({
@@ -11,9 +33,10 @@ export function signIn(data) {
       response => {
         dispatch({
           type: constants.SIGN_IN_USER_SUCCESS,
-          userData: response.data,
+          payload: response.data,
         });
-        history.goBack();
+        dispatch(getUserInfo());
+        history.push('/');
       },
       error => {
         dispatch({
@@ -34,9 +57,8 @@ export function signUp(data) {
       response => {
         dispatch({
           type: constants.SIGN_UP_USER_SUCCESS,
-          userData: response.data,
         });
-        history.goBack();
+        dispatch(signIn(data));
       },
       error => {
         dispatch({

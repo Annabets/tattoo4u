@@ -74,7 +74,7 @@ const mapDispatchToProps = dispatch => {
     deletePhoto: (photoId, cb) => dispatch(photoGridActions.deletePhoto(photoId, cb)),
     likePhoto: photoId => dispatch(photoGridActions.likePhoto(photoId)),
     getComments: photoId => dispatch(photoGridActions.getComments(photoId)),
-    addComment: (photoId, data, cb) => dispatch(photoGridActions.addComment(photoId, data, cb))
+    addComment: (data, cb) => dispatch(photoGridActions.addComment(data, cb))
   }
 };
 

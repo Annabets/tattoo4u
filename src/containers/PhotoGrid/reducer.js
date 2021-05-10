@@ -36,7 +36,7 @@ export function photoGridReducer(state = initialState, action) {
     case _.GET_COMMENTS_SUCCESS:
       return {
         ...state,
-        comments: action.data,
+        comments: action.data.content,
       };
 
     default:

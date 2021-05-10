@@ -27,7 +27,7 @@ import {
   ADMIN,
   BAN,
   UNBAN,
-  UNEMPLOYED, NOT_CONFIRMED_STUDIOS, STUDIO_CONFORMATION
+  UNEMPLOYED, NOT_CONFIRMED_STUDIOS, STUDIO_CONFORMATION, USER_DETAIL
 } from "../constants";
 import axios from 'axios';
 import {getToken} from "../utils";
@@ -35,7 +35,7 @@ import {getToken} from "../utils";
 axios.defaults.baseURL = API_URL;
 
 axios.interceptors.request.use(config => {
-  getToken() && (config.headers['Authorization'] = `Bearer_${getToken()}`);
+  getToken() && (config.headers['Authorization'] = `${getToken()}`);
 
   return config;
 });
@@ -54,6 +54,8 @@ const formData = data => {
   }
   return formData
 };
+
+const getUserInfo = () => axios.get(USER_DETAIL);
 
 const signInUser = data => axios.post(SIGN_IN, data);
 
@@ -99,11 +101,11 @@ const registerMaster = data => axios.post(MASTER, data);
 
 const getCurrentUser = () => axios.get(`${USERS}/currentUser`);
 
-const likePhoto = photoId => axios.get(`${LIKE_PHOTO}/${photoId}`);
+const likePhoto = photoId => axios.post(`${PHOTOS}/${photoId}${LIKE_PHOTO}`);
 
-const getComments = photoId => axios.get(`${COMMENT}s/${photoId}`);
+const getComments = photoId => axios.get(`${COMMENTS}/${photoId}`);
 
-const addComment = (photoId, data) => axios.post(`${COMMENT}/${photoId}`, data);
+const addComment = (data) => axios.post(COMMENT, data);
 
 const getFavStudios = () => axios.get(`${USERS + FAVORITE_STUDIO}s`);
 
@@ -148,6 +150,7 @@ const getNotConfirmedStudios = () => axios.get(NOT_CONFIRMED_STUDIOS);
 const confirmStudio = studioId => axios.post(STUDIO_CONFORMATION, null, {params: {studioId}})
 
 export const api = {
+  getUserInfo,
   signInUser,
   signUpUser,
   uploadPhoto,

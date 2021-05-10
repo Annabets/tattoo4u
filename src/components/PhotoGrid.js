@@ -24,10 +24,10 @@ class PhotoGrid extends React.Component {
     return columnPhotos.map((photo) => {
       return (
         <div className="Column-item" key={photo.id} id={photo.id} onClick={this.handleGridItemClick}>
-          <img className="Column-item-img" src={`${photo.photoUrl}`} alt=""/>
+          <img className="Column-item-img" src={`${photo.photo}`} alt=""/>
           <div className="Column-item-content">
-            <a href={`${MASTERS}/${photo.authorId}`}>
-              {`${photo.authorName}`}
+            <a href={`${MASTERS}/${photo.author.id}`}>
+              {`${photo.author.username}`}
             </a>
             {isAuth() &&
             <button className="transparent-btn" value={photo.id} onClick={() => likePhoto(photo.id)}>
@@ -35,7 +35,7 @@ class PhotoGrid extends React.Component {
               {photo.liked && <img src={likedBtn} width="24" height="24" alt=""/>}
             </button>}
           </div>
-          {(userRole === "ADMIN" || username === photo.authorName) &&
+          {(userRole === "ADMIN" || username === photo.author.username) &&
           <span className="--delete text-danger" onClick={() => deletePhoto(photo.id)}>&times;</span>}
         </div>
       )

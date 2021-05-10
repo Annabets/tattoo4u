@@ -112,12 +112,12 @@ function getComments(photoId) {
   }
 }
 
-function addComment(photoId, data, cb) {
+function addComment(data, cb) {
   return dispatch => {
     dispatch({
       type: _.ADD_COMMENT_REQUEST
     });
-    api.addComment(photoId, data).then(
+    api.addComment(data).then(
       () => {
         dispatch({
           type: _.ADD_COMMENT_SUCCESS,

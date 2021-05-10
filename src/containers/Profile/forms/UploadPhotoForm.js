@@ -8,7 +8,7 @@ const schema = yup.object({
 });
 
 class UploadPhotoForm extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.initialState = {
@@ -43,19 +43,23 @@ class UploadPhotoForm extends React.Component {
 
     this.removeError();
     schema.validate(this.state, {abortEarly: false})
-      .then(() => this.props.uploadPhoto({file, description, tags: tags.split(',')}, cb))
+      .then(() => this.props.uploadPhoto({
+        photo: file,
+        dto: new Blob([JSON.stringify({description, tags: tags.split(',')})], {type: 'application/json'})
+      }, cb))
       .catch(reason => reason.inner.forEach(er => this.setError(er.path, er.message)))
   };
 
   render() {
-    const { file, tags, description, errors } = this.state;
-    const { error } = this.props;
+    const {file, tags, description, errors} = this.state;
+    const {error} = this.props;
 
     const popover = (
       <Popover id="popover-tags">
         <Popover.Content className="fs-14">
           Enter tags that describes tattoo on the photo. Separate tags by commas.
-          Try enter as much tags as possible because it affects on how successfully your photo will be found in the search.
+          Try enter as much tags as possible because it affects on how successfully your photo will be found in the
+          search.
           If photo can be described by phrase, enter it's words separated by commas too.
         </Popover.Content>
       </Popover>
@@ -79,7 +83,7 @@ class UploadPhotoForm extends React.Component {
             <FormLabel>
               Tags
               <OverlayTrigger placement="right" overlay={popover}>
-                <img src={Info} alt="info" height={13} width={13} className="ml-2 cursor-help" />
+                <img src={Info} alt="info" height={13} width={13} className="ml-2 cursor-help"/>
               </OverlayTrigger>
             </FormLabel>
             <Form.Control
